@@ -1,0 +1,336 @@
+export type Language = "ar" | "en";
+
+export const translations = {
+  ar: {
+    // Brand & Header
+    brandName: "وش الخطة؟",
+    tagline: "خطط طلعتك في جدة حسب وقتك وميزانيتك",
+    home: "الرئيسية",
+    readyPlans: "خطط جاهزة",
+    places: "أماكن جدة",
+    offers: "عروض جدة",
+    advertise: "أعلن معنا",
+    quickPlan: "خطة على السريع",
+    account: "حسابي",
+    signIn: "تسجيل الدخول",
+    signUp: "إنشاء حساب",
+    logout: "تسجيل الخروج",
+    themeToggle: "تبديل المظهر",
+    langToggle: "English",
+
+    // Hero Section
+    heroBadge: "النسخة الأولى — جدة",
+    heroTitle: "محتار وين تروح اليوم؟",
+    heroDesc: "قل لنا وقتك وميزانيتك وجوّكم، ونرتّب لكم طلعة كاملة داخل جدة: نشاط، مطعم، قهوة، والمسار بالترتيب.",
+    explorePlaces: "استكشف أماكن جدة",
+    statPlans: "٣ خطط لكل طلب",
+    statTime: "< دقيقة للترتيب",
+    statDistricts: "١١ حي في جدة",
+
+    // Budgets Section
+    budgetsTitle: "ثلاث ميزانيات، وخطط تناسب كل يوم",
+    arrangePlan: "رتّب الخطة",
+
+    // Categories
+    categoriesTitle: "وش ودّكم تسوون؟",
+    noCost: "بدون تكلفة",
+
+    // Ready Plans Section
+    readyPlansTitle: "خطط جاهزة ومجرّبة",
+    allPlans: "كل الخطط",
+    perPerson: "للشخص",
+    hours: "ساعات",
+    stations: "محطات",
+
+    // Offers
+    offersTitle: "عروض تستاهل الطلعة",
+    allOffers: "كل العروض",
+    verifiedAt: "تم التحقق بتاريخ",
+    expiresIn: "ينتهي في",
+    sponsored: "إعلان",
+    free: "مجانًا",
+
+    // How it works
+    howItWorksTitle: "كيف تشتغل؟",
+    step1: "اختر وقتك وميزانيتك.",
+    step2: "حدّد جوّكم ومين معكم.",
+    step3: "استلم خطتك وافتح المسار.",
+
+    // Business CTA
+    businessTitle: "عندك مكان يستاهل الناس تعرفه؟",
+    businessDesc: "أضف مكانك، حدّث معلوماتك، وانشر عروضك لجمهور يبحث عنك فعلًا داخل جدة.",
+    joinPartner: "انضم كشريك",
+
+    // Quick Plan Wizard
+    wizardStep: "خطوة",
+    wizardOf: "من",
+    step0Title: "وين أنتم في جدة؟",
+    step0Desc: "نستخدم الحي فقط لاقتراح أماكن أقرب. ما نطلب موقعك الدقيق.",
+    anyDistrict: "ما يفرق، أهم شيء الخطة",
+    step1Title: "مين معك؟",
+    groupSize: "عدد الأشخاص",
+    step2Title: "كم عندكم وقت؟",
+    startTime: "وقت البداية",
+    step3Title: "وش جوّكم اليوم؟",
+    step3Desc: "تقدر تختار أكثر من جو.",
+    step4Title: "داخل أو خارج؟",
+    indoor: "داخلي",
+    outdoor: "خارجي",
+    anyEnv: "ما يفرق",
+    step5Title: "أي ميزانية تناسبكم؟",
+    customBudget: "حدد ميزانيتي بنفسي (ر.س للشخص)",
+    customBudgetPlaceholder: "مثال: 150",
+    step6Title: "تفضيلات إضافية (اختياري)",
+    prev: "رجوع",
+    next: "التالي",
+    generate: "جهّز خطتنا",
+
+    // Results
+    resultsTitle: "خططكم جاهزة",
+    allJeddah: "كل جدة",
+    makeCheaper: "زد الميزانية",
+    makeNearer: "خلّها أقرب",
+    anotherPlan: "خطة ثانية",
+    editAnswers: "عدّل الإجابات",
+    ourPick: "اختيارنا لك",
+    totalPrice: "الإجمالي",
+    duration: "المدة",
+    travel: "التنقل",
+    allIndoor: "كلها داخلية",
+    indoorAndOutdoor: "داخلي وخارجي",
+    needsReservation: "يحتاج حجزًا",
+    verifiedInfo: "معلومات موثّقة",
+    needsVerification: "تحتاج تأكيد قبل الطلعة",
+    showDetails: "شوف الخطة",
+    hideDetails: "إخفاء التفاصيل",
+    changePlace: "غيّر لي المكان",
+    openRoute: "افتح المسار",
+    shareWhatsApp: "شارك الخطة",
+    calculateSplit: "حاسبة القطة 💰",
+    showMap: "الخريطة التفاعلية 🗺️",
+    groupPoll: "تصويت الجروب 📊",
+    savePlan: "حفظ الخطة ⭐",
+    planSaved: "تم حفظ الخطة!",
+
+    // Split Bill Modal
+    splitTitle: "حاسبة القطة 💰",
+    splitDesc: "وزّع تكاليف الطلعة بين الشباب/العائلة بكل سهولة.",
+    baseCostPerPerson: "التكلفة الأساسية للشخص",
+    groupCount: "عدد الأشخاص في القطة",
+    extraExpenses: "مصاريف إضافية (تأكسي، بنزين، حلى، إلخ)",
+    extraLabel: "اسم التكلفة الإضافية",
+    extraAmount: "المبلغ (ر.س)",
+    addExtra: "+ إضافة تكلفة",
+    totalBill: "إجمالي القطة",
+    shareBillWhatsApp: "مشاركة تفاصيل القطة على واتساب",
+    close: "إغلاق",
+
+    // Route Map Modal
+    mapTitle: "مسار الطلعة على الخريطة 🗺️",
+    mapDesc: "محطات الخطة بالترتيب والمسافات التقريبية بين أحياء جدة.",
+
+    // Group Poll Modal
+    pollTitle: "تصويت الجروب على الخطة 📊",
+    pollDesc: "شارِك رابط التصويت مع الجروب لاختيار الطلعة المناسبة للمجموعة.",
+    voteFor: "تصويت لـ",
+    sharePollWhatsApp: "مشاركة الاستبيان على واتساب",
+
+    // Places Page
+    placesTitle: "أماكن جدة",
+    placesDesc: "تصفّح الأماكن حسب التصنيف والحي والميزانية، أو خلّنا نرتّبها لك في خطة كاملة.",
+    searchPlace: "ابحث باسم المكان...",
+    maxPrice: "أقصى سعر للشخص",
+    noPlacesFound: "ما لقينا أماكن بهذه الفلاتر. وسّع الميزانية أو غيّر الحي.",
+
+    // Account Page
+    accountTitle: "حسابي",
+    accountSubtitle: "إدارة خططك المحفوظة، مفضلتك، ومعلومات حسابك.",
+    guestBadge: "حساب ضيف local",
+    savedPlansCount: "الخطط المحفوظة",
+    favoritePlacesCount: "الأماكن المفضلة",
+    noSavedPlans: "للحين ما حفظت أي خطة. ابدأ بتكوين خطتك الأولى!",
+    noFavorites: "لا توجد أماكن في المفضلة بعد.",
+    welcomeUser: "مرحباً بك، ",
+
+    // Auth Modal
+    authTitle: "تسجيل الدخول / إنشاء حساب",
+    authDesc: "احفظ خططك وأماكنك المفضلة وتزامن مع أجهزتك.",
+    nameLabel: "الاسم الكامل",
+    emailLabel: "البريد الإلكتروني",
+    passwordLabel: "كلمة المرور",
+    alreadyHaveAccount: "لديك حساب بالفعل؟ سجل دخولك",
+    dontHaveAccount: "ليس لديك حساب؟ أنشئ حسابك الآن",
+
+    // Footer
+    footerDesc: "ما تحتاج تدوّر بين مئات الأماكن. قل لنا وش تبغى، ونرتّب لك الخطة داخل جدة.",
+    footerNote: "جميع الأماكن الظاهرة تجريبية لأغراض العرض والتجربة.",
+    navHeader: "تنقّل",
+    businessHeader: "للأعمال",
+  },
+  en: {
+    // Brand & Header
+    brandName: "Wesh Alkhutta?",
+    tagline: "Plan your Jeddah outing by time & budget",
+    home: "Home",
+    readyPlans: "Ready Plans",
+    places: "Jeddah Places",
+    offers: "Offers",
+    advertise: "Advertise",
+    quickPlan: "Quick Plan",
+    account: "My Account",
+    signIn: "Sign In",
+    signUp: "Sign Up",
+    logout: "Log Out",
+    themeToggle: "Toggle Theme",
+    langToggle: "العربية",
+
+    // Hero Section
+    heroBadge: "Version 1.0 — Jeddah",
+    heroTitle: "Not sure where to go today?",
+    heroDesc: "Tell us your duration, budget, and mood — we will curate your complete Jeddah itinerary: activity, restaurant, cafe, and step-by-step route.",
+    explorePlaces: "Explore Jeddah Places",
+    statPlans: "3 Plans per request",
+    statTime: "< 1 min setup",
+    statDistricts: "11 Districts covered",
+
+    // Budgets Section
+    budgetsTitle: "Three Budgets for Every Day",
+    arrangePlan: "Generate Plan",
+
+    // Categories
+    categoriesTitle: "What do you feel like doing?",
+    noCost: "Free of charge",
+
+    // Ready Plans Section
+    readyPlansTitle: "Curated Ready Plans",
+    allPlans: "All Plans",
+    perPerson: "per person",
+    hours: "hours",
+    stations: "stops",
+
+    // Offers
+    offersTitle: "Deals Worth The Outing",
+    allOffers: "All Offers",
+    verifiedAt: "Verified on",
+    expiresIn: "Expires on",
+    sponsored: "Sponsored",
+    free: "Free",
+
+    // How it works
+    howItWorksTitle: "How it works?",
+    step1: "Choose your time and budget.",
+    step2: "Select group size and vibe.",
+    step3: "Get your plan and open the route.",
+
+    // Business CTA
+    businessTitle: "Have a spot people should know about?",
+    businessDesc: "Add your business, update info, and feature offers to an active audience looking for outings in Jeddah right now.",
+    joinPartner: "Join as Partner",
+
+    // Quick Plan Wizard
+    wizardStep: "Step",
+    wizardOf: "of",
+    step0Title: "Where are you in Jeddah?",
+    step0Desc: "We only use your district to suggest closer spots. No exact location required.",
+    anyDistrict: "Anywhere in Jeddah",
+    step1Title: "Who is with you?",
+    groupSize: "Number of people",
+    step2Title: "How much time do you have?",
+    startTime: "Start time",
+    step3Title: "What is your mood today?",
+    step3Desc: "You can pick more than one vibe.",
+    step4Title: "Indoor or Outdoor?",
+    indoor: "Indoor",
+    outdoor: "Outdoor",
+    anyEnv: "Doesn't matter",
+    step5Title: "What is your budget per person?",
+    customBudget: "Custom budget per person (SAR)",
+    customBudgetPlaceholder: "e.g. 150",
+    step6Title: "Extra preferences (Optional)",
+    prev: "Back",
+    next: "Next",
+    generate: "Generate Our Plan",
+
+    // Results
+    resultsTitle: "Your Plans Are Ready",
+    allJeddah: "All Jeddah",
+    makeCheaper: "Increase Budget",
+    makeNearer: "Make Closer",
+    anotherPlan: "Alternative Plan",
+    editAnswers: "Edit Answers",
+    ourPick: "Our Recommendation",
+    totalPrice: "Total",
+    duration: "Duration",
+    travel: "Transit",
+    allIndoor: "All Indoor",
+    indoorAndOutdoor: "Indoor & Outdoor",
+    needsReservation: "Reservation Needed",
+    verifiedInfo: "Verified Details",
+    needsVerification: "Confirm before heading out",
+    showDetails: "View Details",
+    hideDetails: "Hide Details",
+    changePlace: "Swap Spot",
+    openRoute: "Open Route",
+    shareWhatsApp: "Share Plan",
+    calculateSplit: "Split Bill 💰",
+    showMap: "Route Map 🗺️",
+    groupPoll: "Group Poll 📊",
+    savePlan: "Save Plan ⭐",
+    planSaved: "Plan Saved!",
+
+    // Split Bill Modal
+    splitTitle: "Split Bill Calculator 💰",
+    splitDesc: "Easily split the outing cost among friends or family.",
+    baseCostPerPerson: "Base cost per person",
+    groupCount: "Number of people in split",
+    extraExpenses: "Extra expenses (Taxi, Snacks, Tips, etc.)",
+    extraLabel: "Expense name",
+    extraAmount: "Amount (SAR)",
+    addExtra: "+ Add Expense",
+    totalBill: "Total Bill Amount",
+    shareBillWhatsApp: "Share Split Breakdown via WhatsApp",
+    close: "Close",
+
+    // Route Map Modal
+    mapTitle: "Interactive Route Map 🗺️",
+    mapDesc: "Sequential itinerary stops and distance routes across Jeddah.",
+
+    // Group Poll Modal
+    pollTitle: "Group Plan Poll 📊",
+    pollDesc: "Share this voting poll link with your group to decide on the winning plan.",
+    voteFor: "Vote for",
+    sharePollWhatsApp: "Share Poll on WhatsApp",
+
+    // Places Page
+    placesTitle: "Jeddah Places Directory",
+    placesDesc: "Browse spots by category, district, and budget, or let us curate a complete plan for you.",
+    searchPlace: "Search place by name...",
+    maxPrice: "Max price per person",
+    noPlacesFound: "No places match these filters. Try expanding budget or district.",
+
+    // Account Page
+    accountTitle: "My Account",
+    accountSubtitle: "Manage your saved plans, favorites, and profile.",
+    guestBadge: "Local Guest User",
+    savedPlansCount: "Saved Plans",
+    favoritePlacesCount: "Favorite Places",
+    noSavedPlans: "No saved plans yet. Start by generating your first plan!",
+    noFavorites: "No favorite places added yet.",
+    welcomeUser: "Welcome, ",
+
+    // Auth Modal
+    authTitle: "Sign In / Create Account",
+    authDesc: "Save your favorite plans and places and sync across devices.",
+    nameLabel: "Full Name",
+    emailLabel: "Email Address",
+    passwordLabel: "Password",
+    alreadyHaveAccount: "Already have an account? Sign In",
+    dontHaveAccount: "Don't have an account? Sign Up",
+
+    // Footer
+    footerDesc: "No need to browse hundreds of places. Tell us your vibe, and we will structure your Jeddah plan.",
+    footerNote: "All places displayed are demo data for demonstration purposes.",
+    navHeader: "Navigation",
+    businessHeader: "For Business",
+  },
+} as const;
