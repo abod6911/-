@@ -152,24 +152,36 @@ function Index() {
         </div>
       </div>
 
-      {/* ===== Quick Vibe Section ===== */}
-      <section className="bg-[#FAF6F0] dark:bg-[#161B1A] pt-20 pb-12 border-b border-[#E2D3BE] dark:border-white/10">
+      {/* ===== Coastal Warm Quick Vibe Section ===== */}
+      <section className="bg-gradient-to-b from-[#F4EBDD] via-[#FAF6F0] to-[#F4EBDD] dark:from-[#121817] dark:via-[#192322] dark:to-[#121817] pt-20 pb-16 border-b border-[#E2D3BE]/80 dark:border-white/10 relative">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="mb-6">
-            <h2 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-3xl">{t("quickVibeTitle")}</h2>
-            <p className="text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold mt-1">{t("quickVibeSub")}</p>
+          <div className="mb-8 flex flex-col items-center text-center">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C96745]/15 dark:bg-[#C96745]/25 px-4 py-1 text-xs font-extrabold text-[#C96745] dark:text-[#FF9D7A] mb-2 border border-[#C96745]/20">
+              ✨ اختاروا جوّكم السريع
+            </span>
+            <h2 className="text-3xl font-black text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">
+              {t("quickVibeTitle")}
+            </h2>
+            <p className="text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold mt-1.5 max-w-md">
+              {t("quickVibeSub")}
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5">
             {quickVibes.map((chip) => (
               <Link
                 key={chip.labelAr}
                 to="/quick-plan"
                 search={{ mood: chip.mood }}
-                className="surface-card group flex flex-col items-center justify-center p-4 text-center hover-lift min-h-[90px] border border-[#E2D3BE] dark:border-white/10"
+                className="group relative flex flex-col items-center justify-center p-4 text-center rounded-2xl bg-white/90 dark:bg-[#1F2B2A] border border-[#E2D3BE] dark:border-white/15 shadow-sm hover-lift min-h-[96px] transition-all hover:border-[#C96745] dark:hover:border-[#C96745] hover:shadow-lift"
               >
-                <span className="text-2xl mb-1.5 group-hover:animate-wiggle">{chip.emoji}</span>
-                <span className="text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] group-hover:text-[#C96745] transition-colors">
+                {/* Accent top gradient on hover */}
+                <div className="absolute top-0 inset-x-0 h-1 rounded-t-2xl bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                <span className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300">
+                  {chip.emoji}
+                </span>
+                <span className="text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] group-hover:text-[#C96745] dark:group-hover:text-[#FF9D7A] transition-colors leading-tight">
                   {isRtl ? chip.labelAr : chip.labelEn}
                 </span>
               </Link>
