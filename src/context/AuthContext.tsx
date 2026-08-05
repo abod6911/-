@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { GeneratedPlan } from "@/lib/planner";
+import type { ReadyPlan } from "@/data/jeddah";
+
+export type SavedPlan = GeneratedPlan | ReadyPlan;
 
 export interface UserProfile {
   id: string;
@@ -9,11 +12,11 @@ export interface UserProfile {
 
 interface AuthContextType {
   user: UserProfile | null;
-  savedPlans: GeneratedPlan[];
+  savedPlans: SavedPlan[];
   favorites: string[];
   login: (name: string, email: string) => void;
   logout: () => void;
-  savePlan: (plan: GeneratedPlan) => void;
+  savePlan: (plan: SavedPlan) => void;
   removeSavedPlan: (planId: string) => void;
   toggleFavorite: (placeId: string) => void;
   isFavorite: (placeId: string) => boolean;
@@ -37,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { id: "guest", name: "زائر جدة", email: "guest@weshalkhutta.sa" };
   });
 
-  const [savedPlans, setSavedPlans] = useState<GeneratedPlan[]>(() => {
+  const [savedPlans, setSavedPlans] = useState<SavedPlan[]>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("wesh_saved_plans");
       if (saved) {
@@ -92,7 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
-  const savePlan = (plan: GeneratedPlan) => {
+  const savePlan = (plan: SavedPlan) => {
     if (!savedPlans.some((p) => p.id === plan.id)) {
       setSavedPlans((prev) => [plan, ...prev]);
     }
