@@ -8,27 +8,39 @@ export interface UserProfile {
   id: string;
   name: string;
   email: string;
+  district?: string;
+  token?: string;
+  createdAt?: string;
 }
 
 interface AuthContextType {
   user: UserProfile | null;
   savedPlans: SavedPlan[];
   favorites: string[];
-  login: (name: string, email: string) => void;
+  login: (name: string, email: string, district?: string) => boolean;
+  register: (name: string, email: string, password: string, district?: string) => { success: boolean; message?: string };
   logout: () => void;
   savePlan: (plan: SavedPlan) => void;
   removeSavedPlan: (planId: string) => void;
   toggleFavorite: (placeId: string) => void;
   isFavorite: (placeId: string) => boolean;
   isPlanSaved: (planId: string) => boolean;
+  loginAttempts: number;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Input Sanitization Security Guard
+export function sanitizeInput(str: string): string {
+  return str.replace(/[<>'"/]/g, "").trim();
+}
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [loginAttempts, setLoginAttempts] = useState(0);
+
   const [user, setUser] = useState<UserProfile | null>(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("wesh_user");
+      const saved = localStorage.getItem("jeddaw_user") || localStorage.getItem("wesh_user");
       if (saved) {
         try {
           return JSON.parse(saved);
@@ -37,12 +49,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
     }
-    return { id: "guest", name: "زائر جدة", email: "guest@weshalkhutta.sa" };
+    return { id: "guest", name: "زائر جدة", email: "guest@jeddaw.sa", district: "الكورنيش" };
   });
 
   const [savedPlans, setSavedPlans] = useState<SavedPlan[]>(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("wesh_saved_plans");
+      const saved = localStorage.getItem("jeddaw_saved_plans") || localStorage.getItem("wesh_saved_plans");
       if (saved) {
         try {
           return JSON.parse(saved);
@@ -56,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [favorites, setFavorites] = useState<string[]>(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("wesh_favorites");
+      const saved = localStorage.getItem("jeddaw_favorites") || localStorage.getItem("wesh_favorites");
       if (saved) {
         try {
           return JSON.parse(saved);
@@ -70,29 +82,58 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (user) localStorage.setItem("wesh_user", JSON.stringify(user));
-      else localStorage.removeItem("wesh_user");
+      if (user) {
+        localStorage.setItem("jeddaw_user", JSON.stringify(user));
+      } else {
+        localStorage.removeItem("jeddaw_user");
+      }
     }
   }, [user]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("wesh_saved_plans", JSON.stringify(savedPlans));
+      localStorage.setItem("jeddaw_saved_plans", JSON.stringify(savedPlans));
     }
   }, [savedPlans]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("wesh_favorites", JSON.stringify(favorites));
+      localStorage.setItem("jeddaw_favorites", JSON.stringify(favorites));
     }
   }, [favorites]);
 
-  const login = (name: string, email: string) => {
-    setUser({ id: `user_${Date.now()}`, name, email });
+  const login = (name: string, email: string, district?: string): boolean => {
+    const cleanName = sanitizeInput(name);
+    const cleanEmail = sanitizeInput(email);
+    const secToken = `sec_token_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+    setUser({
+      id: `user_${Date.now()}`,
+      name: cleanName || "عضو جِدّاو",
+      email: cleanEmail,
+      district: district || "جدة",
+      token: secToken,
+      createdAt: new Date().toLocaleDateString("ar-SA"),
+    });
+
+    setLoginAttempts(0);
+    return true;
+  };
+
+  const register = (name: string, email: string, password: string, district?: string) => {
+    if (password.length < 6) {
+      return { success: false, message: "كلمة المرور يجب أن لا تقل عن 6 أحرف لحماية حسابك." };
+    }
+    if (!email.includes("@") || !email.includes(".")) {
+      return { success: false, message: "صيغة البريد الإلكتروني غير صحيحة." };
+    }
+
+    login(name, email, district);
+    return { success: true };
   };
 
   const logout = () => {
-    setUser(null);
+    setUser({ id: "guest", name: "زائر جدة", email: "guest@jeddaw.sa", district: "الكورنيش" });
   };
 
   const savePlan = (plan: SavedPlan) => {
@@ -121,12 +162,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         savedPlans,
         favorites,
         login,
+        register,
         logout,
         savePlan,
         removeSavedPlan,
         toggleFavorite,
         isFavorite,
         isPlanSaved,
+        loginAttempts,
       }}
     >
       {children}

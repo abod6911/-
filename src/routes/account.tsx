@@ -1,17 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bookmark, Heart, LogOut, Sparkles, User as UserIcon } from "lucide-react";
+import { Bookmark, Clock, Heart, LogOut, MapPin, Navigation, Share2, ShieldCheck, Sparkles, Trash2, User as UserIcon, Wallet } from "lucide-react";
+import { useState } from "react";
 import { getPlace } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { PlaceCard } from "@/components/places/PlaceCard";
+import { AuthModal } from "@/components/auth/AuthModal";
 
 export const Route = createFileRoute("/account")({
   head: () => ({
     meta: [
-      { title: "حسابي | جِدّاو — JEDDAW" },
+      { title: "حسابي والخطط المحفوظة | جِدّاو — JEDDAW" },
       {
         name: "description",
-        content: "إدارة خططك المحفوظة للويكند والأماكن المفضلة في جِدّاو.",
+        content: "إدارة حسابك، خططك المحفوظة للويكند والأماكن المفضلة في جِدّاو.",
       },
     ],
     links: [{ rel: "canonical", href: "/account" }],
@@ -21,61 +23,94 @@ export const Route = createFileRoute("/account")({
 
 function AccountPage() {
   const { t, isRtl } = useLanguage();
-  const { user, logout, savedPlans, favorites } = useAuth();
+  const { user, logout, savedPlans, removeSavedPlan, favorites } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   if (!user || user.id === "guest") {
     return (
-      <div className="mx-auto max-w-md px-4 py-20 text-center animate-fade-in-up">
-        <div className="surface-card p-8">
-          <span className="text-5xl block mb-4">🔑</span>
-          <h1 className="text-2xl font-extrabold text-[#252A28]">{t("authTitle")}</h1>
-          <p className="mt-2 text-sm text-[#6E716C] leading-relaxed">{t("authPrompt")}</p>
-          <Link
-            to="/quick-plan"
-            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#C96745] py-3.5 text-sm font-bold text-white shadow-lift hover:bg-[#b55837] min-h-[48px]"
-          >
-            <Sparkles className="h-4 w-4" />
-            {t("createFirstPlan")}
-          </Link>
+      <>
+        <div className="mx-auto max-w-md px-4 py-20 text-center animate-fade-in-up">
+          <div className="surface-card p-8 border border-[#E2D3BE] dark:border-white/10">
+            <span className="text-5xl block mb-4">🔑</span>
+            <h1 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">دخول أو إنشاء حساب</h1>
+            <p className="mt-2 text-sm text-[#6E716C] dark:text-[#B5B8B2] leading-relaxed">
+              سجّل دخولك لحفظ خطط الويكند ومشاركتها مع الشلة وإضافة الأماكن للمفضلة!
+            </p>
+
+            <div className="mt-6 space-y-3">
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="w-full rounded-full bg-[#C96745] py-3.5 text-sm font-bold text-white shadow-lift hover:bg-[#b55837] min-h-[48px]"
+              >
+                تسجيل الدخول / حساب جديد 🚀
+              </button>
+
+              <Link
+                to="/quick-plan"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] py-3 text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] min-h-[44px]"
+              >
+                <Sparkles className="h-4 w-4 text-[#C96745]" />
+                سوّ لي خطة جديدة ⚡
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
+
+        {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
+      </>
     );
   }
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      {/* Profile Header */}
-      <div className="surface-card p-6 md:p-8 flex flex-wrap items-center justify-between gap-4 animate-fade-in-up">
+      {/* Profile Header Card */}
+      <div className="surface-card p-6 md:p-8 flex flex-wrap items-center justify-between gap-4 animate-fade-in-up border border-[#E2D3BE] dark:border-white/10">
         <div className="flex items-center gap-4">
           <div className="grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-[#C96745] to-[#397C78] text-2xl font-bold text-white shadow-sm">
             {user.name.charAt(0).toUpperCase()}
           </div>
           <div>
-            <h1 className="text-2xl font-extrabold text-[#252A28]">{user.name}</h1>
-            <p className="text-xs font-semibold text-[#6E716C] mt-0.5">{user.email}</p>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">{user.name}</h1>
+              <span className="rounded-full bg-[#397C78]/15 px-3 py-0.5 text-xs font-extrabold text-[#397C78] dark:text-[#5EAAA5]">
+                عضو جِدّاو 🌟
+              </span>
+            </div>
+            <p className="text-xs font-semibold text-[#6E716C] dark:text-[#B5B8B2] mt-1">
+              {user.email} · الحي المفضل: {user.district || "الكورنيش"}
+            </p>
           </div>
         </div>
 
         <button
           onClick={logout}
-          className="inline-flex items-center gap-2 rounded-full border border-[#E2D3BE] px-5 py-2.5 text-xs font-bold text-[#252A28] hover:border-[#B84E4E] hover:text-[#B84E4E] transition-all min-h-[44px]"
+          className="inline-flex items-center gap-2 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] px-5 py-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#B84E4E] hover:text-[#B84E4E] transition-all min-h-[44px]"
         >
           <LogOut className="h-4 w-4" />
-          {t("logout")}
+          تسجيل الخروج
         </button>
       </div>
 
-      {/* Saved Plans */}
+      {/* Saved Plans Section */}
       <section className="mt-10">
-        <h2 className="text-2xl font-extrabold text-[#252A28] mb-6 flex items-center gap-2">
-          <Bookmark className="h-5 w-5 text-[#C96745]" />
-          {t("savedPlansCount")} ({savedPlans.length})
-        </h2>
+        <div className="flex items-center justify-between gap-4 mb-6">
+          <h2 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] flex items-center gap-2">
+            <Bookmark className="h-5 w-5 text-[#C96745]" />
+            الخطط المحفوظة ({savedPlans.length})
+          </h2>
+
+          <Link
+            to="/quick-plan"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[#C96745] px-4 py-2 text-xs font-bold text-white shadow-lift min-h-[40px]"
+          >
+            <Sparkles className="h-3.5 w-3.5" /> سوّ خطة جديدة
+          </Link>
+        </div>
 
         {savedPlans.length === 0 ? (
-          <div className="surface-card p-8 text-center">
+          <div className="surface-card p-8 text-center border border-[#E2D3BE] dark:border-white/10">
             <span className="text-4xl block mb-3">📋</span>
-            <p className="text-base font-bold text-[#252A28]">{t("emptySavedPlans")}</p>
+            <p className="text-base font-bold text-[#252A28] dark:text-[#F5F1E8]">{t("emptySavedPlans")}</p>
             <Link
               to="/quick-plan"
               className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#C96745] px-6 py-3 text-sm font-bold text-white shadow-lift min-h-[44px]"
@@ -86,34 +121,82 @@ function AccountPage() {
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {savedPlans.map((plan) => (
-              <article key={plan.id} className="surface-card p-6 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-xl font-bold text-[#252A28]">{plan.titleAr}</h3>
-                  <p className="text-xs text-[#6E716C] mt-1">
-                    {"subtitleAr" in plan ? plan.subtitleAr : plan.descAr}
-                  </p>
-                </div>
-                <div className="mt-4 border-t border-[#E2D3BE] pt-3 flex items-center justify-between text-xs font-bold text-[#C96745]">
-                  <span>{"pricePerPerson" in plan ? `${plan.pricePerPerson} ر.س / شخص` : plan.tagAr}</span>
-                  <span>{plan.stops.length} محطات</span>
-                </div>
-              </article>
-            ))}
+            {savedPlans.map((plan) => {
+              const price = "pricePerPerson" in plan ? plan.pricePerPerson : plan.stops.reduce((s, id) => s + getPlace(id).pricePerPerson, 0);
+
+              return (
+                <article
+                  key={plan.id}
+                  className="surface-card overflow-hidden flex flex-col justify-between p-6 border border-[#E2D3BE] dark:border-white/10 hover-lift"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <span className="rounded-full bg-[#C96745]/15 px-3 py-1 text-xs font-extrabold text-[#C96745]">
+                        {"tagAr" in plan ? plan.tagAr : "خطة مخصصة ⚡"}
+                      </span>
+                      <button
+                        onClick={() => removeSavedPlan(plan.id)}
+                        className="text-[#6E716C] hover:text-[#B84E4E] transition-colors p-1"
+                        title="حذف الخطة"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+
+                    <h3 className="text-xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
+                      {plan.titleAr}
+                    </h3>
+                    <p className="text-xs text-[#6E716C] dark:text-[#B5B8B2] mt-1 line-clamp-2">
+                      {"subtitleAr" in plan ? plan.subtitleAr : plan.descAr}
+                    </p>
+
+                    {/* Timeline stops preview */}
+                    <ul className="mt-4 space-y-2 border-t border-[#E2D3BE] dark:border-white/10 pt-3">
+                      {plan.stops.map((stop, i) => {
+                        const placeId = typeof stop === "string" ? stop : stop.place.id;
+                        const place = getPlace(placeId);
+                        return (
+                          <li key={placeId} className="flex items-center gap-2 text-xs font-semibold text-[#252A28] dark:text-[#F5F1E8]">
+                            <span className="grid h-5 w-5 place-items-center rounded-full bg-[#397C78] text-[10px] font-bold text-white shrink-0">
+                              {i + 1}
+                            </span>
+                            <span className="truncate">{place.nameAr}</span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+
+                  <div className="mt-5 border-t border-[#E2D3BE] dark:border-white/10 pt-3 flex items-center justify-between text-xs font-bold">
+                    <span className="text-[#C96745] flex items-center gap-1">
+                      <Wallet className="h-4 w-4" /> {price} ر.س / شخص
+                    </span>
+                    <button
+                      onClick={() => alert(`رابط الخطة: https://jeddaw.sa/plans#${plan.id}`)}
+                      className="inline-flex items-center gap-1 text-[#397C78] dark:text-[#5EAAA5] hover:underline"
+                    >
+                      <Share2 className="h-3.5 w-3.5" /> مشاركة 📲
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
 
-      {/* Favorites */}
-      <section className="mt-12">
-        <h2 className="text-2xl font-extrabold text-[#252A28] mb-6 flex items-center gap-2">
+      {/* Favorite Places Section */}
+      <section className="mt-14">
+        <h2 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] mb-6 flex items-center gap-2">
           <Heart className="h-5 w-5 text-[#C96745]" />
-          {t("favoritePlacesCount")} ({favorites.length})
+          الأماكن المفضلة ({favorites.length})
         </h2>
 
         {favorites.length === 0 ? (
-          <div className="surface-card p-8 text-center">
-            <p className="text-sm text-[#6E716C] font-semibold">{t("noFavorites")}</p>
+          <div className="surface-card p-8 text-center border border-[#E2D3BE] dark:border-white/10">
+            <p className="text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+              لم تقم بتمييز أي مكان كمفضل بعد. تصفح الأماكن واضغط على ❤️ لإضافتها!
+            </p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

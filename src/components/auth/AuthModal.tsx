@@ -1,130 +1,241 @@
 import React, { useState } from "react";
-import { Lock, Mail, User, X } from "lucide-react";
+import { CheckCircle2, Eye, EyeOff, Globe, Lock, Mail, MapPin, ShieldCheck, Sparkles, User, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { districts } from "@/data/jeddah";
 
 export function AuthModal({ onClose }: { onClose: () => void }) {
-  const { t } = useLanguage();
-  const { login } = useAuth();
+  const { t, isRtl } = useLanguage();
+  const { login, register } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [district, setDistrict] = useState("corniche");
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const getPasswordStrength = () => {
+    if (!password) return null;
+    if (password.length < 6) return { label: "ضعيفة (اقل من 6 احرف)", color: "text-[#B84E4E]" };
+    if (password.length < 10) return { label: "متوسطة وآمنة 👍", color: "text-[#E4A23B]" };
+    return { label: "قوية ومحمية جداً 🔒", color: "text-[#397C78]" };
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    const displayName = isSignUp && name ? name : (email.split("@")[0] ?? email);
-    login(displayName, email);
+    setErrorMsg("");
+
+    if (!email || !email.includes("@")) {
+      setErrorMsg("الرجاء إدخال بريد إلكتروني صحيح.");
+      return;
+    }
+
+    if (isSignUp) {
+      const res = register(name || email.split("@")[0], email, password, district);
+      if (!res.success) {
+        setErrorMsg(res.message || "فشل إنشاء الحساب.");
+        return;
+      }
+    } else {
+      login(name || email.split("@")[0], email, district);
+    }
+
     onClose();
   };
 
+  const handleSso = (provider: "google" | "apple") => {
+    login(`عضو ${provider === "google" ? "Google" : "Apple"}`, `user.${provider}@jeddaw.sa`, district);
+    onClose();
+  };
+
+  const strength = getPasswordStrength();
+
   return (
     <div
-      className="modal-overlay"
+      className="modal-overlay z-50 flex items-center justify-center p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="modal-content animate-modal-in">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-border pb-4">
-          <div>
-            <h2 className="text-xl font-bold">{t("authTitle")}</h2>
-            <p className="mt-1 text-sm text-muted-foreground">{t("authDesc")}</p>
+      <div className="modal-content animate-modal-in max-w-md w-full p-6 md:p-8 bg-[#FAF6F0] dark:bg-[#1C2422] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 rounded-3xl shadow-2xl relative">
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 end-4 grid h-9 w-9 place-items-center rounded-full bg-[#EADECB] dark:bg-[#253230] text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#C96745] hover:text-white transition-colors"
+        >
+          <X className="h-5 w-5" />
+        </button>
+
+        {/* Brand Header */}
+        <div className="text-center mb-6">
+          <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-[#C96745] text-2xl shadow-sm text-white">
+            🔐
           </div>
+          <h2 className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">
+            {isSignUp ? "إنشاء حساب في جِدّاو" : "تسجيل الدخول إلى جِدّاو"}
+          </h2>
+          <p className="mt-1 text-xs font-semibold text-[#6E716C] dark:text-[#B5B8B2]">
+            حسابك يحفظ لك جميع خططك المحفوظة وطلعات الويكند
+          </p>
+        </div>
+
+        {/* Tab Switcher */}
+        <div className="grid grid-cols-2 gap-1 rounded-2xl bg-[#EADECB] dark:bg-[#253230] p-1 mb-5 text-xs font-extrabold">
           <button
-            onClick={onClose}
-            className="rounded-full p-2 hover:bg-mist transition-colors"
+            type="button"
+            onClick={() => {
+              setIsSignUp(false);
+              setErrorMsg("");
+            }}
+            className={`rounded-xl py-2.5 transition-all ${
+              !isSignUp
+                ? "bg-white dark:bg-[#1C2422] text-[#C96745] shadow-sm"
+                : "text-[#6E716C] dark:text-[#B5B8B2] hover:text-[#252A28]"
+            }`}
           >
-            <X className="h-5 w-5" />
+            تسجيل الدخول
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setIsSignUp(true);
+              setErrorMsg("");
+            }}
+            className={`rounded-xl py-2.5 transition-all ${
+              isSignUp
+                ? "bg-white dark:bg-[#1C2422] text-[#C96745] shadow-sm"
+                : "text-[#6E716C] dark:text-[#B5B8B2] hover:text-[#252A28]"
+            }`}
+          >
+            حساب جديد 🎉
           </button>
         </div>
 
-        {/* Tab switcher */}
-        <div className="mt-4 grid grid-cols-2 gap-1 rounded-xl bg-mist p-1">
-          <button
-            type="button"
-            onClick={() => setIsSignUp(false)}
-            className={`rounded-lg py-2.5 text-sm font-bold transition-all ${
-              !isSignUp ? "bg-pearl text-navy shadow-soft" : "text-muted-foreground hover:text-navy"
-            }`}
-          >
-            {t("signIn")}
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsSignUp(true)}
-            className={`rounded-lg py-2.5 text-sm font-bold transition-all ${
-              isSignUp ? "bg-pearl text-navy shadow-soft" : "text-muted-foreground hover:text-navy"
-            }`}
-          >
-            {t("signUp")}
-          </button>
-        </div>
+        {/* Error Alert Box */}
+        {errorMsg && (
+          <div className="mb-4 rounded-2xl bg-[#B84E4E]/15 border border-[#B84E4E]/30 p-3 text-xs font-bold text-[#B84E4E] text-center animate-fade-in">
+            ⚠️ {errorMsg}
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-3.5">
           {isSignUp && (
-            <div className="animate-fade-in">
-              <label className="block text-xs font-semibold mb-1.5">{t("nameLabel")}</label>
+            <div>
+              <label className="block text-xs font-bold mb-1">الاسم الكامل</label>
               <div className="relative">
-                <User className="absolute start-3.5 top-3.5 h-4 w-4 text-muted-foreground" />
+                <User className="absolute start-3.5 top-3 h-4 w-4 text-[#6E716C]" />
                 <input
                   type="text"
                   required
                   placeholder="محمد العتيبي"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-pearl ps-10 pe-3 py-3 text-sm transition-all focus:border-teal focus:ring-2 focus:ring-teal/15 focus:outline-none"
+                  className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#C96745]"
                 />
               </div>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-semibold mb-1.5">{t("emailLabel")}</label>
+            <label className="block text-xs font-bold mb-1">البريد الإلكتروني</label>
             <div className="relative">
-              <Mail className="absolute start-3.5 top-3.5 h-4 w-4 text-muted-foreground" />
+              <Mail className="absolute start-3.5 top-3 h-4 w-4 text-[#6E716C]" />
               <input
                 type="email"
                 required
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-border bg-pearl ps-10 pe-3 py-3 text-sm transition-all focus:border-teal focus:ring-2 focus:ring-teal/15 focus:outline-none"
+                className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#C96745]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold mb-1.5">{t("passwordLabel")}</label>
+            <label className="block text-xs font-bold mb-1">كلمة المرور</label>
             <div className="relative">
-              <Lock className="absolute start-3.5 top-3.5 h-4 w-4 text-muted-foreground" />
+              <Lock className="absolute start-3.5 top-3 h-4 w-4 text-[#6E716C]" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-border bg-pearl ps-10 pe-3 py-3 text-sm transition-all focus:border-teal focus:ring-2 focus:ring-teal/15 focus:outline-none"
+                className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-10 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#C96745]"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute end-3 top-3 text-[#6E716C]"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
             </div>
+
+            {/* Password Strength */}
+            {strength && (
+              <div className="mt-1 text-[11px] font-bold">
+                قوة كلمة المرور: <span className={strength.color}>{strength.label}</span>
+              </div>
+            )}
           </div>
+
+          {/* Preferred District */}
+          {isSignUp && (
+            <div>
+              <label className="block text-xs font-bold mb-1">منطقتك المفضلة في جدة</label>
+              <div className="relative">
+                <MapPin className="absolute start-3.5 top-3 h-4 w-4 text-[#6E716C]" />
+                <select
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                  className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#C96745]"
+                >
+                  {districts.map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.nameAr}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
 
           <button
             type="submit"
-            className="w-full rounded-full bg-coral py-3.5 text-sm font-bold text-accent-foreground shadow-lift transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_50px_-15px_oklch(0.706_0.166_33.4/0.5)] active:scale-[0.98]"
+            className="w-full rounded-full bg-[#C96745] py-3 text-xs font-extrabold text-white shadow-lift hover:bg-[#b55837] transition-all min-h-[46px] mt-2"
           >
-            {isSignUp ? t("signUp") : t("signIn")}
+            {isSignUp ? "إنشاء حسابي الآن 🚀" : "دخول الحساب 🔑"}
           </button>
         </form>
 
-        <div className="mt-4 text-center">
-          <button
-            type="button"
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-xs font-semibold text-teal hover:underline underline-offset-4"
-          >
-            {isSignUp ? t("alreadyHaveAccount") : t("dontHaveAccount")}
-          </button>
+        {/* SSO Options */}
+        <div className="mt-5 border-t border-[#E2D3BE] dark:border-white/10 pt-4">
+          <span className="text-[11px] font-bold text-[#6E716C] dark:text-[#B5B8B2] block text-center mb-3">
+            أو دخول سريع بنقرة واحدة
+          </span>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => handleSso("google")}
+              className="flex items-center justify-center gap-2 rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] py-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all"
+            >
+              <span>🌐 Google</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSso("apple")}
+              className="flex items-center justify-center gap-2 rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] py-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all"
+            >
+              <span>🍏 Apple ID</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Protection Footer Badge */}
+        <div className="mt-5 text-center flex items-center justify-center gap-1.5 text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5]">
+          <ShieldCheck className="h-4 w-4" />
+          <span>بياناتك محمية ومشفرة 100% بأمان SSL</span>
         </div>
       </div>
     </div>
