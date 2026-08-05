@@ -14,7 +14,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    const displayName = isSignUp && name ? name : email.split("@")[0];
+    const displayName = isSignUp && name ? name : (email.split("@")[0] ?? email);
     login(displayName, email);
     onClose();
   };

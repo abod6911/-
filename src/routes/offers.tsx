@@ -35,7 +35,7 @@ function OffersPage() {
       <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {offers.map((offer, index) => {
           const place = getPlace(offer.placeId);
-          const discountPct = offer.original > 0 ? Math.round((1 - offer.price / offer.original) * 100) : 0;
+          const discountPct = offer.discountPct;
 
           return (
             <article
@@ -48,11 +48,9 @@ function OffersPage() {
                 </div>
               )}
 
-              {offer.sponsored && (
-                <span className="inline-block rounded-full bg-[#252A28] px-2.5 py-1 text-[11px] font-bold text-[#FAF6F0] mb-2">
-                  {t("sponsored")}
-                </span>
-              )}
+              <span className="inline-block rounded-full bg-[#252A28] px-2.5 py-1 text-[11px] font-bold text-[#FAF6F0] mb-2">
+                {offer.code}
+              </span>
 
               <h2 className="mt-2 text-xl font-extrabold text-[#252A28]">{offer.titleAr}</h2>
               <p className="mt-1 text-sm font-semibold text-[#6E716C]">
@@ -60,22 +58,17 @@ function OffersPage() {
               </p>
 
               <div className="mt-6 flex items-baseline gap-2 border-t border-[#E2D3BE] pt-4">
-                <span className="text-3xl font-extrabold text-[#C96745]">
-                  {offer.price === 0 ? t("free") : offer.price}
-                </span>
-                {offer.price > 0 && <span className="text-sm font-bold text-[#6E716C]">{isRtl ? "ر.س" : "SAR"}</span>}
-                {offer.original > offer.price && (
-                  <span className="text-sm font-medium text-[#6E716C] line-through ms-2">
-                    {offer.original} {isRtl ? "ر.س" : "SAR"}
-                  </span>
-                )}
+                <span className="text-3xl font-extrabold text-[#C96745]">{offer.discountPct}%</span>
+                <span className="text-sm font-bold text-[#6E716C]">{isRtl ? "خصم" : "OFF"}</span>
               </div>
 
               <div className="mt-4 flex items-center justify-between border-t border-[#E2D3BE] pt-3 text-xs text-[#6E716C]">
                 <span className="flex items-center gap-1 text-[#71805B] font-bold">
-                  <BadgeCheck className="h-4 w-4" /> {t("verifiedAt")} {offer.verifiedAt}
+                  <BadgeCheck className="h-4 w-4" /> {t("verifiedAt")}
                 </span>
-                <span>{t("expiresIn")} 31 أغسطس</span>
+                <span>
+                  {t("expiresIn")} {offer.validUntil}
+                </span>
               </div>
             </article>
           );

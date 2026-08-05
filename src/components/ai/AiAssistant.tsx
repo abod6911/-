@@ -9,7 +9,7 @@ interface AiMessage {
   sender: "ai" | "user";
   text: string;
   suggestedPlaces?: Place[];
-  actionLink?: { label: string; url: string };
+  actionLink?: { label: string; url: string } | undefined;
 }
 
 // Inappropriate / offensive word safety list
