@@ -65,12 +65,12 @@ export const translations = {
 
     // How It Works (Section 10)
     howItWorksTitle: "خطتك جاهزة بثلاث خطوات",
-    step1Title: "اختار جوّكم",
-    step1Desc: "قل لنا وقتك وميزانيتك ومين معك.",
-    step2Title: "خلّ الترتيب علينا",
-    step2Desc: "جِدّاو يختار الأماكن ويرتّب الوقت والمسار.",
-    step3Title: "اطلع واستمتع",
-    step3Desc: "افتح الطريق وشارك الخطة مع الشلة.",
+    howStep1Title: "اختار جوّكم",
+    howStep1Desc: "قل لنا وقتك وميزانيتك ومين معك.",
+    howStep2Title: "خلّ الترتيب علينا",
+    howStep2Desc: "جِدّاو يختار الأماكن ويرتّب الوقت والمسار.",
+    howStep3Title: "اطلع واستمتع",
+    howStep3Desc: "افتح الطريق وشارك الخطة مع الشلة.",
 
     // Outing Wizard Experience (Section 11)
     wizardStartTitle: "نرتّب طلعتكم؟",
@@ -349,12 +349,12 @@ export const translations = {
 
     // How It Works
     howItWorksTitle: "Your plan ready in 3 steps",
-    step1Title: "Pick Your Vibe",
-    step1Desc: "Tell us your time, budget, and group.",
-    step2Title: "Leave Planning to Us",
-    step2Desc: "JEDDAW selects spots and organizes the route.",
-    step3Title: "Go Out & Enjoy",
-    step3Desc: "Open route maps and share with your group.",
+    howStep1Title: "Pick Your Vibe",
+    howStep1Desc: "Tell us your time, budget, and group.",
+    howStep2Title: "Leave Planning to Us",
+    howStep2Desc: "JEDDAW selects spots and organizes the route.",
+    howStep3Title: "Go Out & Enjoy",
+    howStep3Desc: "Open route maps and share with your group.",
 
     // Outing Wizard Experience
     wizardStartTitle: "Shall we plan your outing?",
