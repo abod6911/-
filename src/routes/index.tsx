@@ -76,19 +76,20 @@ function Index() {
   return (
     <div>
       {/* ===== ULTRA-MODERN VIBRANT COASTAL HERO SECTION ===== */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#0D2321] via-[#1D3A37] to-[#132826] text-white pt-20 pb-28 md:pt-28 md:pb-36">
-        {/* Ambient Glowing Light Mesh Orbs */}
-        <div className="absolute -top-24 -start-24 h-96 w-96 rounded-full bg-[#C96745]/25 blur-3xl pointer-events-none animate-pulse" />
-        <div className="absolute bottom-0 end-0 h-96 w-96 rounded-full bg-[#397C78]/35 blur-3xl pointer-events-none animate-pulse" />
-
-        {/* Background Image Overlay */}
-        <div className="absolute inset-0 z-0 opacity-25 mix-blend-overlay">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0B2523] via-[#18423E] to-[#255C56] text-white pt-24 pb-28 md:pt-32 md:pb-36 shadow-2xl">
+        {/* Real High-Res Coastal Sea Background Image */}
+        <div className="absolute inset-0 z-0">
           <img
-            src="/assets/jeddah-route-hero-BCiUi1Qn.jpg"
-            alt="جدة البحر الأحمر"
-            className="h-full w-full object-cover object-center"
+            src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=90"
+            alt="جدة الكورنيش والبحر الأحمر"
+            className="h-full w-full object-cover object-center opacity-45 scale-105 transition-transform duration-1000"
           />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B2523]/80 via-[#18423E]/60 to-[#0B2523]" />
         </div>
+
+        {/* Ambient Glowing Orbs */}
+        <div className="absolute -top-24 -start-24 h-[500px] w-[500px] rounded-full bg-[#C96745]/30 blur-3xl pointer-events-none animate-pulse" />
+        <div className="absolute bottom-0 end-0 h-[500px] w-[500px] rounded-full bg-[#397C78]/40 blur-3xl pointer-events-none animate-pulse" />
 
         {/* Hero Content */}
         <div className="relative z-10 mx-auto max-w-5xl px-4 text-center w-full">
