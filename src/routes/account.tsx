@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bookmark, Clock, Heart, LogOut, MapPin, Navigation, Share2, ShieldCheck, Sparkles, Trash2, User as UserIcon, Wallet } from "lucide-react";
+import { Bookmark, CheckCircle2, Clock, Heart, Lock, LogOut, MapPin, Navigation, Share2, ShieldCheck, Sparkles, Trash2, User as UserIcon, Wallet } from "lucide-react";
 import { useState } from "react";
 import { getPlace } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
@@ -29,29 +29,62 @@ function AccountPage() {
   if (!user || user.id === "guest") {
     return (
       <>
-        <div className="mx-auto max-w-md px-4 py-20 text-center animate-fade-in-up">
-          <div className="surface-card p-8 border border-[#E2D3BE] dark:border-white/10">
-            <span className="text-5xl block mb-4">🔑</span>
-            <h1 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">دخول أو إنشاء حساب</h1>
-            <p className="mt-2 text-sm text-[#6E716C] dark:text-[#B5B8B2] leading-relaxed">
-              سجّل دخولك لحفظ خطط الويكند ومشاركتها مع الشلة وإضافة الأماكن للمفضلة!
+        <div className="mx-auto max-w-xl px-4 py-16 animate-fade-in-up">
+          {/* Professional High-Tech Auth Portal Card */}
+          <div className="rounded-3xl bg-gradient-to-b from-[#FAF6F0] via-white to-[#FAF6F0] dark:from-[#1C2422] dark:via-[#161B1A] dark:to-[#1C2422] p-8 md:p-10 border border-[#E2D3BE] dark:border-white/10 shadow-2xl relative overflow-hidden text-center">
+            {/* Top Accent Gradient Border */}
+            <div className="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78]" />
+
+            {/* 3D Metallic Badge Icon */}
+            <div className="mx-auto mb-5 grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-[#C96745] to-[#397C78] text-white shadow-lift ring-4 ring-[#C96745]/20">
+              <Lock className="h-9 w-9" />
+            </div>
+
+            <h1 className="text-2xl md:text-3xl font-black text-[#252A28] dark:text-[#F5F1E8]">
+              تسجيل الدخول إلى جِدّاو 🔑
+            </h1>
+            <p className="mt-2 text-xs md:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold leading-relaxed max-w-md mx-auto">
+              أنشئ حسابك الشخصي أو سجّل دخولك للاستفادة الكاملة من ميزات تخطيط وحفظ خطط الويكند!
             </p>
 
-            <div className="mt-6 space-y-3">
+            {/* Features Checklist */}
+            <ul className="mt-6 space-y-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] text-start max-w-sm mx-auto bg-[#F4EBDD]/60 dark:bg-[#253230]/60 p-4 rounded-2xl border border-[#E2D3BE]/60 dark:border-white/10">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-[#397C78] dark:text-[#5EAAA5] shrink-0" />
+                <span>حفظ خطط الويكند اللانهائية واسترجاعها بأي وقت</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-[#397C78] dark:text-[#5EAAA5] shrink-0" />
+                <span>قائمة الأماكن والمطاعم المفضلة لديك بجدة</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-[#397C78] dark:text-[#5EAAA5] shrink-0" />
+                <span>مشاركة المسارات والتكلفة مع الشلة بنقرة واحدة</span>
+              </li>
+            </ul>
+
+            {/* Main Action Buttons */}
+            <div className="mt-8 space-y-3">
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="w-full rounded-full bg-[#C96745] py-3.5 text-sm font-bold text-white shadow-lift hover:bg-[#b55837] min-h-[48px]"
+                className="w-full rounded-full bg-[#C96745] py-4 text-sm font-black text-white shadow-lift hover:bg-[#b55837] transition-all animate-pulse-glow min-h-[52px]"
               >
                 تسجيل الدخول / حساب جديد 🚀
               </button>
 
               <Link
                 to="/quick-plan"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] py-3 text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] min-h-[44px]"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] py-3.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all min-h-[46px]"
               >
                 <Sparkles className="h-4 w-4 text-[#C96745]" />
-                سوّ لي خطة جديدة ⚡
+                سوّ لي خطة جديدة بدلاء ⚡
               </Link>
+            </div>
+
+            {/* Protection Security Badge */}
+            <div className="mt-6 flex items-center justify-center gap-1.5 text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] pt-3 border-t border-[#E2D3BE]/60 dark:border-white/10">
+              <ShieldCheck className="h-4 w-4" />
+              <span>نظام حماية مشفر وتشفير بيانات آمن 100% SSL</span>
             </div>
           </div>
         </div>

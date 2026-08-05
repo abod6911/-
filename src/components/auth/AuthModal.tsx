@@ -217,31 +217,8 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
           </button>
         </form>
 
-        {/* SSO Options */}
-        <div className="mt-5 border-t border-[#E2D3BE] dark:border-white/10 pt-4">
-          <span className="text-[11px] font-bold text-[#6E716C] dark:text-[#B5B8B2] block text-center mb-3">
-            أو دخول سريع بنقرة واحدة
-          </span>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => handleSso("google")}
-              className="flex items-center justify-center gap-2 rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] py-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all"
-            >
-              <span>🌐 Google</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSso("apple")}
-              className="flex items-center justify-center gap-2 rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] py-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all"
-            >
-              <span>🍏 Apple ID</span>
-            </button>
-          </div>
-        </div>
-
         {/* Protection Footer Badge */}
-        <div className="mt-5 text-center flex items-center justify-center gap-1.5 text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5]">
+        <div className="mt-6 text-center flex items-center justify-center gap-1.5 text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] border-t border-[#E2D3BE]/60 dark:border-white/10 pt-4">
           <ShieldCheck className="h-4 w-4" />
           <span>بياناتك محمية ومشفرة 100% بأمان SSL</span>
         </div>
