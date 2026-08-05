@@ -21,7 +21,7 @@ export const Route = createFileRoute("/places")({
   component: PlacesPage,
 });
 
-type MainCategory = "all" | "food" | "cafe" | "hotel" | "resort" | "activity";
+type MainCategory = "all" | "food" | "cafe" | "hotel" | "resort" | "activity" | "shopping";
 type SortOption = "topRated" | "trending" | "mostVisited" | "cheapest" | "priceDesc";
 
 const subCategoryChips = [
@@ -32,6 +32,8 @@ const subCategoryChips = [
   { id: "مطاعم مصرية", labelAr: "🇪🇬 مطاعم مصرية" },
   { id: "مشاوي ومأكولات بحرية", labelAr: "🐟 مشاوي ومأكولات بحرية" },
   { id: "كافيهات مختصة ورائية", labelAr: "☕ كافيهات مختصة ورائية" },
+  { id: "مولات ومراكز تجارية", labelAr: "🛍️ مولات ومراكز تجارية" },
+  { id: "أسواق شعبية وتراثية", labelAr: "🏺 أسواق شعبية وتراثية" },
   { id: "فنادق 5 نجوم وفاخرة", labelAr: "🏨 فنادق 5 نجوم وفاخرة" },
   { id: "منتجعات البحر الأحمر وأبحر", labelAr: "🏖️ منتجعات أبحر والبحر" },
 ];
@@ -114,6 +116,7 @@ function PlacesPage() {
           { id: "all", label: "الكل 🌟" },
           { id: "food", label: "🍽️ مطاعم" },
           { id: "cafe", label: "☕ كافيهات وحلى" },
+          { id: "shopping", label: "🛍️ تسوق ومولات" },
           { id: "hotel", label: "🏨 فنادق" },
           { id: "resort", label: "🏖️ منتجعات" },
           { id: "activity", label: "🎮 أنشطة وفعاليات" },
