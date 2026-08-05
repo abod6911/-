@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, BadgeCheck, Clock, MapPin, Sparkles, Star, Wallet, Zap } from "lucide-react";
+import { ArrowLeft, BadgeCheck, Clock, MapPin, Navigation, Sparkles, Star, Wallet, Zap } from "lucide-react";
 import heroImage from "@/assets/jeddah-route-hero.jpg";
 import { RouteLine } from "@/components/brand/Logo";
 import { budgetLevels, getPlace, moodLabels, offers, readyPlans, type Mood } from "@/data/jeddah";
@@ -57,82 +57,107 @@ function Index() {
 
   return (
     <div>
-      {/* ===== Hero Section ===== */}
-      <section className="relative overflow-hidden bg-[#252A28] text-[#FAF6F0] min-h-[540px] md:min-h-[620px] flex items-center">
-        {/* Background Jeddah image with gradient overlay */}
+      {/* ===== Vibrant Coastal Hero Section ===== */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1A3330] via-[#244A47] to-[#5C3224] text-white min-h-[580px] md:min-h-[640px] flex items-center pt-8 pb-16">
+        {/* Background Image with Warm Coastal Blend */}
         <img
           src={heroImage}
-          alt="ساحل جدة والبلد التاريخية"
+          alt="غروب ساحل جدة والبلد"
           width={1408}
           height={1104}
-          className="absolute inset-0 h-full w-full object-cover opacity-35"
+          className="absolute inset-0 h-full w-full object-cover opacity-50 mix-blend-overlay"
         />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#252A28] via-[#252A28]/70 to-transparent" />
+        
+        {/* Coastal Sunset Radial Glows */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#161B1A] via-transparent to-black/20" />
+        <div className="absolute -top-32 end-0 h-[450px] w-[450px] rounded-full bg-[#C96745]/30 blur-3xl" />
+        <div className="absolute -bottom-32 start-0 h-[450px] w-[450px] rounded-full bg-[#397C78]/40 blur-3xl" />
 
-        <div className="relative mx-auto max-w-6xl px-4 py-16 md:py-24 w-full">
-          {/* Small Brand Line */}
-          <span className="animate-fade-in-up inline-flex items-center gap-2 rounded-full bg-[#C96745]/20 px-4 py-1.5 text-xs font-bold text-[#FAF6F0] backdrop-blur-md border border-[#C96745]/30">
-            <Sparkles className="h-4 w-4 text-[#C96745]" /> {t("slogan")}
-          </span>
+        <div className="relative mx-auto max-w-5xl px-4 text-center w-full">
+          {/* Small Brand Tagline Badge */}
+          <div className="animate-fade-in-up inline-flex items-center gap-2 rounded-full bg-[#FAF6F0]/15 px-5 py-2 text-xs font-extrabold text-white backdrop-blur-md border border-white/25 shadow-lg">
+            <Sparkles className="h-4 w-4 text-[#E4A23B] animate-pulse" />
+            <span>{t("slogan")}</span>
+          </div>
 
           {/* Main Headline */}
-          <h1 className="animate-fade-in-up delay-1 mt-5 max-w-2xl text-4xl font-extrabold leading-tight md:text-6xl md:leading-[1.1] text-[#FAF6F0]">
-            {t("heroTitle")}
+          <h1 className="animate-fade-in-up delay-1 mt-6 text-4xl font-black leading-tight md:text-6xl md:leading-[1.15] text-white tracking-tight">
+            محتار وين تروح اليوم؟ <br className="hidden md:inline" />
+            <span className="bg-gradient-to-r from-[#FF9D7A] via-[#F4EBDD] to-[#5EAAA5] bg-clip-text text-transparent">
+              جِدّاو يرتّب لك الطلعة كاملة
+            </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="animate-fade-in-up delay-2 mt-4 max-w-xl text-base leading-relaxed text-[#FAF6F0]/90 md:text-xl font-medium">
+          <p className="animate-fade-in-up delay-2 mt-5 mx-auto max-w-2xl text-base leading-relaxed text-white/90 md:text-xl font-semibold">
             {t("heroDesc")}
           </p>
 
           {/* Primary & Secondary Buttons */}
-          <div className="animate-fade-in-up delay-3 mt-8 flex flex-wrap gap-4 items-center">
+          <div className="animate-fade-in-up delay-3 mt-9 flex flex-wrap gap-4 items-center justify-center">
             <Link
               to="/quick-plan"
-              className="group inline-flex items-center gap-2.5 rounded-full bg-[#C96745] px-8 py-4 text-base font-bold text-[#FAF6F0] shadow-lift transition-all duration-300 hover:-translate-y-1 hover:bg-[#b55837] animate-pulse-glow min-h-[52px]"
+              className="group inline-flex items-center gap-3 rounded-full bg-[#C96745] px-9 py-4 text-base font-black text-white shadow-lift transition-all duration-300 hover:-translate-y-1 hover:bg-[#b55837] animate-pulse-glow min-h-[56px]"
             >
               <Sparkles className="h-5 w-5" />
-              {t("quickPlan")}
+              <span>{t("quickPlan")}</span>
               <ArrowLeft className={`h-5 w-5 transition-transform duration-300 group-hover:-translate-x-1 ${isRtl ? "" : "rotate-180 group-hover:translate-x-1"}`} />
             </Link>
             <Link
               to="/places"
-              className="inline-flex items-center gap-2 rounded-full border border-[#FAF6F0]/30 px-7 py-4 text-base font-semibold text-[#FAF6F0] backdrop-blur-sm transition-all duration-300 hover:bg-[#FAF6F0]/15 hover:border-[#FAF6F0]/60 min-h-[52px]"
+              className="inline-flex items-center gap-2.5 rounded-full bg-white/10 border border-white/30 px-8 py-4 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:border-white/60 min-h-[56px]"
             >
-              {t("explorePlaces")}
+              <Navigation className="h-4 w-4" />
+              <span>{t("explorePlaces")}</span>
             </Link>
           </div>
 
-          {/* Social Proof */}
-          <div className="animate-fade-in-up delay-4 mt-10 inline-flex items-center gap-3 rounded-2xl bg-[#FAF6F0]/10 border border-[#FAF6F0]/15 px-5 py-3 backdrop-blur-md">
+          {/* Social Proof Floating Pill */}
+          <div className="animate-fade-in-up delay-4 mt-10 inline-flex items-center gap-3 rounded-full bg-black/40 border border-white/20 px-6 py-2.5 backdrop-blur-md shadow-md">
             <span className="flex -space-x-2 overflow-hidden">
-              <span className="inline-block h-7 w-7 rounded-full bg-[#C96745] text-center text-xs font-bold text-white leading-7">🔥</span>
-              <span className="inline-block h-7 w-7 rounded-full bg-[#397C78] text-center text-xs font-bold text-white leading-7">🌊</span>
-              <span className="inline-block h-7 w-7 rounded-full bg-[#E4A23B] text-center text-xs font-bold text-white leading-7">✨</span>
+              <span className="inline-block h-6 w-6 rounded-full bg-[#C96745] text-center text-xs font-bold text-white leading-6 shadow-sm">🔥</span>
+              <span className="inline-block h-6 w-6 rounded-full bg-[#397C78] text-center text-xs font-bold text-white leading-6 shadow-sm">🌊</span>
+              <span className="inline-block h-6 w-6 rounded-full bg-[#E4A23B] text-center text-xs font-bold text-white leading-6 shadow-sm">✨</span>
             </span>
-            <span className="text-sm font-semibold text-[#FAF6F0]">
+            <span className="text-xs md:text-sm font-bold text-white/95">
               {t("socialProof")}
             </span>
           </div>
         </div>
       </section>
 
-      {/* ===== Core Value Proposition Banner ===== */}
-      <section className="bg-[#397C78] text-white py-6">
-        <div className="mx-auto max-w-6xl px-4 text-center">
-          <p className="text-base md:text-lg font-bold">
-            {t("valueProp")}
-          </p>
-        </div>
-      </section>
+      {/* ===== Floating Core Value Proposition Banner ===== */}
+      <div className="relative z-30 -mt-10 mx-auto max-w-5xl px-4">
+        <div className="rounded-3xl bg-gradient-to-r from-[#295652] via-[#397C78] to-[#C96745] text-white p-6 md:p-8 shadow-2xl border border-white/20 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-lg">
+          <div className="text-center md:text-start">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#FF9D7A] block mb-1">
+              💡 ليش اختاروا جِدّاو؟
+            </span>
+            <p className="text-lg md:text-xl font-extrabold text-white leading-snug">
+              المواقع الثانية تعطيك أماكن. <span className="underline underline-offset-4 decoration-[#FF9D7A]">جِدّاو يرتّب لك الطلعة كاملة.</span>
+            </p>
+          </div>
 
-      {/* ===== Quick Vibe Section (Section 9) ===== */}
-      <section className="bg-[#FAF6F0] py-12 border-b border-[#E2D3BE]">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15">
+              ⚡ تخطيط فوري
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15">
+              💰 موزون على ميزانيتك
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15">
+              📍 مسار وخرائط مجهزة
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ===== Quick Vibe Section ===== */}
+      <section className="bg-[#FAF6F0] dark:bg-[#161B1A] pt-20 pb-12 border-b border-[#E2D3BE] dark:border-white/10">
         <div className="mx-auto max-w-6xl px-4">
           <div className="mb-6">
-            <h2 className="text-2xl font-extrabold text-[#252A28] md:text-3xl">{t("quickVibeTitle")}</h2>
-            <p className="text-sm text-[#6E716C] font-semibold mt-1">{t("quickVibeSub")}</p>
+            <h2 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-3xl">{t("quickVibeTitle")}</h2>
+            <p className="text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold mt-1">{t("quickVibeSub")}</p>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
@@ -141,10 +166,10 @@ function Index() {
                 key={chip.labelAr}
                 to="/quick-plan"
                 search={{ mood: chip.mood }}
-                className="surface-card group flex flex-col items-center justify-center p-4 text-center hover-lift min-h-[90px]"
+                className="surface-card group flex flex-col items-center justify-center p-4 text-center hover-lift min-h-[90px] border border-[#E2D3BE] dark:border-white/10"
               >
                 <span className="text-2xl mb-1.5 group-hover:animate-wiggle">{chip.emoji}</span>
-                <span className="text-xs font-bold text-[#252A28] group-hover:text-[#C96745] transition-colors">
+                <span className="text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] group-hover:text-[#C96745] transition-colors">
                   {isRtl ? chip.labelAr : chip.labelEn}
                 </span>
               </Link>
@@ -205,11 +230,11 @@ function Index() {
         </div>
       </section>
 
-      {/* ===== How It Works Section (Section 10) ===== */}
+      {/* ===== How It Works Section ===== */}
       <section className="mx-auto max-w-6xl px-4 py-16">
         <div className="text-center max-w-2xl mx-auto">
-          <h2 className="text-3xl font-extrabold text-[#252A28] md:text-4xl">{t("howItWorksTitle")}</h2>
-          <p className="mt-3 text-[#6E716C] text-base font-semibold">بدل ما تضيع وقتك بين مئات الأماكن، ثلاث خطوات وبس:</p>
+          <h2 className="text-3xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">{t("howItWorksTitle")}</h2>
+          <p className="mt-3 text-[#6E716C] dark:text-[#B5B8B2] text-base font-semibold">بدل ما تضيع وقتك بين مئات الأماكن، ثلاث خطوات وبس:</p>
         </div>
 
         <ol className="mt-10 grid gap-6 md:grid-cols-3">
@@ -218,15 +243,15 @@ function Index() {
             { step: "2", title: t("step2Title"), desc: t("step2Desc"), emoji: "🗺️", color: "bg-[#397C78] text-white" },
             { step: "3", title: t("step3Title"), desc: t("step3Desc"), emoji: "🎉", color: "bg-[#71805B] text-white" },
           ].map((s, i) => (
-            <li key={s.step} className="surface-card p-7 hover-lift relative overflow-hidden group">
+            <li key={s.step} className="surface-card p-7 hover-lift relative overflow-hidden group border border-[#E2D3BE] dark:border-white/10">
               <div className="flex items-center justify-between">
                 <span className={`grid h-12 w-12 place-items-center rounded-2xl ${s.color} text-xl font-bold shadow-sm`}>
                   {s.step}
                 </span>
                 <span className="text-4xl group-hover:animate-wiggle">{s.emoji}</span>
               </div>
-              <h3 className="mt-5 font-bold text-xl text-[#252A28]">{s.title}</h3>
-              <p className="mt-2 text-sm text-[#6E716C] leading-relaxed">{s.desc}</p>
+              <h3 className="mt-5 font-bold text-xl text-[#252A28] dark:text-[#F5F1E8]">{s.title}</h3>
+              <p className="mt-2 text-sm text-[#6E716C] dark:text-[#B5B8B2] leading-relaxed">{s.desc}</p>
               {i < 2 && (
                 <div className="hidden md:block absolute top-1/2 -end-3 w-6 border-t-2 border-dashed border-[#397C78]/40" />
               )}
@@ -239,10 +264,10 @@ function Index() {
       <section className="mx-auto max-w-6xl px-4 pb-16">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-extrabold text-[#252A28] md:text-4xl">{t("readyPlansTitle")}</h2>
-            <p className="mt-1 text-sm text-[#6E716C]">خطط مجهزة بأسماء وأجواء شبابية</p>
+            <h2 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">{t("readyPlansTitle")}</h2>
+            <p className="mt-1 text-sm text-[#6E716C] dark:text-[#B5B8B2]">خطط مجهزة بأسماء وأجواء شبابية</p>
           </div>
-          <Link to="/plans" className="shrink-0 text-sm font-bold text-[#397C78] hover:underline underline-offset-4">
+          <Link to="/plans" className="shrink-0 text-sm font-bold text-[#397C78] dark:text-[#5EAAA5] hover:underline underline-offset-4">
             {t("allPlans")} →
           </Link>
         </div>
@@ -251,102 +276,42 @@ function Index() {
             const price = plan.stops.reduce((s, id) => s + getPlace(id).pricePerPerson, 0);
             const mins = plan.stops.reduce((s, id) => s + getPlace(id).durationMin, 0);
             return (
-              <article key={plan.id} className="surface-card p-6 hover-lift group flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="rounded-full bg-[#C96745]/15 px-3 py-1 text-xs font-bold text-[#C96745]">
+              <article key={plan.id} className="surface-card overflow-hidden hover-lift group flex flex-col justify-between border border-[#E2D3BE] dark:border-white/10">
+                <div className="relative h-40 w-full overflow-hidden">
+                  <img src={plan.image} alt={plan.titleAr} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute top-3 start-3 end-3 flex items-center justify-between z-10">
+                    <span className="rounded-full bg-[#C96745] px-3 py-1 text-xs font-bold text-white">
                       {plan.tagAr}
                     </span>
-                    <span className="text-xs font-bold text-[#6E716C] flex items-center gap-1">
-                      <Star className="h-3.5 w-3.5 text-[#E4A23B] fill-[#E4A23B]" />
-                      {budgetLevels[plan.budget].ar}
+                    <span className="rounded-full bg-black/50 backdrop-blur px-3 py-1 text-xs font-bold text-[#E4A23B]">
+                      ⭐ {budgetLevels[plan.budget].ar}
                     </span>
                   </div>
-                  <h3 className="mt-4 text-xl font-bold text-[#252A28] group-hover:text-[#C96745] transition-colors">
-                    {isRtl ? plan.titleAr : plan.titleEn}
-                  </h3>
-                  <p className="mt-2 text-sm text-[#6E716C] line-clamp-2 leading-relaxed">{plan.descAr}</p>
-
-                  <ul className="mt-5 space-y-2.5 border-t border-[#E2D3BE] pt-4 text-sm">
-                    {plan.stops.map((id, i) => (
-                      <li key={id} className="flex items-center gap-3">
-                        <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#397C78] text-[11px] font-bold text-white shadow-sm">
-                          {i + 1}
-                        </span>
-                        <span className="truncate font-medium text-[#252A28]">
-                          {isRtl ? getPlace(id).nameAr : getPlace(id).nameEn}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
 
-                <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-[#E2D3BE] pt-4 text-[13px] text-[#6E716C]">
-                  <span className="flex items-center gap-1.5">
-                    <Wallet className="h-3.5 w-3.5 text-[#C96745]" />
-                    <span className="font-bold text-[#252A28]">{price} {isRtl ? "ر.س" : "SAR"}</span> {t("perPerson")}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Clock className="h-3.5 w-3.5 text-[#397C78]" />
-                    {Math.round(mins / 60)} {t("hours")}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 text-[#6E716C]" />
-                    {plan.stops.length} {t("stations")}
-                  </span>
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] group-hover:text-[#C96745] transition-colors">
+                      {isRtl ? plan.titleAr : plan.titleEn}
+                    </h3>
+                    <p className="mt-2 text-sm text-[#6E716C] dark:text-[#B5B8B2] line-clamp-2 leading-relaxed">{plan.descAr}</p>
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-[#E2D3BE] dark:border-white/10 pt-4 text-[13px] text-[#6E716C] dark:text-[#B5B8B2]">
+                    <span className="flex items-center gap-1.5">
+                      <Wallet className="h-3.5 w-3.5 text-[#C96745]" />
+                      <span className="font-bold text-[#252A28] dark:text-[#F5F1E8]">{price} {isRtl ? "ر.س" : "SAR"}</span> {t("perPerson")}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="h-3.5 w-3.5 text-[#397C78]" />
+                      {Math.round(mins / 60)} {t("hours")}
+                    </span>
+                  </div>
                 </div>
               </article>
             );
           })}
-        </div>
-      </section>
-
-      {/* ===== Categories Section ===== */}
-      <section className="bg-[#FAF6F0] py-16 border-y border-[#E2D3BE]">
-        <div className="mx-auto max-w-6xl px-4">
-          <h2 className="text-2xl font-extrabold text-[#252A28] md:text-4xl">{t("placesTitle")}</h2>
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
-            {categories.map((c) => (
-              <Link
-                key={c.ar}
-                to="/places"
-                className="surface-card group flex items-center gap-4 p-5 hover-lift"
-              >
-                <span className="text-3xl group-hover:animate-wiggle">{c.emoji}</span>
-                <div>
-                  <span className="text-base font-bold text-[#252A28] block group-hover:text-[#C96745] transition-colors">
-                    {isRtl ? c.ar : c.en}
-                  </span>
-                  <span className="text-xs font-semibold text-[#6E716C]">
-                    {c.mood === "free" ? t("noCost") : moodLabels[c.mood]}
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== Business CTA Section (Section 21) ===== */}
-      <section className="mx-auto max-w-6xl px-4 py-20">
-        <div className="surface-card relative overflow-hidden bg-[#252A28] p-8 md:p-12 text-[#FAF6F0] md:flex md:items-center md:justify-between md:gap-8 border-none">
-          <div className="relative">
-            <div className="flex items-center gap-2 mb-3">
-              <Zap className="h-5 w-5 text-[#C96745]" />
-              <span className="text-xs font-bold text-[#C96745] uppercase tracking-wider">
-                {isRtl ? "لأصحاب الأماكن والفعاليات" : "For Business Owners"}
-              </span>
-            </div>
-            <h2 className="text-2xl font-extrabold text-[#FAF6F0] md:text-3xl">{t("businessTitle")}</h2>
-            <p className="mt-2 max-w-xl text-sm text-[#FAF6F0]/85 leading-relaxed">{t("businessDesc")}</p>
-          </div>
-          <Link
-            to="/advertise"
-            className="relative shrink-0 mt-6 md:mt-0 inline-flex items-center gap-2 rounded-full bg-[#C96745] px-8 py-4 font-bold text-[#FAF6F0] shadow-lift transition-all hover:bg-[#b55837] min-h-[48px]"
-          >
-            {t("addPlace")}
-            <ArrowLeft className={`h-4 w-4 ${isRtl ? "" : "rotate-180"}`} />
-          </Link>
         </div>
       </section>
     </div>
