@@ -5,12 +5,12 @@ import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 
 const kindTone: Record<Place["kind"], string> = {
-  activity: "from-teal/25 via-teal/10 to-mist/50",
-  food: "from-coral/30 via-coral/10 to-sand/50",
-  cafe: "from-warning/25 via-warning/10 to-sand/50",
-  culture: "from-navy/25 via-navy/10 to-mist/50",
-  outdoor: "from-teal-soft/35 via-teal/10 to-mist/50",
-  shopping: "from-coral/20 via-coral/5 to-mist/50",
+  activity: "from-[#C96745]/20 via-[#C96745]/10 to-[#F4EBDD]",
+  food: "from-[#397C78]/25 via-[#397C78]/10 to-[#F4EBDD]",
+  cafe: "from-[#E4A23B]/25 via-[#E4A23B]/10 to-[#F4EBDD]",
+  culture: "from-[#71805B]/25 via-[#71805B]/10 to-[#F4EBDD]",
+  outdoor: "from-[#397C78]/30 via-[#397C78]/10 to-[#F4EBDD]",
+  shopping: "from-[#C96745]/15 via-[#C96745]/5 to-[#F4EBDD]",
 };
 
 const kindEmoji: Record<Place["kind"], string> = {
@@ -39,12 +39,12 @@ export function PlaceCard({ place }: { place: Place }) {
 
   return (
     <article className="surface-card overflow-hidden hover-lift relative group">
-      {/* Gradient header area */}
+      {/* Header gradient area */}
       <div className={`relative flex h-32 items-end justify-between bg-gradient-to-br ${kindTone[place.kind]} p-4`}>
         {/* Kind emoji badge */}
         <div className="absolute top-3 start-3 flex items-center gap-2">
           <span className="text-2xl animate-fade-in">{kindEmoji[place.kind]}</span>
-          <span className="rounded-full bg-pearl/90 px-3 py-1 text-xs font-bold text-navy shadow-soft backdrop-blur">
+          <span className="rounded-full bg-[#FAF6F0] px-3 py-1 text-xs font-bold text-[#252A28] shadow-sm backdrop-blur">
             {place.categoryAr}
           </span>
         </div>
@@ -53,23 +53,23 @@ export function PlaceCard({ place }: { place: Place }) {
         <button
           onClick={handleFav}
           aria-label="المفضلة"
-          className={`absolute top-3 end-3 z-10 rounded-full p-2.5 shadow-soft backdrop-blur transition-all duration-300
+          className={`absolute top-3 end-3 z-10 rounded-full p-2.5 shadow-sm backdrop-blur transition-all duration-300
             ${fav
-              ? "bg-coral/15 text-coral scale-110"
-              : "bg-pearl/90 text-navy hover:bg-coral/10 hover:text-coral"
+              ? "bg-[#C96745]/15 text-[#C96745] scale-110"
+              : "bg-[#FAF6F0] text-[#252A28] hover:bg-[#C96745]/10 hover:text-[#C96745]"
             }
             ${justFaved ? "animate-heart" : "hover-scale"}
           `}
         >
-          <Heart className={`h-4.5 w-4.5 transition-all ${fav ? "fill-coral text-coral" : ""}`} />
+          <Heart className={`h-4.5 w-4.5 transition-all ${fav ? "fill-[#C96745] text-[#C96745]" : ""}`} />
         </button>
 
-        {/* Decorative wave */}
-        <svg viewBox="0 0 200 40" className="absolute inset-x-0 bottom-0 h-8 w-full opacity-60" aria-hidden="true">
+        {/* Decorative route trail */}
+        <svg viewBox="0 0 200 40" className="absolute inset-x-0 bottom-0 h-8 w-full opacity-50" aria-hidden="true">
           <path
             d="M0 32C40 32 60 12 100 12s60 20 100 20"
             fill="none"
-            stroke="var(--teal-soft)"
+            stroke="#397C78"
             strokeWidth="1.5"
             strokeDasharray="5 5"
             className="animate-route-draw"
@@ -77,55 +77,52 @@ export function PlaceCard({ place }: { place: Place }) {
         </svg>
       </div>
 
-      {/* Card body */}
+      {/* Body */}
       <div className="space-y-3 p-4 pt-3">
-        {/* Title and verified badge */}
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-lg font-bold leading-snug group-hover:text-teal transition-colors">
+          <h3 className="text-lg font-bold leading-snug group-hover:text-[#C96745] transition-colors">
             {isRtl ? place.nameAr : place.nameEn}
           </h3>
           {place.verified && (
-            <span className="flex shrink-0 items-center gap-1 rounded-full bg-success/12 px-2.5 py-1 text-[11px] font-bold text-success">
+            <span className="flex shrink-0 items-center gap-1 rounded-full bg-[#71805B]/15 px-2.5 py-0.5 text-[11px] font-bold text-[#71805B]">
               <BadgeCheck className="h-3.5 w-3.5" /> {isRtl ? "موثّق" : "Verified"}
             </span>
           )}
         </div>
 
-        {/* Description */}
-        <p className="line-clamp-2 text-sm text-muted-foreground leading-relaxed">
+        <p className="line-clamp-2 text-sm text-[#6E716C] leading-relaxed">
           {isRtl ? place.descAr : place.descEn}
         </p>
 
-        {/* Info pills */}
-        <ul className="flex flex-wrap gap-x-3 gap-y-1.5 text-[13px] text-muted-foreground">
+        <ul className="flex flex-wrap gap-x-3 gap-y-1.5 text-[13px] text-[#6E716C]">
           <li className="flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5 text-teal" />
+            <MapPin className="h-3.5 w-3.5 text-[#397C78]" />
             {isRtl ? district.nameAr : district.nameEn}
           </li>
           <li className="flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5 text-teal" />
+            <Clock className="h-3.5 w-3.5 text-[#397C78]" />
             {place.durationMin} {isRtl ? "دقيقة" : "min"}
           </li>
           <li className="flex items-center gap-1.5">
-            <Wallet className="h-3.5 w-3.5 text-coral" />
-            <span className="font-semibold">
+            <Wallet className="h-3.5 w-3.5 text-[#C96745]" />
+            <span className="font-semibold text-[#252A28]">
               {place.pricePerPerson === 0 ? (isRtl ? "مجاني" : "Free") : `${place.pricePerPerson} SAR`}
             </span>
           </li>
         </ul>
 
-        {/* Tags */}
+        {/* Tag pills */}
         <div className="flex flex-wrap gap-1.5 text-[11px]">
-          <span className="rounded-full bg-mist/80 px-2.5 py-1 font-semibold text-navy">
+          <span className="rounded-full bg-[#EADECB] px-2.5 py-0.5 font-semibold text-[#252A28]">
             {place.indoor ? (isRtl ? "🏢 داخلي" : "🏢 Indoor") : (isRtl ? "🌤️ خارجي" : "🌤️ Outdoor")}
           </span>
           {place.reservation && (
-            <span className="rounded-full bg-warning/15 px-2.5 py-1 font-semibold text-warning">
+            <span className="rounded-full bg-[#E4A23B]/15 px-2.5 py-0.5 font-semibold text-[#E4A23B]">
               {isRtl ? "📋 يحتاج حجزًا" : "📋 Reservation"}
             </span>
           )}
           {place.kidsFriendly && (
-            <span className="rounded-full bg-success/12 px-2.5 py-1 font-semibold text-success">
+            <span className="rounded-full bg-[#71805B]/15 px-2.5 py-0.5 font-semibold text-[#71805B]">
               {isRtl ? "👶 مناسب للأطفال" : "👶 Kids friendly"}
             </span>
           )}

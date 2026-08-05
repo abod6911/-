@@ -14,7 +14,7 @@ export function MobileTabBar() {
   ] as const;
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border glass-tabbar safe-area-bottom lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E2D3BE] glass-tabbar safe-area-bottom lg:hidden">
       <ul className="mx-auto flex max-w-md items-end justify-between px-3 py-2">
         {items.map(({ to, label, icon: Icon, ...rest }) => {
           const center = "center" in rest && rest.center;
@@ -22,17 +22,17 @@ export function MobileTabBar() {
             <li key={to} className="flex-1 flex justify-center">
               <Link
                 to={to}
-                activeProps={{ className: center ? "" : "is-active text-teal" }}
+                activeProps={{ className: center ? "" : "is-active text-[#C96745]" }}
                 className={
                   center
-                    ? "flex -translate-y-3 flex-col items-center justify-center gap-1 rounded-full bg-gradient-to-br from-coral to-[#ff8c73] h-[56px] w-[56px] min-h-[56px] min-w-[56px] text-[11px] font-bold text-accent-foreground shadow-lift animate-pulse-glow active:scale-95 transition-transform"
-                    : "flex flex-col items-center justify-center gap-1 px-2 py-1 min-h-[44px] min-w-[44px] text-[11px] font-semibold text-muted-foreground active:scale-95 transition-transform relative group"
+                    ? "flex -translate-y-3 flex-col items-center justify-center gap-1 rounded-full bg-[#C96745] h-[56px] w-[56px] min-h-[56px] min-w-[56px] text-[11px] font-bold text-white shadow-lift animate-pulse-glow active:scale-95 transition-transform"
+                    : "flex flex-col items-center justify-center gap-1 px-2 py-1 min-h-[48px] min-w-[48px] text-[11px] font-semibold text-[#6E716C] active:scale-95 transition-transform relative group"
                 }
               >
                 <Icon className="h-5 w-5 z-10" />
                 <span className="z-10">{label}</span>
                 {!center && (
-                  <span className="absolute bottom-0 left-1/2 w-1 h-1 bg-teal rounded-full -translate-x-1/2 opacity-0 transition-opacity [.is-active_&]:opacity-100" />
+                  <span className="absolute bottom-0 left-1/2 w-1.5 h-1.5 bg-[#C96745] rounded-full -translate-x-1/2 opacity-0 transition-opacity [.is-active_&]:opacity-100" />
                 )}
               </Link>
             </li>
