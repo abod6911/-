@@ -6,7 +6,8 @@ export type Mood =
   | "adventure"
   | "calm"
   | "culture"
-  | "shopping";
+  | "shopping"
+  | "new";
 
 export type PlaceKind =
   | "activity"
@@ -18,7 +19,20 @@ export type PlaceKind =
   | "hotel"
   | "resort";
 
-export type GroupType = "solo" | "friends" | "couple" | "family" | "kids" | "coworkers" | "tourist";
+export type GroupType =
+  | "solo"
+  | "friends"
+  | "couple"
+  | "duo"
+  | "family"
+  | "kids"
+  | "coworkers"
+  | "work"
+  | "tourist"
+  | "tourists"
+  | "seniors";
+
+export type DistrictId = string;
 
 export type BudgetLevel = "economy" | "balanced" | "premium";
 
@@ -720,6 +734,10 @@ export const groupLabels: Record<GroupType, { ar: string; en: string }> = {
   kids: { ar: "معي أطفال 👶", en: "With Kids" },
   coworkers: { ar: "زملاء العمل 💼", en: "Coworkers" },
   tourist: { ar: "سياح 🧳", en: "Tourists" },
+  duo: { ar: "شخصين 👥", en: "Duo" },
+  work: { ar: "زملاء العمل 💼", en: "Work" },
+  tourists: { ar: "سياح 🧳", en: "Tourists" },
+  seniors: { ar: "كبار السن 🧓", en: "Seniors" },
 };
 
 export const moodLabels: Record<Mood, { ar: string; en: string }> = {
@@ -731,6 +749,7 @@ export const moodLabels: Record<Mood, { ar: string; en: string }> = {
   calm: { ar: "هدوء وروقان", en: "Calm Vibes" },
   culture: { ar: "ثقافة وتاريخ", en: "Culture & History" },
   shopping: { ar: "تسوق وتمشية", en: "Shopping" },
+  new: { ar: "جديد جدة", en: "New in Jeddah" },
 };
 
 export const budgetLevels: Record<BudgetLevel, { ar: string; en: string }> = {
@@ -742,14 +761,14 @@ export const budgetLevels: Record<BudgetLevel, { ar: string; en: string }> = {
 export function getPlace(id: string): Place {
   const p = places.find((x) => x.id === id);
   if (!p) {
-    return places[0];
+    return places[0]!;
   }
   return p;
 }
 
 export function getDistrict(id: string): District {
   const d = districts.find((x) => x.id === id);
-  if (!d) return districts[0];
+  if (!d) return districts[0]!;
   return d;
 }
 

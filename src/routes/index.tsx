@@ -259,9 +259,9 @@ function Index() {
 
         <ol className="mt-10 grid gap-6 md:grid-cols-3">
           {[
-            { step: "1", title: t("step1Title"), desc: t("step1Desc"), emoji: "🎭", color: "bg-[#C96745] text-white" },
-            { step: "2", title: t("step2Title"), desc: t("step2Desc"), emoji: "🗺️", color: "bg-[#397C78] text-white" },
-            { step: "3", title: t("step3Title"), desc: t("step3Desc"), emoji: "🎉", color: "bg-[#71805B] text-white" },
+            { step: "1", title: t("howStep1Title"), desc: t("howStep1Desc"), emoji: "🎭", color: "bg-[#C96745] text-white" },
+            { step: "2", title: t("howStep2Title"), desc: t("howStep2Desc"), emoji: "🗺️", color: "bg-[#397C78] text-white" },
+            { step: "3", title: t("howStep3Title"), desc: t("howStep3Desc"), emoji: "🎉", color: "bg-[#71805B] text-white" },
           ].map((s, i) => (
             <li key={s.step} className="surface-card p-7 hover-lift relative overflow-hidden group border border-[#E2D3BE] dark:border-white/10">
               <div className="flex items-center justify-between">

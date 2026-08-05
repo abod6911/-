@@ -90,10 +90,12 @@ function AccountPage() {
               <article key={plan.id} className="surface-card p-6 flex flex-col justify-between">
                 <div>
                   <h3 className="text-xl font-bold text-[#252A28]">{plan.titleAr}</h3>
-                  <p className="text-xs text-[#6E716C] mt-1">{plan.subtitleAr}</p>
+                  <p className="text-xs text-[#6E716C] mt-1">
+                    {"subtitleAr" in plan ? plan.subtitleAr : plan.descAr}
+                  </p>
                 </div>
                 <div className="mt-4 border-t border-[#E2D3BE] pt-3 flex items-center justify-between text-xs font-bold text-[#C96745]">
-                  <span>{plan.pricePerPerson} ر.س / شخص</span>
+                  <span>{"pricePerPerson" in plan ? `${plan.pricePerPerson} ر.س / شخص` : plan.tagAr}</span>
                   <span>{plan.stops.length} محطات</span>
                 </div>
               </article>

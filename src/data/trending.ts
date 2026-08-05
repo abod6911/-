@@ -26,7 +26,7 @@ export interface TrendingPlace {
 export const getTrendingPlaces = (): TrendingPlace[] => {
   return [
     {
-      place: places.find((p) => p.id === "p3") || places[0],
+      place: places.find((p) => p.id === "p3") || places[0]!,
       rank: 1,
       badgeAr: "🏛️ ترند #1 التراث والثقافة",
       badgeEn: "#1 Heritage Trend",
@@ -35,7 +35,7 @@ export const getTrendingPlaces = (): TrendingPlace[] => {
       weeklyViews: 35200,
     },
     {
-      place: places.find((p) => p.id === "s1") || places[1],
+      place: places.find((p) => p.id === "s1") || places[1]!,
       rank: 2,
       badgeAr: "🏖️ ترند #2 شواطئ أبحر",
       badgeEn: "#2 Obhur Resort Trend",
@@ -44,7 +44,7 @@ export const getTrendingPlaces = (): TrendingPlace[] => {
       weeklyViews: 34500,
     },
     {
-      place: places.find((p) => p.id === "h2") || places[2],
+      place: places.find((p) => p.id === "h2") || places[2]!,
       rank: 3,
       badgeAr: "🏰 ترند #3 إقامة ملكية",
       badgeEn: "#3 Luxury Hotel Trend",
@@ -53,7 +53,7 @@ export const getTrendingPlaces = (): TrendingPlace[] => {
       weeklyViews: 31200,
     },
     {
-      place: places.find((p) => p.id === "r1") || places[3],
+      place: places.find((p) => p.id === "r1") || places[3]!,
       rank: 4,
       badgeAr: "🍗 ترند #4 وجبات سريعة",
       badgeEn: "#4 Fast Food Trend",
@@ -62,7 +62,7 @@ export const getTrendingPlaces = (): TrendingPlace[] => {
       weeklyViews: 28500,
     },
     {
-      place: places.find((p) => p.id === "c1") || places[4],
+      place: places.find((p) => p.id === "c1") || places[4]!,
       rank: 5,
       badgeAr: "☕ ترند #5 قهوة مختصة",
       badgeEn: "#5 Specialty Coffee",
@@ -71,7 +71,7 @@ export const getTrendingPlaces = (): TrendingPlace[] => {
       weeklyViews: 24100,
     },
     {
-      place: places.find((p) => p.id === "r2") || places[5],
+      place: places.find((p) => p.id === "r2") || places[5]!,
       rank: 6,
       badgeAr: "🥙 ترند #6 مشاوي شامية",
       badgeEn: "#6 Shami Grill Trend",
