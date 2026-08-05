@@ -5,7 +5,7 @@ interface LanguageContextType {
   lang: Language;
   setLang: (lang: Language) => void;
   toggleLang: () => void;
-  t: (key: keyof typeof translations.ar) => string;
+  t: (key: string) => string;
   isRtl: boolean;
 }
 
@@ -38,8 +38,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [lang]);
 
-  const t = (key: keyof typeof translations.ar): string => {
-    return translations[lang][key] || translations["ar"][key] || (key as string);
+  const t = (key: string): string => {
+    const dict = translations[lang] as Record<string, string | undefined>;
+    const fallback = translations["ar"] as Record<string, string | undefined>;
+    return dict[key] ?? fallback[key] ?? key;
   };
 
   const isRtl = lang === "ar";
