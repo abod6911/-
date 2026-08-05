@@ -47,9 +47,9 @@ export function SiteHeader() {
   const nav = [
     { to: "/", label: t("home") },
     { to: "/plans", label: t("readyPlans") },
-    { to: "/quick-plan", label: "خطة على السريع" },
-    { to: "/places", label: "استكشف جدة 🗺️" },
-    { to: "/offers", label: "عروض جدة 🔥" },
+    { to: "/quick-plan", label: isRtl ? "خطة على السريع" : "Quick Outing" },
+    { to: "/places", label: isRtl ? "استكشف جدة 🗺️" : "Explore Jeddah 🗺️" },
+    { to: "/offers", label: isRtl ? "عروض جدة 🔥" : "Jeddah Offers 🔥" },
     { to: "/advertise", label: t("advertise") },
   ] as const;
 

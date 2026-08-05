@@ -81,15 +81,15 @@ function Index() {
           </div>
 
           {/* Main Headline */}
-          <h1 className="animate-fade-in-up delay-1 mt-6 text-4xl font-black leading-tight md:text-6xl md:leading-[1.15] text-white tracking-tight">
-            محتار وين تروح اليوم؟ <br className="hidden md:inline" />
-            <span className="bg-gradient-to-r from-[#FF9D7A] via-[#F4EBDD] to-[#5EAAA5] bg-clip-text text-transparent">
-              جِدّاو يرتّب لك الطلعة كاملة
+          <h1 className="animate-fade-in-up delay-1 mt-6 text-3xl font-black leading-relaxed md:text-5xl md:leading-[1.4] text-white">
+            {isRtl ? "محتار وين تروح اليوم؟" : "Wondering Where to Go Today?"} <br className="hidden md:inline" />
+            <span className="bg-gradient-to-r from-[#FF9D7A] via-[#F4EBDD] to-[#5EAAA5] bg-clip-text text-transparent block mt-2">
+              {isRtl ? "جِدّاو يرتّب لك الطلعة كاملة" : "JEDDAW Plans Your Complete Outing"}
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="animate-fade-in-up delay-2 mt-5 mx-auto max-w-2xl text-base leading-relaxed text-white/90 md:text-xl font-semibold">
+          <p className="animate-fade-in-up delay-2 mt-5 mx-auto max-w-2xl text-base leading-relaxed text-white/90 md:text-lg font-semibold">
             {t("heroDesc")}
           </p>
 
@@ -130,23 +130,31 @@ function Index() {
       <div className="relative z-30 -mt-10 mx-auto max-w-5xl px-4">
         <div className="rounded-3xl bg-gradient-to-r from-[#295652] via-[#397C78] to-[#C96745] text-white p-6 md:p-8 shadow-2xl border border-white/20 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-lg">
           <div className="text-center md:text-start">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#FF9D7A] block mb-1">
-              💡 ليش اختاروا جِدّاو؟
+            <span className="text-xs font-bold uppercase tracking-wider text-[#FF9D7A] block mb-2">
+              {isRtl ? "💡 ليش اختاروا جِدّاو؟" : "💡 Why Choose JEDDAW?"}
             </span>
-            <p className="text-lg md:text-xl font-extrabold text-white leading-snug">
-              المواقع الثانية تعطيك أماكن. <span className="underline underline-offset-4 decoration-[#FF9D7A]">جِدّاو يرتّب لك الطلعة كاملة.</span>
+            <p className="text-base md:text-lg font-extrabold text-white leading-relaxed">
+              {isRtl ? (
+                <>
+                  المواقع الثانية تعطيك أماكن. <span className="underline underline-offset-6 decoration-[#FF9D7A]">جِدّاو يرتّب لك الطلعة كاملة.</span>
+                </>
+              ) : (
+                <>
+                  Other sites give you locations. <span className="underline underline-offset-6 decoration-[#FF9D7A]">JEDDAW plans your complete outing.</span>
+                </>
+              )}
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-bold mt-2 md:mt-0">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15">
-              ⚡ تخطيط فوري
+              {isRtl ? "⚡ تخطيط فوري" : "⚡ Instant Planning"}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15">
-              💰 موزون على ميزانيتك
+              {isRtl ? "💰 موزون على ميزانيتك" : "💰 Budget-Friendly"}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15">
-              📍 مسار وخرائط مجهزة
+              {isRtl ? "📍 مسار وخرائط مجهزة" : "📍 Turn-by-Turn Route"}
             </span>
           </div>
         </div>

@@ -153,7 +153,9 @@ export function AiAssistant() {
         aria-label="مساعد جِدّاو الذكي"
       >
         <Bot className="h-5 w-5 animate-bounce" />
-        <span className="text-sm">مساعد جِدّاو الذكي 🤖</span>
+        <span className="text-sm">
+          {isRtl ? "مساعد جِدّاو الذكي 🤖" : "JEDDAW AI Assistant 🤖"}
+        </span>
       </button>
 
       {/* AI Assistant Chat Drawer Modal */}

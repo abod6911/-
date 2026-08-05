@@ -5,6 +5,24 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ==========================================================================
+   Arabic Typography & Readability Rules
+   ========================================================================== */
+html[lang="ar"] h1,
+html[lang="ar"] h2,
+html[lang="ar"] h3,
+html[lang="ar"] h4 {
+  line-height: 1.45 !important;
+  letter-spacing: 0 !important;
+}
+
+html[lang="ar"] p,
+html[lang="ar"] button,
+html[lang="ar"] a,
+html[lang="ar"] label {
+  line-height: 1.6;
+}
+
+/* ==========================================================================
    جِدّاو | JEDDAW — Earthy Coastal Jeddah Style System
    ========================================================================== */
 
