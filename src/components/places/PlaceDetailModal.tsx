@@ -51,32 +51,51 @@ export function PlaceDetailModal({
 
   return (
     <div className="modal-overlay z-50">
-      <div className="modal-content max-w-2xl w-full p-6 md:p-8 animate-modal-in surface-card bg-[#FAF6F0] dark:bg-[#222826] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 relative">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 end-4 grid h-10 w-10 place-items-center rounded-full bg-[#EADECB] dark:bg-[#2E3633] text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#C96745] hover:text-white transition-colors"
-          aria-label="إغلاق"
-        >
-          <X className="h-5 w-5" />
-        </button>
+      <div className="modal-content max-w-2xl w-full p-0 overflow-hidden animate-modal-in surface-card bg-[#FAF6F0] dark:bg-[#222826] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 relative">
+        {/* Place Image Hero Header */}
+        <div className="relative h-56 w-full overflow-hidden">
+          <img
+            src={place.image}
+            alt={place.nameAr}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
-        {/* Top Tag Badges */}
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          {place.trending && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#C96745] px-3 py-1 text-xs font-extrabold text-white shadow-sm">
-              <Flame className="h-3.5 w-3.5 fill-white" /> ترند جدة 🔥
-            </span>
-          )}
-          {place.subCategoryAr && (
-            <span className="rounded-full bg-[#397C78] px-3 py-1 text-xs font-bold text-white">
-              {place.subCategoryAr}
-            </span>
-          )}
-          <span className="rounded-full bg-[#FAF6F0] dark:bg-[#161B1A] border border-[#E2D3BE] dark:border-white/15 px-3 py-1 text-xs font-bold text-[#6E716C] dark:text-[#B5B8B2]">
-            📍 {isRtl ? district.nameAr : district.nameEn}
-          </span>
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 end-4 z-20 grid h-10 w-10 place-items-center rounded-full bg-black/50 text-white backdrop-blur hover:bg-[#C96745] transition-colors"
+            aria-label="إغلاق"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          {/* Floating Badges */}
+          <div className="absolute bottom-4 start-4 end-4 flex items-center justify-between z-10">
+            <div className="flex flex-wrap items-center gap-2">
+              {place.trending && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#C96745] px-3 py-1 text-xs font-extrabold text-white shadow-sm">
+                  <Flame className="h-3.5 w-3.5 fill-white" /> ترند جدة 🔥
+                </span>
+              )}
+              {place.subCategoryAr && (
+                <span className="rounded-full bg-[#397C78] px-3 py-1 text-xs font-bold text-white shadow-sm">
+                  {place.subCategoryAr}
+                </span>
+              )}
+            </div>
+
+            <button
+              onClick={() => toggleFavorite(place.id)}
+              className="grid h-10 w-10 place-items-center rounded-full bg-black/40 text-white backdrop-blur hover:scale-105 transition-transform"
+              aria-label="إضافة للمفضلة"
+            >
+              <Heart className={`h-5 w-5 ${favorited ? "fill-[#C96745] text-[#C96745]" : "text-white"}`} />
+            </button>
+          </div>
         </div>
+
+        <div className="p-6 md:p-8">
 
         {/* Name & Favorites */}
         <div className="flex items-start justify-between gap-4">
@@ -181,6 +200,7 @@ export function PlaceDetailModal({
             <Phone className="h-4 w-4 text-[#C96745]" />
             <span>احجز / اتصل الآن</span>
           </button>
+        </div>
         </div>
       </div>
     </div>
