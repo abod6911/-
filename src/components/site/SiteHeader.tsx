@@ -47,7 +47,7 @@ export function SiteHeader() {
     { to: "/", label: t("home") },
     { to: "/plans", label: t("readyPlans") },
     { to: "/quick-plan", label: "خطة على السريع" },
-    { to: "/places", label: t("places") },
+    { to: "/places", label: "استكشف جدة على راحتك 🗺️" },
     { to: "/offers", label: t("offers") },
     { to: "/advertise", label: t("advertise") },
   ] as const;
