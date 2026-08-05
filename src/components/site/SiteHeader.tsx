@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { AuthModal } from "@/components/auth/AuthModal";
 
 export function SiteHeader() {
-  const { t, toggleLang, lang } = useLanguage();
+  const { t, toggleLang, lang, isRtl } = useLanguage();
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
