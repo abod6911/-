@@ -749,6 +749,7 @@ export const moodLabels: Record<Mood, { ar: string; en: string }> = {
   calm: { ar: "هدوء وروقان", en: "Calm Vibes" },
   culture: { ar: "ثقافة وتاريخ", en: "Culture & History" },
   shopping: { ar: "تسوق وتمشية", en: "Shopping" },
+  new: { ar: "جديد جدة", en: "New in Jeddah" },
 };
 
 export const budgetLevels: Record<BudgetLevel, { ar: string; en: string }> = {
