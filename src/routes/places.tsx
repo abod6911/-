@@ -26,7 +26,7 @@ type SortOption = "topRated" | "trending" | "mostVisited" | "cheapest" | "priceD
 
 const subCategoryChips = [
   { id: "all", labelAr: "الكل 🌟" },
-  { id: " مطاعم شامية", labelAr: "🥙 مطاعم شامية" },
+  { id: "مطاعم شامية", labelAr: "🥙 مطاعم شامية" },
   { id: "وجبات سريعة", labelAr: "🍔 وجبات سريعة" },
   { id: "مطاعم سعودية قديمة", labelAr: "🇸🇦 مطاعم سعودية قديمة" },
   { id: "مطاعم مصرية", labelAr: "🇪🇬 مطاعم مصرية" },

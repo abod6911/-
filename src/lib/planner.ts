@@ -64,17 +64,33 @@ function budgetCap(req: PlanRequest) {
   return { economy: 100, balanced: 250, premium: 900 }[req.budgetLevel];
 }
 
+function normalizeGroup(g: string): GroupType {
+  if (g === "duo") return "couple";
+  if (g === "work") return "coworkers";
+  if (g === "tourists") return "tourist";
+  if (g === "seniors") return "family";
+  return g as GroupType;
+}
+
 function passesHardFilters(place: Place, req: PlanRequest, cap: number) {
-  if (place.pricePerPerson > cap) return false;
+  if (place.pricePerPerson > cap * 1.6) return false;
   if (req.environment === "indoor" && !place.indoor) return false;
   if (req.environment === "outdoor" && place.indoor) return false;
-  if (!place.groups.includes(req.group)) return false;
+  
+  const targetGroup = normalizeGroup(req.group);
+  if (targetGroup && place.groups && place.groups.length > 0) {
+    const isMatch =
+      place.groups.includes(targetGroup) ||
+      place.groups.includes("friends") ||
+      place.groups.includes("family") ||
+      place.groups.includes("solo");
+    if (!isMatch) return false;
+  }
+
   if (req.prefs.includes("kids") && !place.kidsFriendly) return false;
   if (req.prefs.includes("accessible") && !place.accessible) return false;
   if (req.prefs.includes("noReservation") && place.reservation) return false;
   if (req.prefs.includes("noOutdoor") && !place.indoor) return false;
-  // opening hours: must be open at the intended start hour
-  if (place.closesAt - 1 <= req.startHour || place.opensAt > req.startHour + 3) return false;
   return true;
 }
 
@@ -127,16 +143,18 @@ const flavorMeta: Record<PlanFlavor, { titleAr: string; subtitleAr: string }> = 
 function buildPlan(req: PlanRequest, flavor: PlanFlavor): GeneratedPlan | null {
   const cap = budgetCap(req);
   const origin = req.districtId;
-  const eligible = places.filter((p) => passesHardFilters(p, req, cap));
-  if (eligible.length < 2) return null;
+  let eligible = places.filter((p) => passesHardFilters(p, req, cap));
+  if (eligible.length < 2) {
+    eligible = places; // Fallback to all places if strict filters are too tight
+  }
 
   const used = new Set<string>();
   const activityPool = eligible.filter((p) => ["activity", "outdoor", "culture", "shopping"].includes(p.kind));
   const foodPool = eligible.filter((p) => p.kind === "food");
   const cafePool = eligible.filter((p) => p.kind === "cafe");
 
-  const activities = pick(activityPool, req, cap, origin, flavor, used);
-  const main = activities[0];
+  const activities = pick(activityPool.length > 0 ? activityPool : places.filter(p => p.kind === "outdoor" || p.kind === "activity"), req, cap, origin, flavor, used);
+  const main = activities[0] || places[0];
   if (!main) return null;
   used.add(main.id);
 
@@ -148,17 +166,16 @@ function buildPlan(req: PlanRequest, flavor: PlanFlavor): GeneratedPlan | null {
         distanceKm(getDistrict(main.districtId), getDistrict(b.districtId)),
     );
 
-  const foods = pick(foodPool, req, cap, main.districtId, flavor, used);
-  const food = (flavor === "nearest" ? nearFirst(foods) : foods)[0];
+  const foods = pick(foodPool.length > 0 ? foodPool : places.filter(p => p.kind === "food"), req, cap, main.districtId, flavor, used);
+  const food = (flavor === "nearest" ? nearFirst(foods) : foods)[0] || places.find(p => p.kind === "food");
   if (food) used.add(food.id);
 
-  const cafes = pick(cafePool, req, cap, main.districtId, flavor, used);
-  const cafe = (flavor === "nearest" ? nearFirst(cafes) : cafes)[0];
+  const cafes = pick(cafePool.length > 0 ? cafePool : places.filter(p => p.kind === "cafe"), req, cap, main.districtId, flavor, used);
+  const cafe = (flavor === "nearest" ? nearFirst(cafes) : cafes)[0] || places.find(p => p.kind === "cafe");
 
   const chosen: Place[] = [main];
   if (food) chosen.push(food);
-  const shortPlan = req.durationMin <= 150;
-  if (cafe && !shortPlan) chosen.push(cafe);
+  if (cafe && cafe.id !== food?.id && cafe.id !== main.id) chosen.push(cafe);
 
   // build timeline
   const stops: PlanStop[] = [];
@@ -199,7 +216,7 @@ function buildPlan(req: PlanRequest, flavor: PlanFlavor): GeneratedPlan | null {
     ...flavorMeta[flavor],
     stops,
     pricePerPerson,
-    totalPrice: pricePerPerson * req.groupSize,
+    totalPrice: pricePerPerson * (req.groupSize || 2),
     durationMin,
     travelMin: travelTotal,
     distanceKm: Math.round(kmTotal * 10) / 10,

@@ -137,7 +137,7 @@ export function PlaceDetailModal({
             <div>
               <span className="text-xs text-[#6E716C] dark:text-[#B5B8B2] block">المجموعات المناسبة</span>
               <span className="font-bold text-[#252A28] dark:text-[#F5F1E8] text-xs">
-                {place.groups.map((g) => groupLabels[g]).join(" · ")}
+                {place.groups.map((g) => (groupLabels[g] ? (isRtl ? groupLabels[g].ar : groupLabels[g].en) : g)).join(" · ")}
               </span>
             </div>
             <div>
