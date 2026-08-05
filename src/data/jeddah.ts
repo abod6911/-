@@ -742,14 +742,14 @@ export const budgetLevels: Record<BudgetLevel, { ar: string; en: string }> = {
 export function getPlace(id: string): Place {
   const p = places.find((x) => x.id === id);
   if (!p) {
-    return places[0];
+    return places[0]!;
   }
   return p;
 }
 
 export function getDistrict(id: string): District {
   const d = districts.find((x) => x.id === id);
-  if (!d) return districts[0];
+  if (!d) return districts[0]!;
   return d;
 }
 
