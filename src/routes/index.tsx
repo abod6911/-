@@ -8,14 +8,14 @@ import { useLanguage } from "@/context/LanguageContext";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "وش الخطة؟ | خطط طلعتك في جدة — وقتك علينا والتنفيذ عليك" },
+      { title: "جِدّاو | JEDDAW — خطط طلعات ذكية في جدة حسب وقتك وميزانيتك" },
       {
         name: "description",
         content:
-          "مو عارف وين تروح؟ عطنا وقتك ومودك وميزانيتك، ونرتب لك خروجة كاملة في جدة: نشاط، مطعم، قهوة، والمسار بالترتيب.",
+          "محتار وين تروح اليوم في جدة؟ اختر وقتك وميزانيتك ومودك، وجِدّاو يرتّب لك النشاط والمطعم والقهوة والمسار كاملًا.",
       },
-      { property: "og:title", content: "وش الخطة؟ — طلعتك في جدة مرتّبة" },
-      { property: "og:description", content: "أنت عطنا الوقت، والباقي علينا. خطط خروجات مرتبة داخل جدة." },
+      { property: "og:title", content: "جِدّاو — جدة تبدأ من هنا" },
+      { property: "og:description", content: "المواقع الثانية تعطيك أماكن. جِدّاو يرتّب لك الطلعة كاملة." },
       { property: "og:url", content: "/" },
     ],
     links: [{ rel: "canonical", href: "/" }],
@@ -23,24 +23,28 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const quickChips = [
+const quickVibes = [
   { labelAr: "بعد الدوام", labelEn: "After Work", emoji: "💼", mood: "calm" },
   { labelAr: "بحر وغروب", labelEn: "Sea & Sunset", emoji: "🌊", mood: "sea" },
-  { labelAr: "طلعة عائلية", labelEn: "Family Outing", emoji: "👨‍👩‍👧‍👦", mood: "calm" },
+  { labelAr: "طلعة مع الشلة", labelEn: "With Friends", emoji: "🥳", mood: "games" },
   { labelAr: "موعد لشخصين", labelEn: "Date Night", emoji: "👩‍❤️‍👨", mood: "coffee" },
-  { labelAr: "خروجة اقتصادية", labelEn: "Budget Friendly", emoji: "💚", mood: "free" },
-  { labelAr: "آخر الليل", labelEn: "Late Night", emoji: "🌙", mood: "food" },
-  { labelAr: "يوم كامل", labelEn: "Full Day", emoji: "☀️", mood: "adventure" },
+  { labelAr: "يوم عائلي", labelEn: "Family Day", emoji: "👨‍👩‍👧‍👦", mood: "calm" },
+  { labelAr: "جدة بأقل من 100", labelEn: "Under 100 SAR", emoji: "💚", mood: "free" },
   { labelAr: "شيء قريب مني", labelEn: "Near Me", emoji: "📍", mood: "games" },
+  { labelAr: "طلعة آخر الليل", labelEn: "Late Night", emoji: "🌙", mood: "food" },
+  { labelAr: "أماكن داخلية", labelEn: "Indoor AC", emoji: "🏢", mood: "games" },
+  { labelAr: "بدون حجز", labelEn: "No Reservation", emoji: "⚡", mood: "coffee" },
+  { labelAr: "أول مرة في جدة", labelEn: "First Time in Jeddah", emoji: "🧳", mood: "culture" },
+  { labelAr: "فاجئني", labelEn: "Surprise Me", emoji: "🎁", mood: "adventure" },
 ] as const;
 
 const categories: { mood: Mood | "free"; ar: string; en: string; emoji: string }[] = [
   { mood: "sea", ar: "البحر والغروب", en: "Sea & Sunset", emoji: "🌊" },
-  { mood: "games", ar: "ألعاب داخلية", en: "Indoor Games", emoji: "🎮" },
-  { mood: "adventure", ar: "مغامرات وحركة", en: "Adventures", emoji: "🏄" },
+  { mood: "games", ar: "ألعاب وترفيه", en: "Games & Action", emoji: "🎮" },
+  { mood: "adventure", ar: "مغامرة وتجارب", en: "Adventures", emoji: "🏄" },
   { mood: "calm", ar: "عائلات وأطفال", en: "Family & Kids", emoji: "👨‍👩‍👧‍👦" },
-  { mood: "culture", ar: "ثقافة وتاريخ البلد", en: "Culture & History", emoji: "🏛️" },
-  { mood: "food", ar: "مطاعم وجبات", en: "Restaurants", emoji: "🍽️" },
+  { mood: "culture", ar: "جدة التاريخية والبلد", en: "Culture & History", emoji: "🏛️" },
+  { mood: "food", ar: "مطاعم متميزة", en: "Restaurants", emoji: "🍽️" },
   { mood: "coffee", ar: "مقاهي وحلى", en: "Cafes & Sweets", emoji: "☕" },
   { mood: "shopping", ar: "تسوق وتمشية", en: "Shopping", emoji: "🛍️" },
   { mood: "free", ar: "أماكن مجانية", en: "Free Spots", emoji: "✨" },
@@ -56,21 +60,21 @@ function Index() {
         {/* Background Jeddah image with gradient overlay */}
         <img
           src={heroImage}
-          alt="ساحل جدة والبلد التاريخية وقت الغروب"
+          alt="ساحل جدة والبلد التاريخية"
           width={1408}
           height={1104}
           className="absolute inset-0 h-full w-full object-cover opacity-35"
         />
-        {/* Gradient overlays matching Terracotta & Sand tone */}
+        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#252A28] via-[#252A28]/70 to-transparent" />
 
         <div className="relative mx-auto max-w-6xl px-4 py-16 md:py-24 w-full">
-          {/* Badge */}
+          {/* Small Brand Line */}
           <span className="animate-fade-in-up inline-flex items-center gap-2 rounded-full bg-[#C96745]/20 px-4 py-1.5 text-xs font-bold text-[#FAF6F0] backdrop-blur-md border border-[#C96745]/30">
-            <Sparkles className="h-4 w-4 text-[#C96745]" /> {t("heroBadge")}
+            <Sparkles className="h-4 w-4 text-[#C96745]" /> {t("slogan")}
           </span>
 
-          {/* Title */}
+          {/* Main Headline */}
           <h1 className="animate-fade-in-up delay-1 mt-5 max-w-2xl text-4xl font-extrabold leading-tight md:text-6xl md:leading-[1.1] text-[#FAF6F0]">
             {t("heroTitle")}
           </h1>
@@ -80,7 +84,7 @@ function Index() {
             {t("heroDesc")}
           </p>
 
-          {/* CTA Buttons */}
+          {/* Primary & Secondary Buttons */}
           <div className="animate-fade-in-up delay-3 mt-8 flex flex-wrap gap-4 items-center">
             <Link
               to="/quick-plan"
@@ -98,7 +102,7 @@ function Index() {
             </Link>
           </div>
 
-          {/* Social Proof Stats Bar */}
+          {/* Social Proof */}
           <div className="animate-fade-in-up delay-4 mt-10 inline-flex items-center gap-3 rounded-2xl bg-[#FAF6F0]/10 border border-[#FAF6F0]/15 px-5 py-3 backdrop-blur-md">
             <span className="flex -space-x-2 overflow-hidden">
               <span className="inline-block h-7 w-7 rounded-full bg-[#C96745] text-center text-xs font-bold text-white leading-7">🔥</span>
@@ -112,42 +116,53 @@ function Index() {
         </div>
       </section>
 
-      {/* ===== Quick Chips Section ===== */}
-      <section className="bg-[#FAF6F0] py-8 border-b border-[#E2D3BE]">
+      {/* ===== Core Value Proposition Banner ===== */}
+      <section className="bg-[#397C78] text-white py-6">
+        <div className="mx-auto max-w-6xl px-4 text-center">
+          <p className="text-base md:text-lg font-bold">
+            {t("valueProp")}
+          </p>
+        </div>
+      </section>
+
+      {/* ===== Quick Vibe Section (Section 9) ===== */}
+      <section className="bg-[#FAF6F0] py-12 border-b border-[#E2D3BE]">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-sm font-bold text-[#6E716C] uppercase tracking-wider">
-              {isRtl ? "اختيارات سريعة لمودك:" : "Quick Outing Options:"}
-            </span>
+          <div className="mb-6">
+            <h2 className="text-2xl font-extrabold text-[#252A28] md:text-3xl">{t("quickVibeTitle")}</h2>
+            <p className="text-sm text-[#6E716C] font-semibold mt-1">{t("quickVibeSub")}</p>
           </div>
-          <div className="flex flex-wrap gap-2.5">
-            {quickChips.map((chip) => (
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {quickVibes.map((chip) => (
               <Link
                 key={chip.labelAr}
                 to="/quick-plan"
                 search={{ mood: chip.mood }}
-                className="inline-flex items-center gap-2 rounded-full bg-[#F4EBDD] border border-[#E2D3BE] px-4 py-2.5 text-sm font-bold text-[#252A28] transition-all duration-200 hover:border-[#C96745] hover:bg-[#C96745]/10 hover-scale"
+                className="surface-card group flex flex-col items-center justify-center p-4 text-center hover-lift min-h-[90px]"
               >
-                <span>{chip.emoji}</span>
-                <span>{isRtl ? chip.labelAr : chip.labelEn}</span>
+                <span className="text-2xl mb-1.5 group-hover:animate-wiggle">{chip.emoji}</span>
+                <span className="text-xs font-bold text-[#252A28] group-hover:text-[#C96745] transition-colors">
+                  {isRtl ? chip.labelAr : chip.labelEn}
+                </span>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== How It Works Section (3 Steps) ===== */}
+      {/* ===== How It Works Section (Section 10) ===== */}
       <section className="mx-auto max-w-6xl px-4 py-16">
         <div className="text-center max-w-2xl mx-auto">
           <h2 className="text-3xl font-extrabold text-[#252A28] md:text-4xl">{t("howItWorksTitle")}</h2>
-          <p className="mt-3 text-[#6E716C] text-base">بدل ما تضيع وقتك بالبحث واللف والزحمة، ثلاث خطوات وبس:</p>
+          <p className="mt-3 text-[#6E716C] text-base font-semibold">بدل ما تضيع وقتك بين مئات الأماكن، ثلاث خطوات وبس:</p>
         </div>
 
         <ol className="mt-10 grid gap-6 md:grid-cols-3">
           {[
-            { step: "1", text: isRtl ? "عطنا وقتك ومودك وميزانيتك" : "Share your time, vibe & budget", emoji: "⏱️", color: "bg-[#C96745] text-white" },
-            { step: "2", text: isRtl ? "نرتب لك الأماكن والمسار بدون لف جدة كلها" : "We map your route with no extra drive", emoji: "🗺️", color: "bg-[#397C78] text-white" },
-            { step: "3", text: isRtl ? "اطلع واستمتع بخطتك المرتّبة" : "Go out and enjoy your plan", emoji: "🎉", color: "bg-[#71805B] text-white" },
+            { step: "1", title: t("step1Title"), desc: t("step1Desc"), emoji: "🎭", color: "bg-[#C96745] text-white" },
+            { step: "2", title: t("step2Title"), desc: t("step2Desc"), emoji: "🗺️", color: "bg-[#397C78] text-white" },
+            { step: "3", title: t("step3Title"), desc: t("step3Desc"), emoji: "🎉", color: "bg-[#71805B] text-white" },
           ].map((s, i) => (
             <li key={s.step} className="surface-card p-7 hover-lift relative overflow-hidden group">
               <div className="flex items-center justify-between">
@@ -156,7 +171,8 @@ function Index() {
                 </span>
                 <span className="text-4xl group-hover:animate-wiggle">{s.emoji}</span>
               </div>
-              <p className="mt-5 font-bold text-lg leading-snug text-[#252A28]">{s.text}</p>
+              <h3 className="mt-5 font-bold text-xl text-[#252A28]">{s.title}</h3>
+              <p className="mt-2 text-sm text-[#6E716C] leading-relaxed">{s.desc}</p>
               {i < 2 && (
                 <div className="hidden md:block absolute top-1/2 -end-3 w-6 border-t-2 border-dashed border-[#397C78]/40" />
               )}
@@ -165,42 +181,12 @@ function Index() {
         </ol>
       </section>
 
-      {/* ===== Budgets Section ===== */}
-      <section className="mx-auto max-w-6xl px-4 pb-16">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-extrabold text-[#252A28] md:text-4xl">{t("budgetsTitle")}</h2>
-        </div>
-        <RouteLine className="mt-3 h-6 w-48 opacity-60" />
-
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {(["economy", "balanced", "premium"] as const).map((level, i) => (
-            <Link
-              key={level}
-              to="/quick-plan"
-              search={{ budget: level }}
-              className="surface-card group p-7 hover-lift relative overflow-hidden"
-              style={{ animationDelay: `${i * 0.1}s` }}
-            >
-              <span className="relative inline-flex items-center gap-2 rounded-full bg-[#F4EBDD] px-4 py-1.5 text-xs font-bold text-[#252A28] border border-[#E2D3BE]">
-                <Wallet className="h-4 w-4 text-[#C96745]" /> {budgetLevels[level].rangeAr}
-              </span>
-              <h3 className="relative mt-4 text-2xl font-bold text-[#252A28]">{isRtl ? budgetLevels[level].ar : budgetLevels[level].ar}</h3>
-              <p className="relative mt-2 text-sm text-[#6E716C] leading-relaxed">{budgetLevels[level].subAr}</p>
-              <span className="relative mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#C96745] group-hover:gap-3 transition-all">
-                {t("arrangePlan")}
-                <ArrowLeft className={`h-4 w-4 ${isRtl ? "" : "rotate-180"}`} />
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {/* ===== Ready Plans Section ===== */}
       <section className="mx-auto max-w-6xl px-4 pb-16">
         <div className="flex items-end justify-between gap-4">
           <div>
             <h2 className="text-2xl font-extrabold text-[#252A28] md:text-4xl">{t("readyPlansTitle")}</h2>
-            <p className="mt-1 text-sm text-[#6E716C]">خطط مجهزة بأدق التفاصيل والمحطات</p>
+            <p className="mt-1 text-sm text-[#6E716C]">خطط مجهزة بأسماء وأجواء شبابية</p>
           </div>
           <Link to="/plans" className="shrink-0 text-sm font-bold text-[#397C78] hover:underline underline-offset-4">
             {t("allPlans")} →
@@ -264,7 +250,7 @@ function Index() {
       {/* ===== Categories Section ===== */}
       <section className="bg-[#FAF6F0] py-16 border-y border-[#E2D3BE]">
         <div className="mx-auto max-w-6xl px-4">
-          <h2 className="text-2xl font-extrabold text-[#252A28] md:text-4xl">{t("categoriesTitle")}</h2>
+          <h2 className="text-2xl font-extrabold text-[#252A28] md:text-4xl">{t("placesTitle")}</h2>
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
             {categories.map((c) => (
               <Link
@@ -287,59 +273,14 @@ function Index() {
         </div>
       </section>
 
-      {/* ===== Offers Section ===== */}
-      <section className="mx-auto max-w-6xl px-4 py-16">
-        <div className="flex items-end justify-between gap-4">
-          <h2 className="text-2xl font-extrabold text-[#252A28] md:text-4xl">{t("offersTitle")}</h2>
-          <Link to="/offers" className="shrink-0 text-sm font-bold text-[#397C78] hover:underline underline-offset-4">
-            {t("allOffers")} →
-          </Link>
-        </div>
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {offers.slice(0, 3).map((offer) => {
-            const place = getPlace(offer.placeId);
-            return (
-              <article key={offer.id} className="surface-card p-6 hover-lift relative overflow-hidden">
-                {offer.price < offer.original && (
-                  <div className="absolute top-0 end-0 bg-[#C96745] text-white text-xs font-bold px-3 py-1.5 rounded-bl-xl shadow-sm">
-                    {Math.round((1 - offer.price / offer.original) * 100)}% {isRtl ? "خصم" : "OFF"}
-                  </div>
-                )}
-                {offer.sponsored && (
-                  <span className="rounded-full bg-[#252A28] px-2.5 py-1 text-[11px] font-bold text-[#FAF6F0]">
-                    {t("sponsored")}
-                  </span>
-                )}
-                <h3 className="mt-4 text-lg font-bold text-[#252A28]">{offer.titleAr}</h3>
-                <p className="mt-1 text-sm text-[#6E716C]">
-                  {isRtl ? place.nameAr : place.nameEn}
-                </p>
-                <p className="mt-4 flex items-baseline gap-2">
-                  <span className="text-2xl font-extrabold text-[#C96745]">
-                    {offer.price === 0 ? t("free") : `${offer.price}`}
-                  </span>
-                  {offer.price > 0 && <span className="text-sm font-semibold text-[#6E716C]">{isRtl ? "ر.س" : "SAR"}</span>}
-                  <span className="text-sm font-medium text-[#6E716C] line-through">
-                    {offer.original} {isRtl ? "ر.س" : "SAR"}
-                  </span>
-                </p>
-                <p className="mt-3 flex items-center gap-1 text-xs text-[#71805B] font-bold">
-                  <BadgeCheck className="h-4 w-4" /> {t("verifiedAt")} {offer.verifiedAt}
-                </p>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ===== Business CTA Section ===== */}
-      <section className="mx-auto max-w-6xl px-4 pb-20">
+      {/* ===== Business CTA Section (Section 21) ===== */}
+      <section className="mx-auto max-w-6xl px-4 py-20">
         <div className="surface-card relative overflow-hidden bg-[#252A28] p-8 md:p-12 text-[#FAF6F0] md:flex md:items-center md:justify-between md:gap-8 border-none">
           <div className="relative">
             <div className="flex items-center gap-2 mb-3">
               <Zap className="h-5 w-5 text-[#C96745]" />
               <span className="text-xs font-bold text-[#C96745] uppercase tracking-wider">
-                {isRtl ? "فرصة للأعمال" : "Business Opportunity"}
+                {isRtl ? "لأصحاب الأماكن والفعاليات" : "For Business Owners"}
               </span>
             </div>
             <h2 className="text-2xl font-extrabold text-[#FAF6F0] md:text-3xl">{t("businessTitle")}</h2>
@@ -349,7 +290,7 @@ function Index() {
             to="/advertise"
             className="relative shrink-0 mt-6 md:mt-0 inline-flex items-center gap-2 rounded-full bg-[#C96745] px-8 py-4 font-bold text-[#FAF6F0] shadow-lift transition-all hover:bg-[#b55837] min-h-[48px]"
           >
-            {t("joinPartner")}
+            {t("addPlace")}
             <ArrowLeft className={`h-4 w-4 ${isRtl ? "" : "rotate-180"}`} />
           </Link>
         </div>

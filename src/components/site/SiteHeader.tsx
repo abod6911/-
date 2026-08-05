@@ -46,6 +46,7 @@ export function SiteHeader() {
   const nav = [
     { to: "/", label: t("home") },
     { to: "/plans", label: t("readyPlans") },
+    { to: "/quick-plan", label: "خطة على السريع" },
     { to: "/places", label: t("places") },
     { to: "/offers", label: t("offers") },
     { to: "/advertise", label: t("advertise") },
@@ -55,7 +56,7 @@ export function SiteHeader() {
     <>
       <header
         className={`sticky top-0 z-40 transition-all duration-300 glass-header border-b border-[#E2D3BE]/60 ${
-          scrolled ? "shadow-md py-3" : "py-4"
+          scrolled ? "shadow-md py-2.5" : "py-3.5"
         }`}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4">
@@ -65,7 +66,7 @@ export function SiteHeader() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-6 md:flex">
+          <nav className="hidden items-center gap-5 lg:flex">
             {nav.map((item) => (
               <Link
                 key={item.to}
@@ -79,8 +80,8 @@ export function SiteHeader() {
           </nav>
 
           {/* Action CTAs */}
-          <div className="flex items-center gap-2.5">
-            {/* Quick Plan CTA */}
+          <div className="flex items-center gap-2">
+            {/* Prominent CTA */}
             <Link
               to="/quick-plan"
               className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#C96745] px-5 py-2.5 text-xs font-bold text-white shadow-lift transition-all hover:bg-[#b55837] animate-pulse-glow min-h-[44px]"
@@ -107,7 +108,7 @@ export function SiteHeader() {
               {darkMode ? <Sun className="h-4 w-4 text-[#E4A23B]" /> : <Moon className="h-4 w-4 text-[#397C78]" />}
             </button>
 
-            {/* Account / User Button */}
+            {/* User Button */}
             {user && user.id !== "guest" ? (
               <Link
                 to="/account"
@@ -129,7 +130,7 @@ export function SiteHeader() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setOpen(!open)}
-              className="rounded-xl border border-[#E2D3BE] bg-[#FAF6F0] p-2.5 text-[#252A28] md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="rounded-xl border border-[#E2D3BE] bg-[#FAF6F0] p-2.5 text-[#252A28] lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="القائمة"
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -139,8 +140,8 @@ export function SiteHeader() {
 
         {/* Mobile Dropdown Menu */}
         {open && (
-          <div className="border-t border-[#E2D3BE] bg-[#FAF6F0] dark:bg-[#161B1A] px-4 py-4 md:hidden animate-fade-in-down">
-            <nav className="flex flex-col gap-3">
+          <div className="border-t border-[#E2D3BE] bg-[#FAF6F0] dark:bg-[#161B1A] px-4 py-4 lg:hidden animate-fade-in-down">
+            <nav className="flex flex-col gap-2.5">
               {nav.map((item) => (
                 <Link
                   key={item.to}
@@ -154,7 +155,7 @@ export function SiteHeader() {
               <Link
                 to="/quick-plan"
                 onClick={() => setOpen(false)}
-                className="mt-2 flex items-center justify-center gap-2 rounded-full bg-[#C96745] py-3.5 text-center text-sm font-bold text-white"
+                className="mt-2 flex items-center justify-center gap-2 rounded-full bg-[#C96745] py-3.5 text-center text-sm font-bold text-white shadow-lift"
               >
                 <Sparkles className="h-4 w-4" />
                 {t("quickPlan")}

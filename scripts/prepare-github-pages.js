@@ -35,11 +35,12 @@ const indexHtmlContent = `<!DOCTYPE html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>وش الخطة؟ | Wesh Alkhutta — جدة</title>
+    <title>جِدّاو | JEDDAW — جدة تبدأ من هنا</title>
+    <meta name="description" content="جِدّاو يرتّب لك طلعة كاملة في جدة حسب وقتك وميزانيتك ومودك. اختر موقعك ووقتك، ونرتّب لك الخطة كاملة في أقل من دقيقة." />
     <link rel="icon" type="image/x-icon" href="./favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     ${cssFile ? `<link rel="stylesheet" href="./assets/${cssFile}" />` : ""}
   </head>
   <body>

@@ -1,110 +1,131 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Check } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { ArrowLeft, CheckCircle2, Sparkles, Zap } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export const Route = createFileRoute("/advertise")({
   head: () => ({
     meta: [
-      { title: "أعلن معنا | وش الخطة؟ — جدة" },
+      { title: "أعلن مع جِدّاو | JEDDAW — لأصحاب الأماكن والفعاليات" },
       {
         name: "description",
-        content:
-          "أضف مكانك في وش الخطة؟ واظهر داخل خطط الطلعات في جدة: باقات ظهور، عروض، وخطط برعايتك.",
+        content: "عندك مكان يستاهل يدخل خطط جِدّاو؟ حدّث معلومات مكانك، أضف عروضك، واظهر للأشخاص الذين يبحثون عن تجربة تناسبهم فعلًا.",
       },
-      { property: "og:title", content: "أعلن معنا — وش الخطة؟" },
-      { property: "og:description", content: "اظهر لجمهور يبحث عن طلعة في جدة الآن." },
-      { property: "og:url", content: "/advertise" },
     ],
     links: [{ rel: "canonical", href: "/advertise" }],
   }),
   component: AdvertisePage,
 });
 
-const packages = [
-  {
-    name: "Starter Visibility",
-    ar: "باقة الظهور",
-    icon: "🚀",
-    features: ["ملف موثّق", "صور إضافية", "ظهور في تصنيفك", "تقرير شهري"],
-    featuresEn: ["Verified profile", "Extra photos", "Show in category", "Monthly report"],
-  },
-  {
-    name: "Offers Growth",
-    ar: "باقة العروض",
-    icon: "💫",
-    features: ["كل ميزات باقة الظهور", "عروض متعددة نشطة", "عرض مميز في صفحة العروض", "استهداف الجمهور المناسب"],
-    featuresEn: ["All Starter features", "Multiple active offers", "Featured in Offers page", "Target right audience"],
-    featured: true,
-  },
-  {
-    name: "Sponsored Experience",
-    ar: "باقة الخطة برعايتك",
-    icon: "🏆",
-    features: ["كل الميزات السابقة", "خطة كاملة برعايتك", "محتوى تواصل اجتماعي", "صفحة حملة ورابط تتبّع"],
-    featuresEn: ["All Growth features", "Fully sponsored plan", "Social media content", "Campaign page & tracking link"],
-  },
-];
-
-function AdvertisePage() {
+export function AdvertisePage() {
   const { t, isRtl } = useLanguage();
 
+  const packages = [
+    {
+      name: "🚀 باقة الانطلاق",
+      price: "490 ر.س",
+      period: "/ شهر",
+      desc: "مثالية للمقاهي والمطاعم الناشئة للظهور المباشر في الخطط القريبة",
+      features: [
+        "إضافة المكان وتوثيق البيانات رسمياً",
+        "الظهور في نتائج بحث الأحياء القريبة",
+        "تحديث أوقات العمل والأسعار",
+        "عرض الإيموجيات والشارات الخاصة",
+      ],
+      featured: false,
+    },
+    {
+      name: "💫 الباقة المتقدمة",
+      price: "990 ر.س",
+      period: "/ شهر",
+      desc: "خيار رائع للظهور في الخطط الموصى بها وتقديم العروض الحصرية",
+      features: [
+        "كل مميزات باقة الانطلاق",
+        "شارة 'اختيار جِدّاو' الفاخرة",
+        "إضافة العروض والخصومات المباشرة",
+        "أولوية التواجد في خيارات التبديل",
+        "تقرير إحصائيات التفاعل شهرية",
+      ],
+      featured: true,
+    },
+    {
+      name: "🏆 الباقة الراعية",
+      price: "1,890 ر.س",
+      period: "/ شهر",
+      desc: "للعلامات والفعاليات التي تبحث عن أقصى انتشار في جدة",
+      features: [
+        "كل مميزات الباقة المتقدمة",
+        "الظهور في كروت الصفحة الرئيسية",
+        "إعلان ممول مميز في الخطط الجاهزة",
+        "دعم فني وتحديث فوري للمعلومات",
+      ],
+      featured: false,
+    },
+  ];
+
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <div className="animate-fade-in-up">
-        <h1 className="text-3xl font-bold md:text-4xl">💼 {t("businessTitle")}</h1>
-        <p className="mt-3 max-w-2xl text-muted-foreground">{t("businessDesc")}</p>
+    <div className="mx-auto max-w-6xl px-4 py-12">
+      {/* Header */}
+      <div className="text-center max-w-3xl mx-auto animate-fade-in-up">
+        <span className="inline-flex items-center gap-2 rounded-full bg-[#C96745]/15 px-4 py-1.5 text-xs font-bold text-[#C96745]">
+          <Zap className="h-4 w-4" /> {t("businessHeader")}
+        </span>
+        <h1 className="mt-4 text-3xl font-extrabold text-[#252A28] md:text-5xl">
+          {t("businessTitle")}
+        </h1>
+        <p className="mt-4 text-base md:text-lg text-[#6E716C] leading-relaxed font-semibold">
+          {t("businessDesc")}
+        </p>
       </div>
 
-      <div className="mt-8 grid gap-5 md:grid-cols-3">
-        {packages.map((p, index) => {
-          const delayClass = `delay-${index + 1}`;
-          
-          return (
-            <article
-              key={p.name}
-              className={`surface-card p-6 hover-lift animate-fade-in-up ${delayClass} ${
-                p.featured ? "ring-2 ring-coral ring-offset-2 ring-offset-background" : ""
-              }`}
-            >
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <span className="text-2xl">{p.icon}</span>
-                {isRtl ? p.ar : p.name}
-              </h2>
-              <p className="text-sm text-muted-foreground mt-1">{isRtl ? p.name : p.ar}</p>
-              <ul className="mt-5 space-y-3 text-sm">
-                {(isRtl ? p.features : p.featuresEn || p.features).map((f) => (
-                  <li key={f} className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                    {f}
+      {/* Packages Grid */}
+      <div className="mt-12 grid gap-8 md:grid-cols-3">
+        {packages.map((pkg, i) => (
+          <div
+            key={pkg.name}
+            className={`surface-card p-8 flex flex-col justify-between hover-lift relative ${
+              pkg.featured
+                ? "border-2 border-[#C96745] ring-2 ring-[#C96745]/20 bg-[#FAF6F0]"
+                : "border border-[#E2D3BE]"
+            }`}
+            style={{ animationDelay: `${i * 0.1}s` }}
+          >
+            {pkg.featured && (
+              <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#C96745] px-4 py-1 text-xs font-bold text-white shadow-sm">
+                الأكثر طلباً ⭐
+              </span>
+            )}
+
+            <div>
+              <h3 className="text-xl font-bold text-[#252A28]">{pkg.name}</h3>
+              <p className="mt-2 text-xs text-[#6E716C] font-semibold leading-relaxed">{pkg.desc}</p>
+
+              <div className="mt-6 flex items-baseline gap-1">
+                <span className="text-3xl font-extrabold text-[#C96745]">{pkg.price}</span>
+                <span className="text-xs text-[#6E716C] font-bold">{pkg.period}</span>
+              </div>
+
+              <ul className="mt-6 space-y-3 border-t border-[#E2D3BE] pt-6 text-sm">
+                {pkg.features.map((feat) => (
+                  <li key={feat} className="flex items-start gap-2 text-[#252A28] font-medium">
+                    <CheckCircle2 className="h-4.5 w-4.5 text-[#397C78] shrink-0 mt-0.5" />
+                    <span>{feat}</span>
                   </li>
                 ))}
               </ul>
-            </article>
-          );
-        })}
-      </div>
+            </div>
 
-      <div className="relative overflow-hidden rounded-3xl mt-12 bg-gradient-to-br from-navy to-navy-light p-8 text-pearl animate-fade-in-up delay-4 shadow-xl">
-        {/* Decorative blobs */}
-        <div className="absolute -top-24 -end-24 h-64 w-64 rounded-full bg-teal/20 blur-3xl"></div>
-        <div className="absolute -bottom-24 -start-24 h-64 w-64 rounded-full bg-coral/20 blur-3xl"></div>
-        
-        <div className="relative z-10">
-          <h2 className="text-2xl font-bold">
-            {isRtl ? "وش الخطوة القادمة؟" : "What's the Next Step?"}
-          </h2>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed opacity-90">
-            {isRtl 
-              ? "بوابة أصحاب الأعمال (توثيق الملكية، تحديث الأوقات، رفع العروض، وتحليلات الأداء) ولوحة الإدارة تُبنى في المرحلة القادمة بعد تفعيل قاعدة البيانات وتسجيل الدخول."
-              : "The Business Portal (claiming ownership, updating hours, uploading offers, and performance analytics) and the admin dashboard are being built in the next phase after activating the database and authentication."}
-          </p>
-          <Link
-            to="/quick-plan"
-            className="mt-6 inline-block rounded-full bg-gradient-to-r from-coral to-coral-light px-8 py-3.5 font-bold text-accent-foreground transition-all hover:scale-105 hover:shadow-lg hover:shadow-coral/25"
-          >
-            {t("quickPlan")}
-          </Link>
-        </div>
+            <button
+              onClick={() => alert("شكراً لاهتمامك! تواصل معنا عبر البريد أو واتساب للانضمام إلى جِدّاو.")}
+              className={`mt-8 w-full rounded-full py-3.5 text-center text-sm font-bold transition-all min-h-[48px] ${
+                pkg.featured
+                  ? "bg-[#C96745] text-white shadow-lift hover:bg-[#b55837]"
+                  : "border border-[#E2D3BE] bg-[#F4EBDD] text-[#252A28] hover:border-[#C96745]"
+              }`}
+            >
+              {t("addPlace")}
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

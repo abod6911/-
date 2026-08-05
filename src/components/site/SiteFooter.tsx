@@ -41,13 +41,13 @@ export function SiteFooter() {
           <div>
             <h3 className="mb-4 font-bold text-[#FAF6F0] text-lg">{t("socialHeader")}</h3>
             <div className="flex flex-wrap gap-2.5">
-              <a href="https://twitter.com/weshalkhutta" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAF6F0]/10 hover:bg-[#C96745] hover:text-white transition-all font-semibold text-xs min-h-[40px]">
+              <a href="https://twitter.com/jeddaw" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAF6F0]/10 hover:bg-[#C96745] hover:text-white transition-all font-semibold text-xs min-h-[40px]">
                 <Twitter className="h-4 w-4" />
-                <span>Twitter / X</span>
+                <span>@jeddaw</span>
               </a>
-              <a href="https://instagram.com/weshalkhutta" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAF6F0]/10 hover:bg-[#C96745] hover:text-white transition-all font-semibold text-xs min-h-[40px]">
+              <a href="https://instagram.com/jeddaw" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAF6F0]/10 hover:bg-[#C96745] hover:text-white transition-all font-semibold text-xs min-h-[40px]">
                 <Instagram className="h-4 w-4" />
-                <span>Instagram</span>
+                <span>@jeddaw</span>
               </a>
             </div>
           </div>
@@ -74,7 +74,7 @@ export function SiteFooter() {
       <div className="mx-auto mt-14 max-w-6xl pt-8 relative flex flex-col items-center border-t border-[#FAF6F0]/15">
         <RouteLine className="absolute -top-3 h-1 w-full max-w-md animate-route-draw opacity-40 rounded-full" />
         <p className="text-xs text-[#FAF6F0]/60 text-center font-medium">
-          © 2026 {t("brandName")} — Give us your time, and we'll plan the rest.
+          © 2026 {t("brandName")} (JEDDAW) — {t("slogan")} {t("sloganEn")}
         </p>
       </div>
     </footer>

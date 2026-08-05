@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Compass, Heart, Home, Sparkles, User } from "lucide-react";
+import { Bookmark, Compass, Home, Sparkles, User } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function MobileTabBar() {
@@ -7,9 +7,9 @@ export function MobileTabBar() {
 
   const items = [
     { to: "/", label: t("home"), icon: Home },
-    { to: "/places", label: t("places"), icon: Compass },
-    { to: "/quick-plan", label: t("quickPlan"), icon: Sparkles, center: true },
-    { to: "/offers", label: t("offers"), icon: Heart },
+    { to: "/places", label: "استكشف", icon: Compass },
+    { to: "/quick-plan", label: "خطتك", icon: Sparkles, center: true },
+    { to: "/plans", label: "المحفوظات", icon: Bookmark },
     { to: "/account", label: t("account"), icon: User },
   ] as const;
 
