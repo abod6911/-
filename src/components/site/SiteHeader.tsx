@@ -47,16 +47,16 @@ export function SiteHeader() {
     { to: "/", label: t("home") },
     { to: "/plans", label: t("readyPlans") },
     { to: "/quick-plan", label: "خطة على السريع" },
-    { to: "/places", label: "استكشف جدة على راحتك 🗺️" },
-    { to: "/offers", label: t("offers") },
+    { to: "/places", label: "استكشف جدة 🗺️" },
+    { to: "/offers", label: "عروض جدة 🔥" },
     { to: "/advertise", label: t("advertise") },
   ] as const;
 
   return (
     <>
       <header
-        className={`sticky top-0 z-40 transition-all duration-300 glass-header border-b border-[#E2D3BE]/60 ${
-          scrolled ? "shadow-md py-2.5" : "py-3.5"
+        className={`sticky top-0 z-40 transition-all duration-300 glass-header border-b border-[#E2D3BE]/60 dark:border-white/10 ${
+          scrolled ? "shadow-lg py-2.5" : "py-3.5"
         }`}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4">
@@ -66,13 +66,13 @@ export function SiteHeader() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-5 lg:flex">
+          <nav className="hidden items-center gap-6 lg:flex">
             {nav.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
                 activeProps={{ className: "text-[#C96745] font-extrabold" }}
-                className="text-sm font-semibold text-[#252A28] dark:text-[#F5F1E8] hover:text-[#C96745] transition-colors"
+                className="text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] hover:text-[#C96745] transition-colors relative py-1"
               >
                 {item.label}
               </Link>
@@ -80,11 +80,11 @@ export function SiteHeader() {
           </nav>
 
           {/* Action CTAs */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             {/* Prominent CTA */}
             <Link
               to="/quick-plan"
-              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#C96745] px-5 py-2.5 text-xs font-bold text-white shadow-lift transition-all hover:bg-[#b55837] animate-pulse-glow min-h-[44px]"
+              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#C96745] px-5 py-2.5 text-xs font-extrabold text-white shadow-lift transition-all hover:bg-[#b55837] animate-pulse-glow min-h-[44px]"
             >
               <Sparkles className="h-4 w-4" />
               <span>{t("quickPlan")}</span>
@@ -93,16 +93,16 @@ export function SiteHeader() {
             {/* Language Switcher */}
             <button
               onClick={toggleLang}
-              className="inline-flex items-center gap-1.5 rounded-full border border-[#E2D3BE] bg-[#FAF6F0] dark:bg-[#222826] px-3.5 py-2 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all min-h-[44px]"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] px-3.5 py-2 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all min-h-[44px]"
             >
-              <Globe className="h-4 w-4 text-[#397C78]" />
+              <Globe className="h-4 w-4 text-[#397C78] dark:text-[#5EAAA5]" />
               <span>{lang === "ar" ? "EN" : "عربي"}</span>
             </button>
 
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="rounded-full border border-[#E2D3BE] bg-[#FAF6F0] dark:bg-[#222826] p-2.5 text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] p-2.5 text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="تغيير الثيم"
             >
               {darkMode ? <Sun className="h-4 w-4 text-[#E4A23B]" /> : <Moon className="h-4 w-4 text-[#397C78]" />}
@@ -130,7 +130,7 @@ export function SiteHeader() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setOpen(!open)}
-              className="rounded-xl border border-[#E2D3BE] bg-[#FAF6F0] p-2.5 text-[#252A28] lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] p-2.5 text-[#252A28] dark:text-[#F5F1E8] lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="القائمة"
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -140,14 +140,14 @@ export function SiteHeader() {
 
         {/* Mobile Dropdown Menu */}
         {open && (
-          <div className="border-t border-[#E2D3BE] bg-[#FAF6F0] dark:bg-[#161B1A] px-4 py-4 lg:hidden animate-fade-in-down">
+          <div className="border-t border-[#E2D3BE] dark:border-white/10 bg-[#FAF6F0] dark:bg-[#161B1A] px-4 py-4 lg:hidden animate-fade-in-down">
             <nav className="flex flex-col gap-2.5">
               {nav.map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}
                   onClick={() => setOpen(false)}
-                  className="rounded-xl px-4 py-3 text-base font-bold text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#F4EBDD]"
+                  className="rounded-xl px-4 py-3 text-base font-bold text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#F4EBDD] dark:hover:bg-[#222826]"
                 >
                   {item.label}
                 </Link>
@@ -155,7 +155,7 @@ export function SiteHeader() {
               <Link
                 to="/quick-plan"
                 onClick={() => setOpen(false)}
-                className="mt-2 flex items-center justify-center gap-2 rounded-full bg-[#C96745] py-3.5 text-center text-sm font-bold text-white shadow-lift"
+                className="mt-2 flex items-center justify-center gap-2 rounded-full bg-[#C96745] py-3.5 text-center text-sm font-extrabold text-white shadow-lift"
               >
                 <Sparkles className="h-4 w-4" />
                 {t("quickPlan")}
