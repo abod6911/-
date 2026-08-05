@@ -7,6 +7,14 @@ import { districts } from "@/data/jeddah";
 export function AuthModal({ onClose }: { onClose: () => void }) {
   const { t, isRtl } = useLanguage();
   const { login, register } = useAuth();
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -56,7 +64,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
       className="modal-overlay z-50 flex items-center justify-center p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="modal-content animate-modal-in max-w-md w-full p-6 md:p-8 bg-[#FAF6F0] dark:bg-[#1C2422] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 rounded-3xl shadow-2xl relative">
+      <div className="modal-content max-w-md w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 bg-[#FAF6F0] dark:bg-[#1C2422] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 rounded-3xl shadow-2xl relative">
         {/* Close Button */}
         <button
           onClick={onClose}

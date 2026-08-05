@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ExternalLink, MapPin, Navigation, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { getDistrict } from "@/data/jeddah";
@@ -13,13 +13,20 @@ export function RouteMapModal({
 }) {
   const { t, isRtl } = useLanguage();
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   const googleRouteUrl = `https://www.google.com/maps/dir/${plan.stops
     .map((s) => encodeURIComponent(`${s.place.nameEn} Jeddah`))
     .join("/")}`;
 
   return (
-    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal-content max-w-2xl animate-modal-in">
+    <div className="modal-overlay z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="modal-content max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-modal-in surface-card bg-[#FAF6F0] dark:bg-[#222826] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 p-6 rounded-3xl shadow-2xl">
         <div className="flex items-center justify-between border-b border-border pb-4">
           <div className="flex items-center gap-2">
             <MapPin className="h-6 w-6 text-teal" />
