@@ -95,9 +95,7 @@ function AccountPage() {
                   </p>
                 </div>
                 <div className="mt-4 border-t border-[#E2D3BE] pt-3 flex items-center justify-between text-xs font-bold text-[#C96745]">
-                  <span>
-                    {"pricePerPerson" in plan ? plan.pricePerPerson : plan.budgetPerPerson} ر.س / شخص
-                  </span>
+                  <span>{"pricePerPerson" in plan ? `${plan.pricePerPerson} ر.س / شخص` : plan.tagAr}</span>
                   <span>{plan.stops.length} محطات</span>
                 </div>
               </article>
