@@ -6,7 +6,8 @@ export type Mood =
   | "adventure"
   | "calm"
   | "culture"
-  | "shopping";
+  | "shopping"
+  | "new";
 
 export type PlaceKind =
   | "activity"
@@ -18,7 +19,20 @@ export type PlaceKind =
   | "hotel"
   | "resort";
 
-export type GroupType = "solo" | "friends" | "couple" | "family" | "kids" | "coworkers" | "tourist";
+export type GroupType =
+  | "solo"
+  | "friends"
+  | "couple"
+  | "duo"
+  | "family"
+  | "kids"
+  | "coworkers"
+  | "work"
+  | "tourist"
+  | "tourists"
+  | "seniors";
+
+export type DistrictId = string;
 
 export type BudgetLevel = "economy" | "balanced" | "premium";
 
@@ -720,6 +734,10 @@ export const groupLabels: Record<GroupType, { ar: string; en: string }> = {
   kids: { ar: "معي أطفال 👶", en: "With Kids" },
   coworkers: { ar: "زملاء العمل 💼", en: "Coworkers" },
   tourist: { ar: "سياح 🧳", en: "Tourists" },
+  duo: { ar: "شخصين 👥", en: "Duo" },
+  work: { ar: "زملاء العمل 💼", en: "Work" },
+  tourists: { ar: "سياح 🧳", en: "Tourists" },
+  seniors: { ar: "كبار السن 🧓", en: "Seniors" },
 };
 
 export const moodLabels: Record<Mood, { ar: string; en: string }> = {
