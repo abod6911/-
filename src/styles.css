@@ -460,11 +460,10 @@
   box-shadow: var(--shadow-soft);
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
               box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@utility surface-card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lift);
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+  }
 }
 
 @utility glass-card {
@@ -511,19 +510,18 @@
 @utility gradient-border {
   position: relative;
   border: none;
-}
-
-@utility gradient-border::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: linear-gradient(135deg, var(--teal), var(--coral));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: linear-gradient(135deg, var(--teal), var(--coral));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
 }
 
 /* Animation utilities */
@@ -592,24 +590,24 @@
 @utility hover-lift {
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
               box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-@utility hover-lift:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lift);
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lift);
+  }
 }
 
 @utility hover-scale {
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-}
-@utility hover-scale:hover {
-  transform: scale(1.03);
+  &:hover {
+    transform: scale(1.03);
+  }
 }
 
 @utility hover-glow {
   transition: box-shadow 0.3s ease;
-}
-@utility hover-glow:hover {
-  box-shadow: var(--shadow-glow);
+  &:hover {
+    box-shadow: var(--shadow-glow);
+  }
 }
 
 /* ==========================================================================
