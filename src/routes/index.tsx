@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2, Compass, Flame, MapPin, Navigation, Sparkles, Star, Users, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Compass, Flame, MapPin, Navigation, Search, Sparkles, Star, Users, Zap } from "lucide-react";
 import { PlaceCard } from "@/components/places/PlaceCard";
 import { getTrendingPlaces } from "@/data/trending";
 import { places, type Mood, type Place } from "@/data/jeddah";
@@ -48,9 +48,17 @@ const quickVibes: VibeChip[] = [
 
 function Index() {
   const { t, isRtl } = useLanguage();
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedVibe, setSelectedVibe] = useState<VibeChip>(quickVibes[0]);
 
-  // Filter matching places for the selected vibe
+  const handleHeroSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate({ to: "/places" });
+    }
+  };
+
   const getMatchingVibePlaces = (vibe: VibeChip): Place[] => {
     return places
       .filter((p) => {
@@ -67,27 +75,30 @@ function Index() {
 
   return (
     <div>
-      {/* ===== Vibrant Coastal Hero Section ===== */}
-      <section className="relative overflow-hidden bg-[#1D3A37] text-white pt-24 pb-20 md:pt-32 md:pb-28">
-        {/* Background Image with Warm Coastal Gradient */}
-        <div className="absolute inset-0 z-0">
+      {/* ===== ULTRA-MODERN VIBRANT COASTAL HERO SECTION ===== */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0D2321] via-[#1D3A37] to-[#132826] text-white pt-20 pb-28 md:pt-28 md:pb-36">
+        {/* Ambient Glowing Light Mesh Orbs */}
+        <div className="absolute -top-24 -start-24 h-96 w-96 rounded-full bg-[#C96745]/25 blur-3xl pointer-events-none animate-pulse" />
+        <div className="absolute bottom-0 end-0 h-96 w-96 rounded-full bg-[#397C78]/35 blur-3xl pointer-events-none animate-pulse" />
+
+        {/* Background Image Overlay */}
+        <div className="absolute inset-0 z-0 opacity-25 mix-blend-overlay">
           <img
             src="/assets/jeddah-route-hero-BCiUi1Qn.jpg"
-            alt="جدة الكورنيش والبحر"
-            className="h-full w-full object-cover object-center opacity-40 mix-blend-overlay"
+            alt="جدة البحر الأحمر"
+            className="h-full w-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1D3A37]/80 via-[#1D3A37]/65 to-[#1D3A37]" />
         </div>
 
         {/* Hero Content */}
-        <div className="relative mx-auto max-w-5xl px-4 text-center w-full">
-          {/* Small Brand Tagline Badge */}
-          <div className="animate-fade-in-up inline-flex items-center gap-2 rounded-full bg-[#FAF6F0]/15 px-5 py-2 text-xs font-extrabold text-white backdrop-blur-md border border-white/25 shadow-lg">
+        <div className="relative z-10 mx-auto max-w-5xl px-4 text-center w-full">
+          {/* Top Floating Badge */}
+          <div className="animate-fade-in-up inline-flex items-center gap-2 rounded-full bg-white/10 px-5 py-2 text-xs font-extrabold text-white backdrop-blur-xl border border-white/20 shadow-2xl">
             <Sparkles className="h-4 w-4 text-[#E4A23B] animate-pulse" />
             <span>{t("slogan")}</span>
           </div>
 
-          {/* Main Headline */}
+          {/* Main Hero Headline */}
           <h1 className="animate-fade-in-up delay-1 mt-6 text-3xl font-black leading-relaxed md:text-5xl md:leading-[1.4] text-white">
             {isRtl ? "محتار وين تروح اليوم؟" : "Wondering Where to Go Today?"} <br className="hidden md:inline" />
             <span className="bg-gradient-to-r from-[#FF9D7A] via-[#F4EBDD] to-[#5EAAA5] bg-clip-text text-transparent block mt-2">
@@ -96,72 +107,100 @@ function Index() {
           </h1>
 
           {/* Subtitle */}
-          <p className="animate-fade-in-up delay-2 mt-5 mx-auto max-w-2xl text-base leading-relaxed text-white/90 md:text-lg font-semibold">
-            {t("heroDesc")}
+          <p className="animate-fade-in-up delay-2 mt-4 mx-auto max-w-2xl text-base leading-relaxed text-white/90 md:text-lg font-semibold">
+            اختر وقتك وميزانيتك وجوّكم، وجِدّاو يرتّب لكم النشاط والمطعم والقهوة والمسار كاملاً في أقل من دقيقة.
           </p>
 
-          {/* Primary & Secondary Buttons */}
-          <div className="animate-fade-in-up delay-3 mt-9 flex flex-wrap gap-4 items-center justify-center">
-            <Link
-              to="/quick-plan"
-              className="group inline-flex items-center gap-3 rounded-full bg-[#C96745] px-9 py-4 text-base font-black text-white shadow-lift transition-all duration-300 hover:-translate-y-1 hover:bg-[#b55837] animate-pulse-glow min-h-[56px]"
-            >
-              <Sparkles className="h-5 w-5" />
-              <span>{t("quickPlan")}</span>
-              <ArrowLeft className={`h-5 w-5 transition-transform duration-300 group-hover:-translate-x-1 ${isRtl ? "" : "rotate-180 group-hover:translate-x-1"}`} />
-            </Link>
-            <Link
-              to="/places"
-              className="inline-flex items-center gap-2.5 rounded-full bg-white/10 border border-white/30 px-8 py-4 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:border-white/60 min-h-[56px]"
-            >
-              <Navigation className="h-4 w-4" />
-              <span>{t("explorePlaces")}</span>
-            </Link>
+          {/* ===== ULTRA-MODERN INTERACTIVE SEARCH & QUICK PLAN BAR ===== */}
+          <div className="animate-fade-in-up delay-3 mt-8 mx-auto max-w-3xl">
+            <form onSubmit={handleHeroSearch} className="rounded-3xl bg-white/15 backdrop-blur-2xl border border-white/25 p-3 md:p-4 shadow-2xl flex flex-col md:flex-row items-center gap-3">
+              <div className="relative flex-1 w-full">
+                <Search className="absolute start-4 top-3.5 h-5 w-5 text-white/70" />
+                <input
+                  type="text"
+                  placeholder="وين حاب تروح؟ (مثلاً: مطعم شامي، كافيه هادي، روزوود، رد سي مول)..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full rounded-2xl bg-white/10 ps-12 pe-4 py-3 text-sm font-semibold text-white placeholder-white/60 border border-white/15 focus:outline-none focus:bg-white/20 focus:border-white/40 transition-all"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 w-full md:w-auto">
+                <Link
+                  to="/quick-plan"
+                  className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#C96745] px-7 py-3.5 text-sm font-black text-white shadow-lift hover:bg-[#b55837] transition-all animate-pulse-glow min-h-[48px] whitespace-nowrap"
+                >
+                  <Sparkles className="h-4.5 w-4.5" />
+                  <span>{t("quickPlan")}</span>
+                  <ArrowLeft className={`h-4.5 w-4.5 ${isRtl ? "" : "rotate-180"}`} />
+                </Link>
+
+                <Link
+                  to="/places"
+                  className="hidden sm:inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 border border-white/25 px-5 py-3.5 text-sm font-bold text-white backdrop-blur hover:bg-white/20 transition-all min-h-[48px] whitespace-nowrap"
+                >
+                  <Navigation className="h-4 w-4" />
+                  <span>استكشف</span>
+                </Link>
+              </div>
+            </form>
+
+            {/* Quick Category Shortcuts */}
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs font-bold">
+              <span className="text-white/70 me-1">اختصارات سريعة:</span>
+              <Link to="/places" className="rounded-full bg-white/10 px-3.5 py-1.5 border border-white/15 hover:bg-white/20 transition-colors">
+                🍽️ مطاعم
+              </Link>
+              <Link to="/places" className="rounded-full bg-white/10 px-3.5 py-1.5 border border-white/15 hover:bg-white/20 transition-colors">
+                ☕ كافيهات
+              </Link>
+              <Link to="/places" className="rounded-full bg-white/10 px-3.5 py-1.5 border border-white/15 hover:bg-white/20 transition-colors">
+                🛍️ مولات وتسوق
+              </Link>
+              <Link to="/places" className="rounded-full bg-white/10 px-3.5 py-1.5 border border-white/15 hover:bg-white/20 transition-colors">
+                🏨 فنادق 5 نجوم
+              </Link>
+              <Link to="/places" className="rounded-full bg-white/10 px-3.5 py-1.5 border border-white/15 hover:bg-white/20 transition-colors">
+                🏖️ منتجعات أبحر
+              </Link>
+            </div>
           </div>
 
-          {/* Social Proof Floating Pill */}
-          <div className="animate-fade-in-up delay-4 mt-10 inline-flex items-center gap-3 rounded-full bg-black/40 border border-white/20 px-6 py-2.5 backdrop-blur-md shadow-md">
+          {/* Live Stats Floating Pill */}
+          <div className="animate-fade-in-up delay-4 mt-8 inline-flex items-center gap-3 rounded-full bg-black/40 border border-white/20 px-6 py-2.5 backdrop-blur-md shadow-lg">
             <span className="flex -space-x-2 overflow-hidden">
               <span className="inline-block h-6 w-6 rounded-full bg-[#C96745] text-center text-xs font-bold text-white leading-6 shadow-sm">🔥</span>
               <span className="inline-block h-6 w-6 rounded-full bg-[#397C78] text-center text-xs font-bold text-white leading-6 shadow-sm">🌊</span>
               <span className="inline-block h-6 w-6 rounded-full bg-[#E4A23B] text-center text-xs font-bold text-white leading-6 shadow-sm">✨</span>
             </span>
             <span className="text-xs md:text-sm font-bold text-white/95">
-              {t("socialProof")}
+              ⭐ 4.9/5.0 تقييم أكثر من 15,000 طلعة تم تنظيمها هذا الشهر في جدة
             </span>
           </div>
         </div>
       </section>
 
       {/* ===== Floating Core Value Proposition Banner ===== */}
-      <div className="relative z-30 -mt-10 mx-auto max-w-5xl px-4">
-        <div className="rounded-3xl bg-gradient-to-r from-[#295652] via-[#397C78] to-[#C96745] text-white p-6 md:p-8 shadow-2xl border border-white/20 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-lg">
+      <div className="relative z-30 -mt-12 mx-auto max-w-5xl px-4">
+        <div className="rounded-3xl bg-gradient-to-r from-[#295652] via-[#397C78] to-[#C96745] text-white p-6 md:p-8 shadow-2xl border border-white/25 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-xl">
           <div className="text-center md:text-start">
             <span className="text-xs font-bold uppercase tracking-wider text-[#FF9D7A] block mb-2">
-              {isRtl ? "💡 ليش اختاروا جِدّاو؟" : "💡 Why Choose JEDDAW?"}
+              💡 ليش اختاروا جِدّاو؟
             </span>
             <p className="text-base md:text-lg font-extrabold text-white leading-relaxed">
-              {isRtl ? (
-                <>
-                  المواقع الثانية تعطيك أماكن. <span className="underline underline-offset-6 decoration-[#FF9D7A]">جِدّاو يرتّب لك الطلعة كاملة.</span>
-                </>
-              ) : (
-                <>
-                  Other sites give you locations. <span className="underline underline-offset-6 decoration-[#FF9D7A]">JEDDAW plans your complete outing.</span>
-                </>
-              )}
+              المواقع الثانية تعطيك أماكن. <span className="underline underline-offset-6 decoration-[#FF9D7A]">جِدّاو يرتّب لك الطلعة كاملة.</span>
             </p>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-bold mt-2 md:mt-0">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15">
-              {isRtl ? "⚡ تخطيط فوري" : "⚡ Instant Planning"}
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15 shadow-sm">
+              ⚡ تخطيط فوري
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15">
-              {isRtl ? "💰 موزون على ميزانيتك" : "💰 Budget-Friendly"}
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15 shadow-sm">
+              💰 موزون على ميزانيتك
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15">
-              {isRtl ? "📍 مسار وخرائط مجهزة" : "📍 Turn-by-Turn Route"}
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15 shadow-sm">
+              📍 مسار وخرائط مجهزة
             </span>
           </div>
         </div>
