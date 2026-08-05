@@ -46,10 +46,9 @@ export function SiteHeader() {
 
   const nav = [
     { to: "/", label: t("home") },
-    { to: "/plans", label: t("readyPlans") },
-    { to: "/quick-plan", label: isRtl ? "خطة على السريع" : "Quick Outing" },
-    { to: "/places", label: isRtl ? "استكشف جدة 🗺️" : "Explore Jeddah 🗺️" },
-    { to: "/offers", label: isRtl ? "عروض جدة 🔥" : "Jeddah Offers 🔥" },
+    { to: "/plans", label: isRtl ? "خطط جاهزة" : "Plans" },
+    { to: "/places", label: isRtl ? "استكشف جدة 🗺️" : "Explore 🗺️" },
+    { to: "/offers", label: isRtl ? "عروض جدة 🔥" : "Offers 🔥" },
     { to: "/advertise", label: t("advertise") },
   ] as const;
 
@@ -60,32 +59,34 @@ export function SiteHeader() {
           scrolled ? "shadow-lg py-2.5" : "py-3.5"
         }`}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4">
-          {/* Logo */}
-          <Link to="/" className="hover-scale">
-            <Logo />
-          </Link>
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 md:px-8">
+          {/* Logo & Desktop Nav Group */}
+          <div className="flex items-center gap-6 xl:gap-10">
+            <Link to="/" className="hover-scale shrink-0 me-2 xl:me-4">
+              <Logo />
+            </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden items-center gap-6 lg:flex">
-            {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                activeProps={{ className: "text-[#C96745] font-extrabold" }}
-                className="text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] hover:text-[#C96745] transition-colors relative py-1"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+            {/* Desktop Nav Links */}
+            <nav className="hidden items-center gap-4 xl:gap-7 lg:flex">
+              {nav.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  activeProps={{ className: "text-[#C96745] font-extrabold" }}
+                  className="text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] hover:text-[#C96745] transition-colors whitespace-nowrap py-1"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
           {/* Action CTAs */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 md:gap-3 shrink-0">
             {/* Prominent CTA */}
             <Link
               to="/quick-plan"
-              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#C96745] px-5 py-2.5 text-xs font-extrabold text-white shadow-lift transition-all hover:bg-[#b55837] animate-pulse-glow min-h-[44px]"
+              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#C96745] px-5 py-2.5 text-xs font-extrabold text-white shadow-lift transition-all hover:bg-[#b55837] animate-pulse-glow min-h-[44px] whitespace-nowrap"
             >
               <Sparkles className="h-4 w-4" />
               <span>{t("quickPlan")}</span>
@@ -94,7 +95,7 @@ export function SiteHeader() {
             {/* Language Switcher */}
             <button
               onClick={toggleLang}
-              className="inline-flex items-center gap-1.5 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] px-3.5 py-2 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all min-h-[44px]"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] px-3.5 py-2 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all min-h-[44px] whitespace-nowrap"
             >
               <Globe className="h-4 w-4 text-[#397C78] dark:text-[#5EAAA5]" />
               <span>{lang === "ar" ? "EN" : "عربي"}</span>
@@ -103,7 +104,7 @@ export function SiteHeader() {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] p-2.5 text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] p-2.5 text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0"
               aria-label="تغيير الثيم"
             >
               {darkMode ? <Sun className="h-4 w-4 text-[#E4A23B]" /> : <Moon className="h-4 w-4 text-[#397C78]" />}
@@ -113,7 +114,7 @@ export function SiteHeader() {
             {user && user.id !== "guest" ? (
               <Link
                 to="/account"
-                className="inline-flex items-center gap-2 rounded-full bg-[#397C78] px-4 py-2 text-xs font-bold text-white min-h-[44px]"
+                className="inline-flex items-center gap-2 rounded-full bg-[#397C78] px-4 py-2 text-xs font-bold text-white min-h-[44px] whitespace-nowrap"
               >
                 <UserIcon className="h-4 w-4" />
                 <span className="max-w-[100px] truncate">{user.name}</span>
@@ -121,7 +122,7 @@ export function SiteHeader() {
             ) : (
               <button
                 onClick={() => setShowAuth(true)}
-                className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-[#C96745] px-4 py-2 text-xs font-bold text-[#C96745] hover:bg-[#C96745] hover:text-white transition-all min-h-[44px]"
+                className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-[#C96745] px-4 py-2 text-xs font-bold text-[#C96745] hover:bg-[#C96745] hover:text-white transition-all min-h-[44px] whitespace-nowrap"
               >
                 <UserIcon className="h-4 w-4" />
                 <span>{t("signIn")}</span>
@@ -131,7 +132,7 @@ export function SiteHeader() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setOpen(!open)}
-              className="rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] p-2.5 text-[#252A28] dark:text-[#F5F1E8] lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] p-2.5 text-[#252A28] dark:text-[#F5F1E8] lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0"
               aria-label="القائمة"
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
