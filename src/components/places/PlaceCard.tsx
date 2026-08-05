@@ -5,17 +5,6 @@ import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { PlaceDetailModal } from "./PlaceDetailModal";
 
-const kindTone: Record<Place["kind"], string> = {
-  activity: "from-[#C96745]/20 via-[#C96745]/10 to-[#F4EBDD]",
-  food: "from-[#397C78]/25 via-[#397C78]/10 to-[#F4EBDD]",
-  cafe: "from-[#E4A23B]/25 via-[#E4A23B]/10 to-[#F4EBDD]",
-  culture: "from-[#71805B]/25 via-[#71805B]/10 to-[#F4EBDD]",
-  outdoor: "from-[#397C78]/30 via-[#397C78]/10 to-[#F4EBDD]",
-  shopping: "from-[#C96745]/15 via-[#C96745]/5 to-[#F4EBDD]",
-  hotel: "from-[#C96745]/25 via-[#397C78]/15 to-[#F4EBDD]",
-  resort: "from-[#397C78]/35 via-[#C96745]/15 to-[#F4EBDD]",
-};
-
 const kindEmoji: Record<Place["kind"], string> = {
   activity: "🎮",
   food: "🍽️",
@@ -48,19 +37,26 @@ export function PlaceCard({ place }: { place: Place }) {
     <>
       <article
         onClick={() => setShowDetailModal(true)}
-        className="surface-card overflow-hidden hover-lift relative group cursor-pointer border border-[#E2D3BE] dark:border-white/10"
+        className="surface-card overflow-hidden hover-lift relative group cursor-pointer border border-[#E2D3BE] dark:border-white/10 flex flex-col justify-between"
       >
-        {/* Header gradient area */}
-        <div className={`relative flex h-32 items-end justify-between bg-gradient-to-br ${kindTone[place.kind]} p-4`}>
-          {/* Kind emoji & subCategory badge */}
-          <div className="absolute top-3 start-3 flex flex-wrap items-center gap-1.5">
-            <span className="text-2xl animate-fade-in">{kindEmoji[place.kind]}</span>
-            <span className="rounded-full bg-[#FAF6F0] dark:bg-[#161B1A] px-3 py-1 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] shadow-sm">
-              {place.subCategoryAr || place.categoryAr}
+        {/* Place Image with Hover Zoom */}
+        <div className="relative h-48 w-full overflow-hidden bg-slate-900">
+          <img
+            src={place.image}
+            alt={place.nameAr}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+          {/* Top Badges */}
+          <div className="absolute top-3 start-3 flex flex-wrap items-center gap-1.5 z-10">
+            <span className="rounded-full bg-[#FAF6F0]/90 dark:bg-[#161B1A]/90 backdrop-blur px-3 py-1 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] shadow-sm">
+              {kindEmoji[place.kind]} {place.subCategoryAr || place.categoryAr}
             </span>
             {place.trending && (
-              <span className="rounded-full bg-[#C96745] px-2.5 py-0.5 text-[11px] font-extrabold text-white">
-                🔥 ترند
+              <span className="rounded-full bg-[#C96745] px-2.5 py-1 text-[11px] font-extrabold text-white shadow-sm flex items-center gap-1">
+                <Flame className="h-3 w-3 fill-white" /> ترند
               </span>
             )}
           </div>
@@ -69,49 +65,49 @@ export function PlaceCard({ place }: { place: Place }) {
           <button
             onClick={handleFav}
             aria-label="المفضلة"
-            className={`absolute top-3 end-3 z-10 rounded-full p-2.5 shadow-sm backdrop-blur transition-all duration-300
+            className={`absolute top-3 end-3 z-10 rounded-full p-2.5 shadow-md backdrop-blur transition-all duration-300
               ${fav
-                ? "bg-[#C96745]/15 text-[#C96745] scale-110"
-                : "bg-[#FAF6F0] dark:bg-[#222826] text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#C96745]/10 hover:text-[#C96745]"
+                ? "bg-[#C96745] text-white scale-110"
+                : "bg-black/40 text-white hover:bg-[#C96745] hover:scale-105"
               }
-              ${justFaved ? "animate-heart" : "hover-scale"}
+              ${justFaved ? "animate-heart" : ""}
             `}
           >
-            <Heart className={`h-4.5 w-4.5 transition-all ${fav ? "fill-[#C96745] text-[#C96745]" : ""}`} />
+            <Heart className={`h-4.5 w-4.5 transition-all ${fav ? "fill-white" : ""}`} />
           </button>
+
+          {/* Bottom Overlay Info */}
+          <div className="absolute bottom-3 start-3 end-3 flex items-center justify-between text-white text-xs font-bold z-10">
+            <span className="flex items-center gap-1 bg-black/50 px-2.5 py-1 rounded-full backdrop-blur">
+              📍 {isRtl ? district.nameAr : district.nameEn}
+            </span>
+            {place.rating && (
+              <span className="flex items-center gap-1 bg-[#E4A23B] text-white px-2.5 py-1 rounded-full shadow-sm">
+                <Star className="h-3.5 w-3.5 fill-white" /> {place.rating}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Body */}
-        <div className="p-5 flex flex-col justify-between min-h-[190px]">
+        <div className="p-5 flex flex-col justify-between flex-1">
           <div>
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-bold text-[#397C78] dark:text-[#5EAAA5]">
-                📍 {isRtl ? district.nameAr : district.nameEn}
-              </span>
-              {place.rating && (
-                <span className="flex items-center gap-1 text-xs font-bold text-[#E4A23B]">
-                  <Star className="h-3.5 w-3.5 fill-[#E4A23B]" />
-                  {place.rating}
-                </span>
-              )}
-            </div>
-
-            <h3 className="mt-2 text-xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] group-hover:text-[#C96745] transition-colors">
+            <h3 className="text-xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] group-hover:text-[#C96745] transition-colors leading-tight">
               {isRtl ? place.nameAr : place.nameEn}
             </h3>
 
-            <p className="mt-1.5 text-xs text-[#6E716C] dark:text-[#B5B8B2] line-clamp-2 leading-relaxed font-semibold">
+            <p className="mt-2 text-xs text-[#6E716C] dark:text-[#B5B8B2] line-clamp-2 leading-relaxed font-medium">
               {isRtl ? place.descAr : place.descEn}
             </p>
           </div>
 
-          <div className="mt-4 border-t border-[#E2D3BE] dark:border-white/10 pt-3.5 flex items-center justify-between text-xs font-bold text-[#252A28] dark:text-[#F5F1E8]">
+          <div className="mt-4 border-t border-[#E2D3BE] dark:border-white/10 pt-3.5 flex items-center justify-between text-xs font-bold">
             <span className="flex items-center gap-1 text-[#C96745]">
               <Wallet className="h-4 w-4" />
-              {place.pricePerPerson === 0 ? "مجاني ✨" : `${place.pricePerPerson} ر.س`}
+              {place.pricePerPerson === 0 ? "مجاني ✨" : `${place.pricePerPerson} ر.س / شخص`}
             </span>
 
-            <span className="flex items-center gap-1 text-[#397C78] dark:text-[#5EAAA5]">
+            <span className="flex items-center gap-1 text-[#397C78] dark:text-[#5EAAA5] group-hover:underline">
               <ExternalLink className="h-3.5 w-3.5" /> التفاصيل والخرائط
             </span>
           </div>

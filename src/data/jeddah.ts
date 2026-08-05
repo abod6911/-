@@ -72,6 +72,7 @@ export interface Place {
   viewsCount?: number;
   trending?: boolean;
   mapsUrl?: string;
+  image: string;
 }
 
 const P = (p: Place) => p;
@@ -104,6 +105,7 @@ export const places: Place[] = [
     viewsCount: 9800,
     trending: true,
     mapsUrl: "https://maps.google.com/?q=21.62,39.1",
+    image: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?auto=format&fit=crop&w=800&q=80",
   }),
   P({
     id: "p2",
@@ -131,6 +133,7 @@ export const places: Place[] = [
     viewsCount: 6200,
     trending: false,
     mapsUrl: "https://maps.google.com/?q=21.56,39.15",
+    image: "https://images.unsplash.com/photo-1538356811268-397bc0132e77?auto=format&fit=crop&w=800&q=80",
   }),
   P({
     id: "p3",
@@ -158,9 +161,38 @@ export const places: Place[] = [
     viewsCount: 7600,
     trending: true,
     mapsUrl: "https://maps.google.com/?q=21.72,39.13",
+    image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
+  }),
+  P({
+    id: "p6",
+    nameAr: "تجربة الغوص في أبحر",
+    nameEn: "Obhur Diving Session",
+    kind: "outdoor",
+    categoryAr: "بحر ومغامرة",
+    districtId: "obhur",
+    moods: ["sea", "adventure"],
+    pricePerPerson: 280,
+    durationMin: 150,
+    indoor: false,
+    groups: ["friends", "couple", "tourist"],
+    kidsFriendly: false,
+    reservation: true,
+    verified: true,
+    accessible: false,
+    opensAt: 8,
+    closesAt: 18,
+    descAr: "جلسة غوص للمبتدئين والمحترفين مع مدرب معتمد في مياه أبحر صافية.",
+    descEn: "Beginner dive session with a certified instructor in Obhur.",
+    whyAr: "تجربة مميزة لعشاق البحر الأحمر.",
+    parkingAr: "مواقف المرسى",
+    rating: 4.9,
+    viewsCount: 11200,
+    trending: true,
+    mapsUrl: "https://maps.google.com/?q=21.78,39.09",
+    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80",
   }),
 
-  // ---- مطاعم شاملة (شامية، وجبات سريعة، سعودية قديمة، مصرية) ----
+  // ---- مطاعم شاملة ----
   P({
     id: "r1",
     nameAr: "مطعم صيادين البحر الأحمر",
@@ -189,6 +221,7 @@ export const places: Place[] = [
     viewsCount: 11800,
     trending: true,
     mapsUrl: "https://maps.google.com/?q=21.62,39.1",
+    image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80",
   }),
   P({
     id: "r2",
@@ -218,6 +251,7 @@ export const places: Place[] = [
     viewsCount: 10400,
     trending: true,
     mapsUrl: "https://maps.google.com/?q=21.48,39.19",
+    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
   }),
   P({
     id: "r3",
@@ -247,6 +281,7 @@ export const places: Place[] = [
     viewsCount: 8900,
     trending: true,
     mapsUrl: "https://maps.google.com/?q=21.55,39.16",
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
   }),
   P({
     id: "r9",
@@ -276,6 +311,7 @@ export const places: Place[] = [
     viewsCount: 12500,
     trending: true,
     mapsUrl: "https://maps.google.com/?q=21.56,39.15",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80",
   }),
   P({
     id: "r10",
@@ -305,35 +341,7 @@ export const places: Place[] = [
     viewsCount: 9400,
     trending: true,
     mapsUrl: "https://maps.google.com/?q=21.52,39.19",
-  }),
-  P({
-    id: "r5",
-    nameAr: "مطبخ الحجاز التراثي",
-    nameEn: "Hijaz Kitchen",
-    kind: "food",
-    categoryAr: "مطاعم",
-    subCategoryAr: "مطاعم سعودية قديمة",
-    subCategoryEn: "Traditional Saudi",
-    districtId: "hamra",
-    moods: ["food", "culture"],
-    pricePerPerson: 95,
-    durationMin: 80,
-    indoor: true,
-    groups: ["family", "couple", "tourist", "friends"],
-    kidsFriendly: true,
-    reservation: false,
-    verified: true,
-    accessible: true,
-    opensAt: 12,
-    closesAt: 24,
-    descAr: "سليق حجازي، فرموزة، وكرشات بتقديم عصري في حي الحمراء.",
-    descEn: "Traditional Hijazi dishes with a modern presentation.",
-    whyAr: "توازن ممتاز بين الجودة والروح التراثية.",
-    parkingAr: "مواقف خاصة",
-    rating: 4.7,
-    viewsCount: 8100,
-    trending: false,
-    mapsUrl: "https://maps.google.com/?q=21.53,39.16",
+    image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80",
   }),
 
   // ---- كافيهات ----
@@ -365,9 +373,40 @@ export const places: Place[] = [
     viewsCount: 14200,
     trending: true,
     mapsUrl: "https://maps.google.com/?q=21.62,39.1",
+    image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80",
+  }),
+  P({
+    id: "c4",
+    nameAr: "مقهى الشرفة والرووف",
+    nameEn: "Rooftop Sea Lounge",
+    kind: "cafe",
+    categoryAr: "كافيهات",
+    subCategoryAr: "كافيهات مختصة ورائية",
+    subCategoryEn: "Specialty & View Cafes",
+    districtId: "obhur",
+    moods: ["coffee", "sea", "calm"],
+    pricePerPerson: 75,
+    durationMin: 60,
+    indoor: false,
+    groups: ["couple", "friends", "tourist"],
+    kidsFriendly: false,
+    reservation: false,
+    verified: true,
+    accessible: false,
+    opensAt: 16,
+    closesAt: 26,
+    descAr: "مقهى سطح بإطلالة بانورامية ساحرة على مياه أبحر والغروب.",
+    descEn: "Rooftop café with sea views and quiet seating.",
+    whyAr: "أجواء مميزة ومثالية للروقان في المساء.",
+    parkingAr: "مواقف خاصة",
+    rating: 4.8,
+    viewsCount: 9900,
+    trending: true,
+    mapsUrl: "https://maps.google.com/?q=21.78,39.09",
+    image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80",
   }),
 
-  // ---- فنادق (Hotels) ----
+  // ---- فنادق ----
   P({
     id: "h1",
     nameAr: "فندق برج الواجهة 5 نجوم",
@@ -396,38 +435,10 @@ export const places: Place[] = [
     viewsCount: 15400,
     trending: true,
     mapsUrl: "https://maps.google.com/?q=21.62,39.1",
-  }),
-  P({
-    id: "h2",
-    nameAr: "فندق الكورنيش اللؤلؤي",
-    nameEn: "Pearl Corniche Hotel",
-    kind: "hotel",
-    categoryAr: "فنادق",
-    subCategoryAr: "فنادق 5 نجوم وفاخرة",
-    subCategoryEn: "Luxury Hotels",
-    districtId: "hamra",
-    moods: ["calm", "sea"],
-    pricePerPerson: 420,
-    durationMin: 1440,
-    indoor: true,
-    groups: ["couple", "family", "coworkers", "tourist"],
-    kidsFriendly: true,
-    reservation: true,
-    verified: true,
-    accessible: true,
-    opensAt: 0,
-    closesAt: 24,
-    descAr: "فندق عصري بقرب نافورة الملك فهد وجلسات شاطئية مريحة.",
-    descEn: "Modern hotel near King Fahd Fountain.",
-    whyAr: "موقع استراتيجي وسط خدمات كورنيش الحمراء.",
-    parkingAr: "مواقف خاصة مجانية",
-    rating: 4.7,
-    viewsCount: 10100,
-    trending: false,
-    mapsUrl: "https://maps.google.com/?q=21.53,39.16",
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80",
   }),
 
-  // ---- منتجعات (Resorts) ----
+  // ---- منتجعات ----
   P({
     id: "s1",
     nameAr: "منتجع شواطئ أبحر الفاخر",
@@ -456,6 +467,7 @@ export const places: Place[] = [
     viewsCount: 18200,
     trending: true,
     mapsUrl: "https://maps.google.com/?q=21.78,39.09",
+    image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80",
   }),
   P({
     id: "s2",
@@ -485,6 +497,7 @@ export const places: Place[] = [
     viewsCount: 22100,
     trending: true,
     mapsUrl: "https://maps.google.com/?q=21.62,39.1",
+    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
   }),
 ];
 
@@ -504,7 +517,6 @@ export const offers: Offer[] = [
   { id: "o1", placeId: "p2", titleAr: "خطين بولينغ بسعر خط", original: 130, price: 65, endAt: "2026-12-31", verifiedAt: "2026-07-28", termsAr: "من الأحد إلى الأربعاء فقط", sponsored: true },
   { id: "o2", placeId: "r1", titleAr: "خصم 20% على أطباق السمك", original: 175, price: 140, endAt: "2026-11-30", verifiedAt: "2026-07-21", termsAr: "لا يشمل العروض الأخرى" },
   { id: "o3", placeId: "c1", titleAr: "قهوة + حلى بـ 29 ريال", original: 45, price: 29, endAt: "2026-10-15", verifiedAt: "2026-08-01", termsAr: "قبل الساعة 6 مساءً" },
-  { id: "o4", placeId: "p3", titleAr: "جولتين كارتينغ بـ 150", original: 240, price: 150, endAt: "2026-09-30", verifiedAt: "2026-07-30", termsAr: "بحجز مسبق" },
 ];
 
 export interface ReadyPlan {
@@ -517,10 +529,46 @@ export interface ReadyPlan {
   stops: string[];
   groups: GroupType[];
   tagAr: string;
+  image: string;
 }
 
 export const readyPlans: ReadyPlan[] = [
-  { id: "rp1", slug: "under-100", titleAr: "جدة بأقل من 100 ريال", titleEn: "Jeddah under 100 SAR", descAr: "ممشى بحري، فطور شعبي، وقهوة اقتصادية.", budget: "economy", stops: ["p1", "r2", "c1"], groups: ["friends", "solo", "family"], tagAr: "الأكثر حفظًا" },
+  {
+    id: "rp1",
+    slug: "under-100",
+    titleAr: "جدة بأقل من 100 ريال",
+    titleEn: "Jeddah under 100 SAR",
+    descAr: "ممشى بحري، فطور شعبي، وقهوة اقتصادية.",
+    budget: "economy",
+    stops: ["p1", "r2", "c1"],
+    groups: ["friends", "solo", "family"],
+    tagAr: "الأكثر حفظًا",
+    image: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: "rp2",
+    slug: "sea-sunset",
+    titleAr: "طلعة غروب البحر والرومانسية",
+    titleEn: "Sea & Sunset Romantic Plan",
+    descAr: "دراجات بحرية، عشاء سمك طازج، وقهوة روف في أبحر.",
+    budget: "balanced",
+    stops: ["p1", "r1", "c4"],
+    groups: ["couple", "friends"],
+    tagAr: "اختيار جِدّاو",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: "rp3",
+    slug: "luxury-staycation",
+    titleAr: "يوم دلع وفخامة في أبحر",
+    titleEn: "Luxury Obhur Staycation",
+    descAr: "غوص، عشاء الشرفة العالية، وإقامة في شاليه عائم.",
+    budget: "premium",
+    stops: ["p6", "s2", "r1"],
+    groups: ["couple", "family"],
+    tagAr: "تجربة مميزة 💎",
+    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
+  },
 ];
 
 export const getPlace = (id: string): Place => {

@@ -27,8 +27,8 @@ function PlansPage() {
       <div className="animate-fade-in-up flex items-center gap-3">
         <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745]/15 text-xl">🗓️</span>
         <div>
-          <h1 className="text-3xl font-extrabold text-[#252A28] md:text-4xl">{t("readyPlansTitle")}</h1>
-          <p className="mt-1 text-sm text-[#6E716C] font-semibold">
+          <h1 className="text-3xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">{t("readyPlansTitle")}</h1>
+          <p className="mt-1 text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
             {isRtl ? "خطط جاهزة ومجربة من جِدّاو لجميع الأوقات والميزانيات" : "Ready itineraries created by JEDDAW"}
           </p>
         </div>
@@ -43,69 +43,86 @@ function PlansPage() {
           return (
             <article
               key={plan.id}
-              className={`surface-card flex flex-col justify-between p-6 hover-lift animate-fade-in-up delay-${(index % 6) + 1}`}
+              className={`surface-card overflow-hidden flex flex-col justify-between hover-lift animate-fade-in-up delay-${(index % 6) + 1} border border-[#E2D3BE] dark:border-white/10`}
             >
-              <div>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="rounded-full bg-[#C96745]/15 px-3 py-1 text-xs font-bold text-[#C96745]">
+              {/* Plan Image Header */}
+              <div className="relative h-44 w-full overflow-hidden">
+                <img
+                  src={plan.image}
+                  alt={plan.titleAr}
+                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute top-3 start-3 end-3 flex items-center justify-between z-10">
+                  <span className="rounded-full bg-[#C96745] px-3 py-1 text-xs font-extrabold text-white shadow-md">
                     {plan.tagAr}
                   </span>
-                  <span className="flex items-center gap-1 text-xs font-bold text-[#6E716C]">
-                    <Star className="h-3.5 w-3.5 text-[#E4A23B] fill-[#E4A23B]" />
-                    {budgetLevels[plan.budget].ar}
+                  <span className="rounded-full bg-black/50 backdrop-blur px-3 py-1 text-xs font-bold text-[#E4A23B] shadow-md">
+                    ⭐ {budgetLevels[plan.budget].ar}
                   </span>
                 </div>
-
-                <h2 className="mt-4 text-2xl font-extrabold text-[#252A28]">
-                  {isRtl ? plan.titleAr : plan.titleEn}
-                </h2>
-                <p className="mt-2 text-sm text-[#6E716C] leading-relaxed">{plan.descAr}</p>
-
-                {/* Stop Timeline */}
-                <ol className="mt-6 space-y-3 border-t border-[#E2D3BE] pt-4">
-                  {plan.stops.map((id, i) => {
-                    const place = getPlace(id);
-                    return (
-                      <li key={id} className="flex items-center gap-3">
-                        <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#397C78] text-[11px] font-bold text-white shadow-sm">
-                          {i + 1}
-                        </span>
-                        <span className="truncate text-sm font-bold text-[#252A28]">
-                          {isRtl ? place.nameAr : place.nameEn}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ol>
               </div>
 
-              <div className="mt-6 border-t border-[#E2D3BE] pt-4">
-                <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold text-[#6E716C] mb-4">
-                  <span className="flex items-center gap-1">
-                    <Wallet className="h-4 w-4 text-[#C96745]" />
-                    <span className="font-bold text-[#252A28]">{price} {isRtl ? "ر.س" : "SAR"}</span> {t("perPerson")}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-4 w-4 text-[#397C78]" />
-                    {Math.round(mins / 60)} {t("hours")}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MapPin className="h-4 w-4 text-[#6E716C]" />
-                    {plan.stops.length} {t("stations")}
-                  </span>
+              <div className="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
+                    {isRtl ? plan.titleAr : plan.titleEn}
+                  </h2>
+                  <p className="mt-2 text-sm text-[#6E716C] dark:text-[#B5B8B2] leading-relaxed font-medium">{plan.descAr}</p>
+
+                  {/* Stop Timeline with Place Images */}
+                  <ol className="mt-6 space-y-3 border-t border-[#E2D3BE] dark:border-white/10 pt-4">
+                    {plan.stops.map((id, i) => {
+                      const place = getPlace(id);
+                      return (
+                        <li key={id} className="flex items-center gap-3">
+                          <img
+                            src={place.image}
+                            alt={place.nameAr}
+                            className="h-10 w-10 rounded-xl object-cover shrink-0 border border-[#E2D3BE] dark:border-white/10"
+                          />
+                          <div className="truncate">
+                            <span className="truncate text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] block">
+                              {i + 1}. {isRtl ? place.nameAr : place.nameEn}
+                            </span>
+                            <span className="text-xs text-[#397C78] dark:text-[#5EAAA5] font-semibold">
+                              {place.categoryAr} · {place.pricePerPerson} ر.س
+                            </span>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ol>
                 </div>
 
-                <button
-                  onClick={() => savePlan(plan)}
-                  className={`w-full rounded-full border px-4 py-3 text-xs font-bold transition-all min-h-[44px] ${
-                    isSaved
-                      ? "bg-[#C96745] text-white border-[#C96745]"
-                      : "border-[#E2D3BE] bg-[#FAF6F0] text-[#252A28] hover:border-[#C96745]"
-                  }`}
-                >
-                  <Star className={`inline h-4 w-4 me-1.5 ${isSaved ? "fill-white" : ""}`} />
-                  {isSaved ? t("planSaved") : t("savePlan")}
-                </button>
+                <div className="mt-6 border-t border-[#E2D3BE] dark:border-white/10 pt-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold text-[#6E716C] dark:text-[#B5B8B2] mb-4">
+                    <span className="flex items-center gap-1">
+                      <Wallet className="h-4 w-4 text-[#C96745]" />
+                      <span className="font-bold text-[#252A28] dark:text-[#F5F1E8]">{price} {isRtl ? "ر.س" : "SAR"}</span> {t("perPerson")}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-4 w-4 text-[#397C78]" />
+                      {Math.round(mins / 60)} {t("hours")}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <MapPin className="h-4 w-4 text-[#6E716C]" />
+                      {plan.stops.length} {t("stations")}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => savePlan(plan)}
+                    className={`w-full rounded-full border px-4 py-3 text-xs font-bold transition-all min-h-[44px] ${
+                      isSaved
+                        ? "bg-[#C96745] text-white border-[#C96745]"
+                        : "border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745]"
+                    }`}
+                  >
+                    <Star className={`inline h-4 w-4 me-1.5 ${isSaved ? "fill-white" : ""}`} />
+                    {isSaved ? t("planSaved") : t("savePlan")}
+                  </button>
+                </div>
               </div>
             </article>
           );

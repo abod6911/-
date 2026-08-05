@@ -107,7 +107,13 @@ function score(place: Place, req: PlanRequest, cap: number, origin: string | nul
 function pick(pool: Place[], req: PlanRequest, cap: number, origin: string | null, flavor: PlanFlavor, used: Set<string>) {
   const ranked = pool
     .filter((p) => !used.has(p.id))
-    .map((p) => ({ p, s: score(p, req, cap, origin, flavor) }))
+    .map((p) => {
+      const baseScore = score(p, req, cap, origin, flavor);
+      const ratingBonus = (p.rating || 4.5) / 10;
+      const viewsBonus = Math.min(0.15, (p.viewsCount || 0) / 100000);
+      const randomJitter = (Math.random() - 0.5) * 0.35; // Ensures dynamic variety on every generation
+      return { p, s: baseScore + ratingBonus + viewsBonus + randomJitter };
+    })
     .sort((a, b) => b.s - a.s);
   return ranked.map((r) => r.p);
 }

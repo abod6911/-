@@ -16,6 +16,7 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { MobileTabBar } from "@/components/site/MobileTabBar";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { AiAssistant } from "@/components/ai/AiAssistant";
 
 function NotFoundComponent() {
   const { t } = useLanguage();
@@ -140,6 +141,7 @@ function RootComponent() {
             </main>
             <SiteFooter />
             <MobileTabBar />
+            <AiAssistant />
           </div>
         </AuthProvider>
       </LanguageProvider>
