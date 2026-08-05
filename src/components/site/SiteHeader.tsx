@@ -24,13 +24,13 @@ export function SiteHeader() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem("wesh_theme");
+      const savedTheme = localStorage.getItem("jeddaw_theme") || localStorage.getItem("wesh_theme");
       if (savedTheme === "dark") {
         document.documentElement.classList.add("dark");
         setDarkMode(true);
       } else {
-        const isDark = document.documentElement.classList.contains("dark");
-        setDarkMode(isDark);
+        document.documentElement.classList.remove("dark");
+        setDarkMode(false);
       }
     }
   }, []);
@@ -39,6 +39,7 @@ export function SiteHeader() {
     if (typeof window !== "undefined") {
       const isDark = document.documentElement.classList.toggle("dark");
       setDarkMode(isDark);
+      localStorage.setItem("jeddaw_theme", isDark ? "dark" : "light");
       localStorage.setItem("wesh_theme", isDark ? "dark" : "light");
     }
   };
