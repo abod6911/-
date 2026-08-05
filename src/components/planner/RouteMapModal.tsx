@@ -18,8 +18,8 @@ export function RouteMapModal({
     .join("/")}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy/60 p-4 backdrop-blur-sm">
-      <div className="surface-card w-full max-w-2xl overflow-hidden border border-border p-6 shadow-lift animate-in fade-in zoom-in-95">
+    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="modal-content max-w-2xl animate-modal-in">
         <div className="flex items-center justify-between border-b border-border pb-4">
           <div className="flex items-center gap-2">
             <MapPin className="h-6 w-6 text-teal" />

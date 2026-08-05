@@ -92,10 +92,10 @@ function Chip({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition-colors ${
+      className={`rounded-2xl border px-4 py-3.5 text-sm font-semibold transition-all duration-200 min-h-[44px] ${
         active
-          ? "border-teal bg-teal text-primary-foreground"
-          : "border-border bg-pearl text-navy hover:border-teal"
+          ? "border-teal bg-teal text-primary-foreground shadow-soft scale-[1.02]"
+          : "border-border bg-pearl text-navy hover:border-teal hover:shadow-soft hover:scale-[1.01] active:scale-[0.98]"
       }`}
     >
       {children}
@@ -185,17 +185,25 @@ function QuickPlan() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <p className="text-sm font-semibold text-teal">
-        {t("wizardStep")} {step + 1} {t("wizardOf")} {steps.length} — {steps[step]}
-      </p>
-      <div className="mt-3 h-1.5 w-full rounded-full bg-mist">
+      {/* Step indicator */}
+      <div className="flex items-center gap-3">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-teal/10 px-3 py-1 text-sm font-bold text-teal">
+          <Sparkles className="h-3.5 w-3.5" />
+          {t("wizardStep")} {step + 1} {t("wizardOf")} {steps.length}
+        </span>
+        <span className="text-sm font-medium text-muted-foreground">— {steps[step]}</span>
+      </div>
+
+      {/* Progress bar */}
+      <div className="mt-3 h-2 w-full rounded-full bg-mist overflow-hidden">
         <div
-          className="h-1.5 rounded-full bg-coral transition-all"
+          className="h-2 rounded-full bg-gradient-to-r from-teal to-coral transition-all duration-500 ease-out"
           style={{ width: `${((step + 1) / steps.length) * 100}%` }}
         />
       </div>
 
-      <div className="surface-card mt-6 p-6">
+      {/* Step content card */}
+      <div className="surface-card mt-6 p-6 animate-fade-in">
         {step === 0 && (
           <fieldset>
             <legend className="text-2xl font-bold">{t("step0Title")}</legend>
@@ -369,7 +377,7 @@ function QuickPlan() {
           type="button"
           onClick={() => setStep((s) => Math.max(0, s - 1))}
           disabled={step === 0}
-          className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-3 font-semibold disabled:opacity-40"
+          className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-3 font-semibold transition-all hover:border-teal hover:shadow-soft disabled:opacity-40 disabled:hover:border-border disabled:hover:shadow-none min-h-[44px]"
         >
           {isRtl ? <ArrowRight className="h-4 w-4" /> : <ArrowLeft className="h-4 w-4" />}{" "}
           {t("prev")}
@@ -378,7 +386,7 @@ function QuickPlan() {
           <button
             type="button"
             onClick={() => setStep((s) => s + 1)}
-            className="inline-flex items-center gap-2 rounded-full bg-teal px-6 py-3 font-bold text-primary-foreground"
+            className="inline-flex items-center gap-2 rounded-full bg-teal px-6 py-3 font-bold text-primary-foreground shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-lift min-h-[44px]"
           >
             {t("next")} {isRtl ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
           </button>
@@ -386,7 +394,7 @@ function QuickPlan() {
           <button
             type="button"
             onClick={() => build()}
-            className="inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3 font-bold text-accent-foreground shadow-lift"
+            className="inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3 font-bold text-accent-foreground shadow-lift transition-all hover:-translate-y-0.5 animate-pulse-glow min-h-[44px]"
           >
             <Sparkles className="h-4 w-4" /> {t("generate")}
           </button>
@@ -422,20 +430,21 @@ function Results({
 
   if (!plans.length) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold">ما لقينا خطة مطابقة 100%</h1>
+      <div className="mx-auto max-w-xl px-4 py-16 text-center animate-fade-in-up">
+        <span className="text-5xl">🤔</span>
+        <h1 className="mt-4 text-2xl font-bold">{isRtl ? "ما لقينا خطة مطابقة 100%" : "No exact match found"}</h1>
         <p className="mt-3 text-muted-foreground">
-          لكن نقدر نوسّع المسافة أو الميزانية شوي وترتّب لكم الطلعة.
+          {isRtl ? "لكن نقدر نوسّع المسافة أو الميزانية شوي وترتّب لكم الطلعة." : "But we can expand the range or budget a bit to find you a plan."}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <button
             onClick={onIncreaseBudget}
-            className="rounded-full bg-teal px-5 py-3 font-bold text-primary-foreground"
+            className="rounded-full bg-teal px-6 py-3 font-bold text-primary-foreground shadow-soft hover-lift"
           >
             {t("makeCheaper")}
           </button>
-          <button onClick={onRestart} className="rounded-full border border-border px-5 py-3 font-bold">
-            جرّب جو ثاني
+          <button onClick={onRestart} className="rounded-full border border-border px-6 py-3 font-bold hover:border-teal transition-colors">
+            {isRtl ? "جرّب جو ثاني" : "Try another mood"}
           </button>
         </div>
       </div>
@@ -444,9 +453,9 @@ function Results({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="animate-fade-in-up flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold md:text-4xl">{t("resultsTitle")}</h1>
+          <h1 className="text-3xl font-bold md:text-4xl">{t("resultsTitle")} 🎉</h1>
           <p className="mt-2 text-muted-foreground">
             {req.districtId ? getDistrict(req.districtId).nameAr : t("allJeddah")} ·{" "}
             {groupLabels[req.group]} · {req.groupSize} {isRtl ? "أشخاص" : "people"} ·{" "}
@@ -456,14 +465,14 @@ function Results({
 
         <button
           onClick={() => setShowPollModal(true)}
-          className="inline-flex items-center gap-2 rounded-full bg-coral px-5 py-2.5 text-sm font-bold text-accent-foreground shadow-lift hover:opacity-90 transition-opacity"
+          className="inline-flex items-center gap-2 rounded-full bg-coral px-5 py-2.5 text-sm font-bold text-accent-foreground shadow-lift hover:-translate-y-0.5 transition-all"
         >
           <Vote className="h-4 w-4" />
           {t("groupPoll")}
         </button>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="animate-fade-in-up delay-1 mt-5 flex flex-wrap gap-2">
         {[
           { label: t("makeCheaper"), fn: onIncreaseBudget },
           { label: t("makeNearer"), fn: onNearer },
@@ -473,21 +482,21 @@ function Results({
           <button
             key={a.label}
             onClick={a.fn}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-pearl px-4 py-2 text-sm font-semibold hover:border-teal"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-pearl px-4 py-2.5 text-sm font-semibold transition-all hover:border-teal hover:shadow-soft active:scale-[0.98]"
           >
             <RefreshCw className="h-3.5 w-3.5" /> {a.label}
           </button>
         ))}
       </div>
 
-      <div className="mt-8 grid gap-5 lg:grid-cols-3">
+      <div className="animate-fade-in-up delay-2 mt-8 grid gap-5 lg:grid-cols-3">
         {plans.map((plan) => {
           const isSaved = isPlanSaved(plan.id);
           return (
             <article
               key={plan.id}
-              className={`surface-card flex flex-col p-5 ${
-                plan.flavor === "balanced" ? "ring-2 ring-coral" : ""
+              className={`surface-card flex flex-col p-5 hover-lift ${
+                plan.flavor === "balanced" ? "ring-2 ring-coral ring-offset-2 ring-offset-background" : ""
               }`}
             >
               <div className="flex items-center justify-between gap-2">
