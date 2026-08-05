@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -32,6 +33,19 @@ jobs:
 
       - name: Build static site
         run: npm run build
+
+      - name: Prepare static files for GitHub Pages
+        run: |
+          mkdir -p dist
+          if [ -d ".output/public" ]; then
+            cp -r .output/public/* dist/ || true
+          fi
+          if [ -f "index.html" ] && [ ! -f "dist/index.html" ]; then
+            cp index.html dist/index.html
+          fi
+          if [ -f "dist/index.html" ]; then
+            cp dist/index.html dist/404.html
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
