@@ -13,7 +13,12 @@ export const translations = {
     valuePropEn: "Other platforms show you places. JEDDAW builds the complete outing.",
     brandPromise: "ما تحتاج تدوّر بين مئات الأماكن. قل لنا وش تبغى، وجِدّاو يرتّب لك الخطة.",
 
-    // Header & Navigation
+    // Trending Section
+    trendingTitle: "طلعة ترند 🔥",
+    trendingTitleEn: "Trending Outings 🔥",
+    trendingSub: "أكثر الأماكن والكافيهات والمطاعم طلباً وتداولاً في جدة هذا الأسبوع",
+    trendingSubEn: "Most popular & viral spots in Jeddah this week",
+    weeklyViewsLabel: "زيارة هذا الأسبوع",
     home: "الرئيسية",
     quickPlan: "سوّ لي خطة",
     readyPlans: "خطط جاهزة",

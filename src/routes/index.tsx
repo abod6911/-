@@ -3,6 +3,8 @@ import { ArrowLeft, BadgeCheck, Clock, MapPin, Sparkles, Star, Wallet, Zap } fro
 import heroImage from "@/assets/jeddah-route-hero.jpg";
 import { RouteLine } from "@/components/brand/Logo";
 import { budgetLevels, getPlace, moodLabels, offers, readyPlans, type Mood } from "@/data/jeddah";
+import { getTrendingPlaces } from "@/data/trending";
+import { PlaceCard } from "@/components/places/PlaceCard";
 import { useLanguage } from "@/context/LanguageContext";
 
 export const Route = createFileRoute("/")({
@@ -24,6 +26,7 @@ export const Route = createFileRoute("/")({
 });
 
 const quickVibes = [
+  { labelAr: "طلعة ترند 🔥", labelEn: "Trending Outing 🔥", emoji: "🔥", mood: "sea" },
   { labelAr: "بعد الدوام", labelEn: "After Work", emoji: "💼", mood: "calm" },
   { labelAr: "بحر وغروب", labelEn: "Sea & Sunset", emoji: "🌊", mood: "sea" },
   { labelAr: "طلعة مع الشلة", labelEn: "With Friends", emoji: "🥳", mood: "games" },
@@ -35,7 +38,6 @@ const quickVibes = [
   { labelAr: "أماكن داخلية", labelEn: "Indoor AC", emoji: "🏢", mood: "games" },
   { labelAr: "بدون حجز", labelEn: "No Reservation", emoji: "⚡", mood: "coffee" },
   { labelAr: "أول مرة في جدة", labelEn: "First Time in Jeddah", emoji: "🧳", mood: "culture" },
-  { labelAr: "فاجئني", labelEn: "Surprise Me", emoji: "🎁", mood: "adventure" },
 ] as const;
 
 const categories: { mood: Mood | "free"; ar: string; en: string; emoji: string }[] = [
@@ -148,6 +150,58 @@ function Index() {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ===== Trending Section: طلعة ترند 🔥 ===== */}
+      <section className="mx-auto max-w-6xl px-4 py-16">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#C96745]/15 px-4 py-1 text-xs font-bold text-[#C96745] mb-2">
+              <Zap className="h-4 w-4" /> الأثر والأعلى تداولاً
+            </div>
+            <h2 className="text-3xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">
+              {t("trendingTitle")}
+            </h2>
+            <p className="mt-2 text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold max-w-xl">
+              {t("trendingSub")}
+            </p>
+          </div>
+          <Link
+            to="/places"
+            className="inline-flex items-center gap-2 rounded-full border border-[#C96745] px-5 py-2.5 text-xs font-bold text-[#C96745] hover:bg-[#C96745] hover:text-white transition-all min-h-[44px]"
+          >
+            <span>استكشف كل ترندات جدة</span>
+            <ArrowLeft className={`h-4 w-4 ${isRtl ? "" : "rotate-180"}`} />
+          </Link>
+        </div>
+
+        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {getTrendingPlaces().map((item) => (
+            <article
+              key={item.place.id}
+              className="surface-card p-6 hover-lift relative overflow-hidden group border border-[#E2D3BE] dark:border-white/10"
+            >
+              {/* Rank Badge */}
+              <div className="flex items-center justify-between gap-2 mb-4">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C96745] text-white px-3.5 py-1 text-xs font-extrabold shadow-sm">
+                  #{item.rank} {item.badgeAr}
+                </span>
+                <span className="text-xs font-bold text-[#397C78] dark:text-[#5EAAA5]">
+                  🔥 {item.weeklyViews.toLocaleString()} {t("weeklyViewsLabel")}
+                </span>
+              </div>
+
+              {/* Main Place Card Content */}
+              <PlaceCard place={item.place} />
+
+              {/* Trend Reason Box */}
+              <div className="mt-3 rounded-xl bg-[#FAF6F0] dark:bg-[#161B1A] p-3 border border-[#E2D3BE]/60 text-xs font-semibold text-[#252A28] dark:text-[#F5F1E8]">
+                <span className="text-[#C96745] font-bold me-1">سبب الترند:</span>
+                {item.reasonAr}
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
