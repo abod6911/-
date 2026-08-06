@@ -312,7 +312,7 @@ export function AiAssistant() {
                           <button
                             key={i}
                             onClick={() => handleSend(reply)}
-                            className="rounded-full bg-gradient-to-r from-white via-[#FAF6F0] to-white dark:from-[#253230] dark:to-[#1C2422] px-3.5 py-2 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/15 hover:border-[#C96745] hover:text-[#C96745] hover:scale-[1.03] active:scale-95 transition-all cursor-pointer shadow-sm flex items-center gap-1.5"
+                            className="rounded-full bg-[#FAF6F0] dark:bg-[#253230] px-3.5 py-2 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/20 hover:border-[#C96745] dark:hover:border-[#C96745] hover:text-[#C96745] dark:hover:text-[#FF9D7A] hover:bg-[#C96745]/10 dark:hover:bg-[#C96745]/20 hover:scale-[1.03] active:scale-95 transition-all cursor-pointer shadow-sm flex items-center gap-1.5"
                           >
                             <span>{reply}</span>
                           </button>
