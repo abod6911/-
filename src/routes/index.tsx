@@ -5,6 +5,8 @@ import { PlaceCard } from "@/components/places/PlaceCard";
 import { getTrendingPlaces } from "@/data/trending";
 import { places, type Mood, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
+import { JeddahWeatherWidget } from "@/components/common/JeddahWeatherWidget";
+import { FlashOffersBanner } from "@/components/home/FlashOffersBanner";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -93,6 +95,11 @@ function Index() {
 
         {/* Hero Content */}
         <div className="relative z-10 mx-auto max-w-5xl px-4 text-center w-full">
+          {/* Live Weather Widget */}
+          <div className="mb-6">
+            <JeddahWeatherWidget />
+          </div>
+
           {/* Top Floating Badge */}
           <div className="animate-fade-in-up inline-flex items-center gap-2 rounded-full bg-white/10 px-5 py-2 text-xs font-extrabold text-white backdrop-blur-xl border border-white/20 shadow-2xl">
             <Sparkles className="h-4 w-4 text-[#E4A23B] animate-pulse" />
@@ -188,7 +195,9 @@ function Index() {
       </section>
 
       {/* ===== Floating Core Value Proposition Banner ===== */}
-      <div className="relative z-30 -mt-12 mx-auto max-w-5xl px-4">
+      <div className="relative z-30 -mt-12 mx-auto max-w-5xl px-4 space-y-6">
+        <FlashOffersBanner />
+
         <div className="rounded-3xl bg-gradient-to-r from-[#295652] via-[#397C78] to-[#C96745] text-white p-6 md:p-8 shadow-2xl border border-white/25 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-xl">
           <div className="text-center md:text-start">
             <span className="text-xs font-bold uppercase tracking-wider text-[#FF9D7A] block mb-2">

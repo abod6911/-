@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { PlaceCard } from "@/components/places/PlaceCard";
 import { AuthModal } from "@/components/auth/AuthModal";
+import { UserBadges } from "@/components/user/UserBadges";
 
 export const Route = createFileRoute("/account")({
   head: () => ({
@@ -124,6 +125,11 @@ function AccountPage() {
           <LogOut className="h-4 w-4" />
           {isRtl ? "تسجيل الخروج" : "Log Out"}
         </button>
+      </div>
+
+      {/* Gamification Achievements Section */}
+      <div className="mt-8">
+        <UserBadges />
       </div>
 
       {/* Saved Plans Section */}

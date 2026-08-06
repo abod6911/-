@@ -6,9 +6,11 @@ import { districts, getDistrict, getPlace, groupLabels, readyPlans, type Distric
 import { formatDuration, generatePlans, type GeneratedPlan, type PlanRequest } from "@/lib/planner";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
-import { SplitBillModal } from "@/components/planner/SplitBillModal";
-import { GroupPollModal } from "@/components/planner/GroupPollModal";
-import { RouteMapModal } from "@/components/planner/RouteMapModal";
+import { BillSplitterModal } from "@/components/plan/BillSplitterModal";
+import { GroupVotingModal } from "@/components/plan/GroupVotingModal";
+import { InteractiveMapModal } from "@/components/plan/InteractiveMapModal";
+import { PlanShareCardModal } from "@/components/plan/PlanShareCardModal";
+import { OutingTimeline } from "@/components/plan/OutingTimeline";
 
 export const Route = createFileRoute("/quick-plan")({
   head: () => ({
@@ -565,33 +567,32 @@ function QuickPlanPage() {
                   </span>
                 </div>
 
-                {/* Primary Action Button: View Full Plan */}
-                <button
-                  onClick={() => setSelectedPlanForMap(plan)}
-                  className="w-full rounded-full bg-[#C96745] px-4 py-3 text-center text-xs font-extrabold text-white shadow-lift hover:bg-[#b55837] transition-all mb-2 min-h-[44px]"
-                >
-                  {isRtl ? "عرض الخطة كاملة والمسار 🗺️" : "View Full Plan & Route 🗺️"}
-                </button>
-
                 {/* Secondary Actions */}
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-1.5 mt-2">
                   <button
                     onClick={() => savePlan(plan)}
-                    className={`rounded-full border px-3 py-2 text-center text-xs font-bold transition-all ${
+                    className={`rounded-full border px-2.5 py-2 text-center text-[11px] font-bold transition-all ${
                       isSaved
                         ? "bg-[#397C78] text-white border-[#397C78]"
                         : "border-[#E2D3BE] bg-[#FAF6F0] dark:bg-[#161B1A] text-[#252A28] dark:text-[#F5F1E8] hover:border-[#397C78]"
                     }`}
                   >
-                    <Star className={`inline h-3.5 w-3.5 me-1 ${isSaved ? "fill-white" : ""}`} />
-                    {isSaved ? (isRtl ? "تم الحفظ 🎉" : "Saved 🎉") : (isRtl ? "احفظ الخطة ⭐" : "Save Plan ⭐")}
+                    <Star className={`inline h-3 w-3 me-1 ${isSaved ? "fill-white" : ""}`} />
+                    {isSaved ? (isRtl ? "محفوظة 🎉" : "Saved 🎉") : (isRtl ? "حفظ ⭐" : "Save ⭐")}
                   </button>
 
                   <button
                     onClick={() => setSplitPlan(plan)}
-                    className="rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] px-3 py-2 text-center text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745]"
+                    className="rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] px-2.5 py-2 text-center text-[11px] font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745]"
                   >
-                    {isRtl ? "تقسيم الفاتورة 💰" : "Split Bill 💰"}
+                    💰 {isRtl ? "الفاتورة" : "Split"}
+                  </button>
+
+                  <button
+                    onClick={() => setShowPollModal(true)}
+                    className="rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] px-2.5 py-2 text-center text-[11px] font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745]"
+                  >
+                    📲 {isRtl ? "مشاركة" : "Share"}
                   </button>
                 </div>
               </div>
