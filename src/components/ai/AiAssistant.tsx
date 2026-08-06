@@ -27,15 +27,50 @@ export function AiAssistant() {
   const [isTyping, setIsTyping] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
+  // Body scroll lock effect when assistant modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+    } else {
+      document.body.style.overflow = "auto";
+      document.body.style.touchAction = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+      document.body.style.touchAction = "auto";
+    };
+  }, [isOpen]);
+
+  const welcomeText = isRtl
+    ? "أهلاً وسهلاً بك في جِدّاو! 🤖 أنا مساعدك الذكي لتخطيط أحلى الطلعات في جدة. اسألني بالعربي أو بالإنكليزي عن الأماكن، المطاعم، الكافيهات، الفنادق، أو كيف ترتّب يومك حسب ميزانيتك ووقتك!"
+    : "Welcome to JEDDAW! 🤖 I am your smart AI assistant for planning the best outings in Jeddah. Ask me in Arabic or English about restaurants, cafes, hotels, beaches, or how to plan your day!";
+
   const initialAiMsg: AiMessage = {
     id: "1",
     sender: "ai",
-    text: isRtl
-      ? "أهلاً وسهلاً بك في جِدّاو! 🤖 أنا مساعدك الذكي لتخطيط أحلى الطلعات في جدة. اسألني بالعربي أو بالإنكليزي عن الأماكن، المطاعم، الكافيهات، الفنادق، أو كيف ترتّب يومك حسب ميزانيتك ووقتك!"
-      : "Welcome to JEDDAW! 🤖 I am your smart AI assistant for planning the best outings in Jeddah. Ask me in Arabic or English about restaurants, cafes, hotels, beaches, or how to plan your day!",
+    text: welcomeText,
   };
 
   const [messages, setMessages] = useState<AiMessage[]>([initialAiMsg]);
+
+  // Update initial message when language changes if no custom messages yet
+  useEffect(() => {
+    setMessages((prev) => {
+      if (prev.length <= 1) {
+        return [
+          {
+            id: "1",
+            sender: "ai",
+            text: isRtl
+              ? "أهلاً وسهلاً بك في جِدّاو! 🤖 أنا مساعدك الذكي لتخطيط أحلى الطلعات في جدة. اسألني بالعربي أو بالإنكليزي عن الأماكن، المطاعم، الكافيهات، الفنادق، أو كيف ترتّب يومك حسب ميزانيتك ووقتك!"
+              : "Welcome to JEDDAW! 🤖 I am your smart AI assistant for planning the best outings in Jeddah. Ask me in Arabic or English about restaurants, cafes, hotels, beaches, or how to plan your day!",
+          },
+        ];
+      }
+      return prev;
+    });
+  }, [isRtl]);
 
   const quickPromptsAr = [
     "كيف أرتّب طلعة بضغطة واحدة؟ ⚡",
@@ -78,7 +113,7 @@ export function AiAssistant() {
 
       // 1. Handle Insults / Offense / Rude Words gracefully with high intelligence
       if (OFFENSIVE_PATTERN.test(q)) {
-        if (isEnglishInput) {
+        if (isEnglishInput || !isRtl) {
           responseText =
             "Hello there! 💫 I am JEDDAW's AI Assistant, designed to help you discover the finest restaurants, cafes, sea spots, and outing plans in Jeddah politely & instantly. How can I assist you with your plans today?";
         } else {
@@ -88,7 +123,7 @@ export function AiAssistant() {
       }
       // 2. Handle Simple Greetings without dumping random places
       else if (GREETING_PATTERN.test(q)) {
-        if (isEnglishInput) {
+        if (isEnglishInput || !isRtl) {
           responseText =
             "Hello and welcome! 🌸 I'm delighted to assist you today. What kind of outing or places are you looking for in Jeddah? (e.g. Restaurants, Cafes, Sea views, Hotels, or Budget plans)";
         } else {
@@ -98,150 +133,65 @@ export function AiAssistant() {
       }
       // 3. Questions about JEDDAW or how to plan
       else if (
+        q.includes("وش") ||
         q.includes("كيف") ||
-        q.includes("how") ||
+        q.includes("خطة") ||
         q.includes("plan") ||
-        q.includes("جِدّاو") ||
-        q.includes("jeddaw")
+        q.includes("how")
       ) {
-        if (isEnglishInput) {
-          responseText =
-            "Other sites just give you a random list of places... But JEDDAW plans your complete outing! 🎯 Go to our 'Quick Plan' page, pick your time, budget, and group, and our AI will build your entire route (Activity + Dinner + Coffee) with live timing & Google Maps in seconds!";
-          actionLink = { label: "Try Quick Plan Now ⚡", url: "/quick-plan" };
-        } else {
-          responseText =
-            "المواقع الثانية تعطيك قائمة مطاعم وبس.. أما جِدّاو يرتّب لك الطلعة كاملة! 🎯 تقدر تدخل صفحة 'خطة على السريع' وتحدد ميزانيتك ووقتك والعدد والجو، والذكاء الاصطناعي يرتّب لك المسار كامل (نشاط + عشاء + قهوة) بالوقت والخرائط في ثوانٍ!";
-          actionLink = { label: "جرّب خطة على السريع الآن ⚡", url: "/quick-plan" };
-        }
+        responseText = isEnglishInput || !isRtl
+          ? "With JEDDAW, planning your outing takes under 1 minute! Select your vibe, budget & district in the 'Quick Plan' tab, and we generate a complete itinerary with dining, coffee, and GPS route."
+          : "مع جِدّاو، تخطيط طلعتك ما ياخذ دقيقة! حدّد ميزانيتك، وجوّكم، والحي المفضل في تبويب (سوّ لي خطة)، وجِدّاو يرتّب لك النشاط، المطعم، القهوة، والمسار كاملاً مع خرائط قوقل!";
+        actionLink = {
+          label: isRtl ? "سوّ خطتك الآن ⚡" : "Plan Your Outing Now ⚡",
+          url: "/quick-plan",
+        };
       }
-      // 4. Cafes, Coffee & Quiet work spots
-      else if (
-        q.includes("مقهى") ||
-        q.includes("كافيه") ||
-        q.includes("قهوة") ||
-        q.includes("مذاكرة") ||
-        q.includes("شغل") ||
-        q.includes("cafe") ||
-        q.includes("coffee") ||
-        q.includes("study") ||
-        q.includes("work")
-      ) {
-        matches = places.filter((p) => p.kind === "cafe" || p.moods.includes("calm"));
-        if (isEnglishInput) {
-          responseText =
-            "Here are the top-rated specialty coffee shops and quiet cafes in Jeddah for relaxing, working, or social meetings:";
-        } else {
-          responseText =
-            "للروقان والتركيز أو المذاكرة والجلسات الرايقة، هذي أفضل مقاهي جدة المتميزة بجودة القهوة والأجواء:";
-        }
-      }
-      // 5. Sea, Beach, Sunset, Corniche, Obhur
-      else if (
-        q.includes("بحر") ||
-        q.includes("غروب") ||
-        q.includes("شاطئ") ||
-        q.includes("كورنيش") ||
-        q.includes("أبحر") ||
-        q.includes("sea") ||
-        q.includes("beach") ||
-        q.includes("sunset") ||
-        q.includes("corniche") ||
-        q.includes("obhur")
-      ) {
-        matches = places.filter(
-          (p) => p.moods.includes("sea") || p.districtId === "corniche" || p.districtId === "obhur"
-        );
-        if (isEnglishInput) {
-          responseText =
-            "Jeddah Red Sea sunset views are unforgettable! 🌊 Here are top waterfront restaurants & spots directly overlooking the sea:";
-        } else {
-          responseText =
-            "عروس البحر الأحمر تجنن في الغروب! 🌊 هذي أفضل الجلسات والمطاعم المطلة مباشرة على بحر جدة:";
-        }
-      }
-      // 6. Food, Restaurants, Cuisines (Seafood, Shami, Egyptian, Saudi, Fast Food)
+      // 4. Dining / Restaurants / Food
       else if (
         q.includes("مطعم") ||
         q.includes("أكل") ||
         q.includes("عشاء") ||
         q.includes("غداء") ||
-        q.includes("شامي") ||
-        q.includes("مصري") ||
-        q.includes("سعودي") ||
-        q.includes("بحري") ||
-        q.includes("سمك") ||
         q.includes("restaurant") ||
-        q.includes("food") ||
-        q.includes("dinner") ||
-        q.includes("seafood")
+        q.includes("dine") ||
+        q.includes("food")
       ) {
-        if (q.includes("بحري") || q.includes("سمك") || q.includes("seafood")) {
-          matches = places.filter((p) => p.subCategoryAr?.includes("مأكولات بحرية") || p.descAr.includes("سمك"));
-          responseText = isEnglishInput
-            ? "Jeddah's iconic fresh Red Sea seafood spots:"
-            : "أشهر وألذ مطاعم الأسماك والمأكولات البحرية على البحر في جدة:";
-        } else if (q.includes("شامي")) {
-          matches = places.filter((p) => p.subCategoryAr?.includes("شامية") || p.descAr.includes("شامي"));
-          responseText = "الأكل الشامي والمشاوي الفاخرة في جدة! هذي التوصيات الأعلى تقييماً:";
-        } else if (q.includes("مصري")) {
-          matches = places.filter((p) => p.subCategoryAr?.includes("مصرية") || p.descAr.includes("مصري"));
-          responseText = "أجمل النكهات والمطاعم المصرية الأصيلة في قلب جدة:";
-        } else {
-          matches = places.filter((p) => p.kind === "food");
-          responseText = isEnglishInput
-            ? "Here are Jeddah's top-rated restaurants across various cuisines:"
-            : "مطاعم جدة المتنوعة والأعلى تقييماً حسب آراء الزوار هذا الأسبوع:";
-        }
+        matches = places.filter((p) => p.kind === "food");
+        responseText = isEnglishInput || !isRtl
+          ? "Here are top recommended dining spots in Jeddah:"
+          : "إليك أعذّ وأفضل المطاعم المقترحة في جدة حسب ترشيحات جِدّاو المحترفة:";
       }
-      // 7. Shopping Malls & Bazaars
+      // 5. Cafes & Coffee
       else if (
-        q.includes("تسوق") ||
-        q.includes("مول") ||
-        q.includes("مولات") ||
-        q.includes("سوق") ||
-        q.includes("shopping") ||
-        q.includes("mall") ||
-        q.includes("bazaar")
+        q.includes("كافيه") ||
+        q.includes("قهوة") ||
+        q.includes("مقهى") ||
+        q.includes("حلى") ||
+        q.includes("cafe") ||
+        q.includes("coffee")
       ) {
-        matches = places.filter((p) => p.kind === "shopping");
-        responseText = isEnglishInput
-          ? "Top shopping malls and traditional heritage souqs in Jeddah:"
-          : "أشهر مولات ومراكز التسوق الفاخرة والأسواق التراثية في جدة:";
+        matches = places.filter((p) => p.kind === "cafe");
+        responseText = isEnglishInput || !isRtl
+          ? "Here are top specialty cafes & dessert spots in Jeddah:"
+          : "إليك أفضل الكافيهات والقهوة المختصة والمقاهي الهادئة بجدة:";
       }
-      // 8. Hotels & Resorts
+      // 6. Hotels & Resorts
       else if (
         q.includes("فندق") ||
         q.includes("منتجع") ||
-        q.includes("فنادق") ||
-        q.includes("منتجعات") ||
+        q.includes("شاليه") ||
+        q.includes("أبحر") ||
         q.includes("hotel") ||
-        q.includes("resort") ||
-        q.includes("stay")
+        q.includes("resort")
       ) {
         matches = places.filter((p) => p.kind === "hotel" || p.kind === "resort");
-        responseText = isEnglishInput
-          ? "Luxury 5-star hotels and waterfront Red Sea resorts in Jeddah:"
-          : "استرخاء وإقامة فاخرة على الكورنيش والبحر 🏨✨ هذي أفضل الفنادق والمنتجعات الموصى بها في جدة:";
+        responseText = isEnglishInput || !isRtl
+          ? "Here are top 5-star hotels & sea resorts in Jeddah & Obhur:"
+          : "إليك أفخم الفنادق 5 نجوم ومنتجعات الشاطئ وأبحر الشمالية بجدة:";
       }
-      // 9. Budget / Price / Cheap / Free
-      else if (
-        q.includes("ميزانية") ||
-        q.includes("رخيص") ||
-        q.includes("مجاني") ||
-        q.includes("سعر") ||
-        q.includes("budget") ||
-        q.includes("cheap") ||
-        q.includes("free") ||
-        q.includes("cost")
-      ) {
-        matches = places.filter((p) => p.pricePerPerson <= 80 || p.pricePerPerson === 0);
-        responseText = isEnglishInput
-          ? "Jeddah has great budget options starting from FREE seaside walks in Balad & Corniche to delicious outings under 80 SAR per person:"
-          : "في جِدّاو عندنا خيارات تناسب كل الميزانيات! تبدأ من طلعت مجانية 0 ريال على كورنيش جدة والبلد التاريخية، إلى طلعات اقتصادية مناسبة جداً:";
-      }
-      // 10. Default helpful answer with specific semantic match
+      // Default fallback
       else {
-        // Find semantic matches by checking place names & categories
         matches = places.filter((p) => {
           const text = (p.nameAr + " " + p.nameEn + " " + p.categoryAr + " " + p.descAr).toLowerCase();
           return text.includes(q);
@@ -251,8 +201,8 @@ export function AiAssistant() {
           matches = places.filter((p) => p.trending || (p.rating && p.rating >= 4.8)).slice(0, 3);
         }
 
-        responseText = isEnglishInput
-          ? "Here are top recommended places in Jeddah tailored for your search:"
+        responseText = isEnglishInput || !isRtl
+          ? "Here are top recommended places in Jeddah tailored for your request:"
           : "هذي أفضل الأماكن والترندات الموصى بها اليوم في جدة، وتقدر دائماً تخصيص بحثك بالحي أو الميزانية أو المود:";
       }
 
@@ -277,7 +227,7 @@ export function AiAssistant() {
       <button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-20 end-5 z-40 flex items-center gap-2 rounded-full bg-gradient-to-r from-[#C96745] to-[#397C78] px-5 py-3 text-xs font-black text-white shadow-lift hover:scale-105 transition-all animate-pulse-glow border border-white/20 min-h-[48px]"
-        aria-label="مساعد جِدّاو الذكي"
+        aria-label={isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}
       >
         <Bot className="h-5 w-5 animate-bounce" />
         <span className="hidden sm:inline">
@@ -287,7 +237,10 @@ export function AiAssistant() {
 
       {/* AI Assistant Chat Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md animate-fade-in"
+          onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}
+        >
           <div className="w-full max-w-lg h-[82vh] max-h-[640px] flex flex-col rounded-3xl bg-[#FAF6F0] dark:bg-[#1C2422] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 shadow-2xl overflow-hidden animate-modal-in">
             {/* Header Bar */}
             <div className="flex items-center justify-between bg-gradient-to-r from-[#1D3A37] to-[#295652] px-6 py-4 text-white shrink-0">
@@ -297,14 +250,14 @@ export function AiAssistant() {
                 </span>
                 <div>
                   <h2 className="text-base font-black flex items-center gap-1.5">
-                    <span>مساعد جِدّاو الذكي</span>
+                    <span>{isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}</span>
                     <span className="rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] px-2 py-0.5 border border-emerald-400/30">
-                      ثنائي اللغة (AR/EN)
+                      {isRtl ? "ثنائي اللغة (AR/EN)" : "Bilingual (AR/EN)"}
                     </span>
                   </h2>
                   <p className="text-[11px] text-white/80 font-semibold flex items-center gap-1">
                     <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    متصل وجاهز لمساعدتك لحظياً
+                    {isRtl ? "متصل وجاهز لمساعدتك لحظياً" : "Online & ready to assist instantly"}
                   </p>
                 </div>
               </div>
@@ -312,7 +265,7 @@ export function AiAssistant() {
               <button
                 onClick={() => setIsOpen(false)}
                 className="grid h-9 w-9 place-items-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-                aria-label="إغلاق"
+                aria-label={isRtl ? "إغلاق" : "Close"}
               >
                 <X className="h-5 w-5" />
               </button>
@@ -366,7 +319,12 @@ export function AiAssistant() {
                                 {isRtl ? place.nameAr : place.nameEn}
                               </h4>
                               <p className="text-[11px] text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-                                {place.categoryAr} · {place.pricePerPerson === 0 ? "مجاني ✨" : `${place.pricePerPerson} ر.س`}
+                                {isRtl ? (place.subCategoryAr || place.categoryAr) : (place.subCategoryEn || place.kind)} ·{" "}
+                                {place.pricePerPerson === 0
+                                  ? isRtl
+                                    ? "مجاني ✨"
+                                    : "Free ✨"
+                                  : `${place.pricePerPerson} ${isRtl ? "ر.س" : "SAR"}`}
                               </p>
                             </div>
                           </div>

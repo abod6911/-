@@ -35,14 +35,16 @@ export function PlaceDetailModal({
   const [showReportModal, setShowReportModal] = useState(false);
 
   useEffect(() => {
-    // Lock background scroll when modal is active
+    // Lock background scroll & touch actions when modal is active
     document.body.style.overflow = "hidden";
+    document.body.style.touchAction = "none";
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.style.overflow = "auto";
+      document.body.style.touchAction = "auto";
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [onClose]);
