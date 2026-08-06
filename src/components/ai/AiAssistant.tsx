@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Bot, Globe, Send, Sparkles, X } from "lucide-react";
 import { places, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
