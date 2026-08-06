@@ -51,13 +51,13 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
     }
 
     if (isSignUp) {
-      const res = register(name || email.split("@")[0], email, password, district);
+      const res = register(name || email.split("@")[0] || email, email, password, district);
       if (!res.success) {
         setErrorMsg(res.message || (isRtl ? "فشل إنشاء الحساب." : "Registration failed."));
         return;
       }
     } else {
-      login(name || email.split("@")[0], email, district);
+      login(name || email.split("@")[0] || email, email, district);
     }
 
     onClose();

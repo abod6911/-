@@ -1,7 +1,13 @@
 import React from "react";
 import { ExternalLink, MapPin, Navigation, Route, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import type { Place } from "@/data/jeddah";
+import { getDistrict, type Place } from "@/data/jeddah";
+
+function placeAddress(place: Place, isRtl: boolean) {
+  const district = getDistrict(place.districtId);
+  const districtName = district ? (isRtl ? district.nameAr : district.nameEn) : "";
+  return `${isRtl ? place.nameAr : place.nameEn}${districtName ? `, ${districtName}` : ""}, ${isRtl ? "جدة" : "Jeddah"}`;
+}
 
 interface InteractiveMapModalProps {
   stops: Place[];
@@ -13,12 +19,14 @@ export function InteractiveMapModal({ stops, onClose }: InteractiveMapModalProps
 
   // Generate multi-stop Google Maps directions URL
   const getGoogleMapsDirectionsUrl = () => {
-    if (stops.length === 0) return "https://maps.google.com";
-    const origin = encodeURIComponent(stops[0].addressAr);
-    const destination = encodeURIComponent(stops[stops.length - 1].addressAr);
+    const first = stops[0];
+    const last = stops[stops.length - 1];
+    if (!first || !last) return "https://maps.google.com";
+    const origin = encodeURIComponent(placeAddress(first, true));
+    const destination = encodeURIComponent(placeAddress(last, true));
     const waypoints = stops
       .slice(1, -1)
-      .map((s) => encodeURIComponent(s.addressAr))
+      .map((s) => encodeURIComponent(placeAddress(s, true)))
       .join("|");
 
     let url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
@@ -120,7 +128,7 @@ export function InteractiveMapModal({ stops, onClose }: InteractiveMapModalProps
                   </h4>
                   <p className="text-[11px] text-[#6E716C] dark:text-[#B5B8B2] font-semibold flex items-center gap-1 mt-0.5">
                     <MapPin className="h-3 w-3 text-[#C96745]" />
-                    {isRtl ? stop.addressAr : stop.addressEn}
+                    {placeAddress(stop, isRtl)}
                   </p>
                 </div>
               </div>

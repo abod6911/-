@@ -11,6 +11,9 @@ import { GroupVotingModal } from "@/components/plan/GroupVotingModal";
 import { InteractiveMapModal } from "@/components/plan/InteractiveMapModal";
 import { PlanShareCardModal } from "@/components/plan/PlanShareCardModal";
 import { OutingTimeline } from "@/components/plan/OutingTimeline";
+import { RouteMapModal } from "@/components/planner/RouteMapModal";
+import { SplitBillModal } from "@/components/planner/SplitBillModal";
+import { GroupPollModal } from "@/components/planner/GroupPollModal";
 
 export const Route = createFileRoute("/quick-plan")({
   head: () => ({
