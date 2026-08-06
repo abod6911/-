@@ -52,7 +52,7 @@ function Index() {
   const { t, isRtl } = useLanguage();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedVibe, setSelectedVibe] = useState<VibeChip>(quickVibes[0]);
+  const [selectedVibe, setSelectedVibe] = useState<VibeChip>(quickVibes[0]!);
 
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
