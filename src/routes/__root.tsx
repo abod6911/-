@@ -42,8 +42,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
-  const router = useRouter();
+  console.error("Root Error Boundary caught:", error);
 
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
@@ -57,14 +56,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           حدث خطأ غير متوقع / Something went wrong
         </h1>
         <p className="mt-2 text-xs text-[#6E716C] dark:text-[#B5B8B2] font-mono p-2 bg-black/5 dark:bg-white/5 rounded-xl break-all">
-          {error.message || "An unexpected error occurred."}
+          {error?.message || "An unexpected error occurred."}
         </p>
 
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <button
             onClick={() => {
-              router.invalidate();
-              reset();
+              if (typeof window !== "undefined") window.location.reload();
             }}
             className="inline-flex items-center justify-center rounded-full bg-[#C96745] px-5 py-2.5 text-xs font-bold text-white shadow-lift hover:bg-[#b55837] transition-all min-h-[44px]"
           >
@@ -129,24 +127,15 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  let locationKey = "route-root";
-  try {
-    const router = useRouter();
-    locationKey = router?.state?.location?.href || "route-root";
-  } catch (err) {
-    console.warn("Router context location check fallback:", err);
-  }
 
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <AuthProvider>
-          <div className="flex min-h-screen flex-col">
+          <div className="flex min-h-screen flex-col bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
             <SiteHeader />
             <main className="flex-1 pb-20 lg:pb-0">
-              <div key={locationKey} className="animate-fade-in">
-                <Outlet />
-              </div>
+              <Outlet />
             </main>
             <SiteFooter />
             <MobileTabBar />
