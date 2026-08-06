@@ -23,7 +23,7 @@ export function GroupVotingModal({ stops, onClose }: GroupVotingModalProps) {
   const handleVote = (id: string, type: "up" | "down") => {
     const current = userVoted[id];
     setVotes((prev) => {
-      const curVotes = { ...prev[id] };
+      const curVotes = { up: 0, down: 0, ...prev[id] };
       if (current === type) {
         // Toggle off
         curVotes[type] -= 1;
