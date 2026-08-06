@@ -353,30 +353,34 @@ function Index() {
           {getTrendingPlaces().map((item) => (
             <article
               key={item.place.id}
-              className="surface-card p-6 hover-lift relative overflow-hidden group border border-[#E2D3BE] dark:border-white/10"
+              className="surface-card p-6 hover-lift relative overflow-hidden group border border-[#E2D3BE] dark:border-white/10 flex flex-col justify-between"
             >
-              {/* Rank Badge */}
-              <div className="absolute top-4 end-4 grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745] text-sm font-black text-white shadow-lift">
-                #{item.rank}
-              </div>
+              <div>
+                {/* Header Row: Category, Title & Rank Badge (No Overlap) */}
+                <div className="flex items-start justify-between gap-3 mb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#FAF6F0] dark:bg-[#161B1A] text-2xl shrink-0">
+                      {item.rank === 1 ? "🥇" : item.rank === 2 ? "🥈" : item.rank === 3 ? "🥉" : "📍"}
+                    </span>
+                    <div>
+                      <span className="text-[11px] font-extrabold text-[#C96745] uppercase tracking-wider block">
+                        {isRtl ? (item.place.subCategoryAr || item.place.categoryAr) : (item.place.subCategoryEn || item.place.kind)}
+                      </span>
+                      <h3 className="text-base md:text-lg font-black text-[#252A28] dark:text-[#F5F1E8] leading-snug">
+                        {isRtl ? item.place.nameAr : item.place.nameEn}
+                      </h3>
+                    </div>
+                  </div>
 
-              <div className="flex items-center gap-3 mb-4">
-                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#FAF6F0] dark:bg-[#161B1A] text-2xl">
-                  {item.rank === 1 ? "🥇" : item.rank === 2 ? "🥈" : "🥉"}
-                </span>
-                <div>
-                  <span className="text-xs font-extrabold text-[#C96745] uppercase tracking-wider block">
-                    {item.place.subCategoryAr || item.place.categoryAr}
+                  <span className="grid h-9 w-9 place-items-center rounded-2xl bg-[#C96745] text-xs font-black text-white shadow-lift shrink-0">
+                    #{item.rank}
                   </span>
-                  <h3 className="text-xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
-                    {isRtl ? item.place.nameAr : item.place.nameEn}
-                  </h3>
                 </div>
-              </div>
 
-              <p className="text-xs text-[#6E716C] dark:text-[#B5B8B2] font-semibold leading-relaxed line-clamp-2">
-                {isRtl ? item.place.descAr : item.place.descEn}
-              </p>
+                <p className="text-xs text-[#6E716C] dark:text-[#B5B8B2] font-semibold leading-relaxed line-clamp-2">
+                  {isRtl ? item.place.descAr : item.place.descEn}
+                </p>
+              </div>
 
               <div className="mt-5 border-t border-[#E2D3BE] dark:border-white/10 pt-4 flex items-center justify-between text-xs font-bold">
                 <span className="text-[#397C78] dark:text-[#5EAAA5] flex items-center gap-1">
