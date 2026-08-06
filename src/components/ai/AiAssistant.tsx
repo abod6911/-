@@ -25,7 +25,7 @@ export function AiAssistant() {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [currentPlan, setCurrentPlan] = useState<GeneratedPlan | null>(null);
 
-  // Body scroll lock effect when assistant modal is open
+  // Lock body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -41,8 +41,8 @@ export function AiAssistant() {
   }, [isOpen]);
 
   const welcomeText = isRtl
-    ? "أهلاً وسهلاً بك في مساعد جِدّاو الهجين! 🤖 أنا جاهز لمساعدتك في التخطيط لطلعتك أو البحث عن أفضل كافيهات ومطاعم جدة بدقة 100%."
-    : "Welcome to JEDDAW's Master Hybrid AI Assistant! 🤖 How can I help you plan your outing or discover spots in Jeddah?";
+    ? "أهلاً بك في جِدّاو! 🌊 أنا هنا لمساعدتك في ترتيب أحلى طلعة في جدة أو اكتشاف كافيهات ومطاعم مميزة ومجربة."
+    : "Welcome to JEDDAW! 🌊 I'm here to help you plan an amazing outing or discover top verified places in Jeddah.";
 
   const initialAiMsg: AiChatMessage = {
     id: "1",
@@ -51,8 +51,8 @@ export function AiAssistant() {
       type: "message",
       message: welcomeText,
       suggestedReplies: isRtl
-        ? ["خطة عائلية بالبلد 🏛️", "طلعة روقان وعشاء بحري 🌊", "ألعاب وكارتينج شباب 🏎️"]
-        : ["Balad Family Outing 🏛️", "Sea View & Sunset Dinner 🌊", "Karting & Youth Action 🏎️"],
+        ? ["خطة عائلية بالبلد 🏛️", "طلعة روقان وعشاء بحري 🌊", "ألعاب وكارتينج شباب 🏎️", "البحث عن كافيهات وأماكن ☕"]
+        : ["Balad Family Outing 🏛️", "Sea View & Sunset Dinner 🌊", "Karting & Youth Action 🏎️", "Search Cafes & Places ☕"],
       plan: null,
     },
   };
@@ -111,7 +111,6 @@ export function AiAssistant() {
 
       setIsTyping(false);
 
-      // Update active plan state ONLY if type is plan/plan_update and plan is validated
       if ((response.type === "plan" || response.type === "plan_update") && response.plan?.validated) {
         setCurrentPlan(response.plan);
       }
@@ -145,50 +144,65 @@ export function AiAssistant() {
 
   return (
     <>
-      {/* Floating Launcher Button */}
+      {/* Floating Launcher Button - High-End Premium Capsule */}
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 end-5 z-40 flex items-center gap-2.5 rounded-full bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] p-3.5 text-white shadow-2xl hover:scale-105 transition-all animate-pulse-glow lg:bottom-6 cursor-pointer"
+        className="fixed bottom-20 end-5 z-40 flex items-center gap-3 rounded-full bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] p-1.5 pe-4 text-white shadow-2xl hover:scale-[1.05] hover:-translate-y-1 active:scale-95 transition-all duration-300 ring-4 ring-[#C96745]/20 lg:bottom-6 cursor-pointer group"
         aria-label={isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}
       >
-        <Bot className="h-6 w-6 animate-bounce" />
-        <span className="hidden text-xs font-black md:inline-block">
-          {isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI"}
-        </span>
+        <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white shadow-inner">
+          <Bot className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
+          <span className="absolute top-0 end-0 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-white animate-pulse" />
+        </div>
+        <div className="flex flex-col text-start">
+          <span className="text-xs font-black tracking-wide text-white drop-shadow-sm">
+            {isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI"}
+          </span>
+          <span className="text-[10px] font-semibold text-white/90 flex items-center gap-1">
+            <Sparkles className="h-2.5 w-2.5 text-amber-200" />
+            {isRtl ? "دليلك للطلعات" : "Outing Planner"}
+          </span>
+        </div>
       </button>
 
-      {/* Modal Dialog */}
+      {/* Modal Dialog - Glassmorphism Aesthetic */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="surface-card flex h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-[#E2D3BE] dark:border-white/10 bg-[#FAF6F0] dark:bg-[#1C2422] shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/65 backdrop-blur-md animate-fade-in">
+          <div className="surface-card flex h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-[#E2D3BE] dark:border-white/10 bg-gradient-to-b from-[#FAF6F0] via-white to-[#FAF6F0] dark:from-[#1C2422] dark:via-[#161B1A] dark:to-[#1C2422] shadow-2xl">
+            
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-[#E2D3BE] dark:border-white/10 bg-[#F4EBDD] dark:bg-[#161B1A] px-5 py-4">
+            <div className="flex items-center justify-between border-b border-[#E2D3BE]/60 dark:border-white/10 bg-[#F4EBDD]/90 dark:bg-[#161B1A]/90 backdrop-blur-md px-5 py-4">
               <div className="flex items-center gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745] text-white shadow-md">
-                  <Bot className="h-5 w-5" />
+                <div className="relative grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#C96745] to-[#E4A23B] text-white shadow-md ring-2 ring-[#C96745]/30">
+                  <Bot className="h-6 w-6" />
+                  <span className="absolute -bottom-0.5 -end-0.5 h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#161B1A]" />
                 </div>
                 <div>
-                  <h2 className="text-base font-black text-[#252A28] dark:text-[#F5F1E8]">
-                    {isRtl ? "مساعد جِدّاو الذكي (Hybrid AI)" : "JEDDAW Master Hybrid AI"}
+                  <h2 className="text-base font-black text-[#252A28] dark:text-[#F5F1E8] flex items-center gap-2">
+                    {isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}
+                    <span className="text-[10px] bg-[#C96745]/15 text-[#C96745] font-black px-2 py-0.5 rounded-full border border-[#C96745]/30">
+                      LIVE
+                    </span>
                   </h2>
-                  <p className="text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] flex items-center gap-1">
-                    <Sparkles className="h-3 w-3" />
-                    {isRtl ? "موجه بالنية والتحقق الصارم — 0 تخمين" : "Intent router backed — 0 guesswork"}
+                  <p className="text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] flex items-center gap-1.5 mt-0.5">
+                    <Sparkles className="h-3 w-3 text-[#E4A23B]" />
+                    {isRtl ? "تخطيط دقيق 100% بدون تخمين" : "Verified 100% zero guesswork"}
                   </p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="rounded-full p-2 text-[#6E716C] dark:text-[#B5B8B2] hover:bg-black/10 dark:hover:bg-white/10 transition-all cursor-pointer"
+                className="rounded-full p-2 text-[#6E716C] dark:text-[#B5B8B2] hover:bg-black/10 dark:hover:bg-white/10 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                aria-label="Close"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Chat Body */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
               {messages.map((msg) => (
                 <div
                   key={msg.id}
@@ -196,36 +210,39 @@ export function AiAssistant() {
                 >
                   {/* User Message Bubble */}
                   {msg.sender === "user" ? (
-                    <div className="max-w-[85%] rounded-2xl p-4 text-xs font-semibold leading-relaxed shadow-sm bg-[#C96745] text-white rounded-br-none">
+                    <div className="max-w-[85%] rounded-2xl px-4 py-3 text-xs font-semibold leading-relaxed shadow-sm bg-gradient-to-r from-[#C96745] to-[#D97757] text-white rounded-br-none">
                       {msg.text}
                     </div>
                   ) : (
                     /* AI Response Bubble */
-                    <div className="max-w-[88%] rounded-2xl p-4 text-xs font-semibold leading-relaxed shadow-sm bg-white dark:bg-[#253230] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 rounded-bl-none">
-                      {msg.response?.message}
+                    <div className="max-w-[90%] sm:max-w-[85%] rounded-2xl p-4 text-xs font-semibold leading-relaxed shadow-sm bg-white dark:bg-[#253230] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE]/80 dark:border-white/10 rounded-bl-none">
+                      <div className="whitespace-pre-line leading-relaxed">{msg.response?.message}</div>
 
                       {/* Render Places list if type is place_results */}
                       {msg.response?.type === "place_results" && msg.response.places && (
-                        <div className="mt-3 space-y-2 border-t border-[#E2D3BE] dark:border-white/10 pt-3">
+                        <div className="mt-3 space-y-2 border-t border-[#E2D3BE]/50 dark:border-white/10 pt-3">
                           {msg.response.places.map((place) => (
                             <div
                               key={place.id}
                               onClick={() => setSelectedPlace(place)}
-                              className="flex items-center gap-3 p-2.5 rounded-xl bg-[#FAF6F0] dark:bg-[#1A2221] border border-[#E2D3BE]/60 dark:border-white/10 hover:border-[#C96745] transition-all cursor-pointer"
+                              className="flex items-center gap-3 p-2.5 rounded-2xl bg-[#FAF6F0] dark:bg-[#1A2221] border border-[#E2D3BE]/60 dark:border-white/10 hover:border-[#C96745] hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group"
                             >
                               <img
                                 src={place.image}
                                 alt={place.nameAr}
-                                className="h-10 w-10 rounded-lg object-cover shrink-0"
+                                className="h-11 w-11 rounded-xl object-cover shrink-0 shadow-sm group-hover:scale-105 transition-transform"
                               />
                               <div className="flex-1 truncate">
                                 <div className="text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] truncate">
                                   {isRtl ? place.nameAr : place.nameEn}
                                 </div>
-                                <div className="text-[10px] text-[#397C78] dark:text-[#5EAAA5] font-semibold">
-                                  {place.categoryAr} · {place.pricePerPerson} {isRtl ? "ر.س" : "SAR"}
+                                <div className="text-[10px] text-[#397C78] dark:text-[#5EAAA5] font-semibold mt-0.5 flex items-center gap-2">
+                                  <span>{place.categoryAr}</span>
+                                  <span>•</span>
+                                  <span>{place.pricePerPerson} {isRtl ? "ر.س" : "SAR"}</span>
                                 </div>
                               </div>
+                              <ChevronLeft className="h-4 w-4 text-[#C96745] opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
                           ))}
                         </div>
@@ -235,10 +252,10 @@ export function AiAssistant() {
                       {(msg.response?.type === "plan" || msg.response?.type === "plan_update") &&
                         msg.response.plan &&
                         msg.response.plan.validated === true && (
-                          <div className="mt-4 pt-3 border-t border-[#E2D3BE] dark:border-white/10">
-                            <div className="flex items-center justify-between font-black text-sm text-[#C96745]">
+                          <div className="mt-4 pt-3.5 border-t border-[#E2D3BE]/60 dark:border-white/10">
+                            <div className="flex items-center justify-between font-black text-sm text-[#C96745] bg-[#C96745]/10 p-3 rounded-2xl border border-[#C96745]/20">
                               <span>{isRtl ? msg.response.plan.titleAr : msg.response.plan.titleEn}</span>
-                              <span className="text-xs bg-[#C96745]/15 px-2.5 py-1 rounded-full text-[#C96745]">
+                              <span className="text-xs bg-[#C96745] text-white px-3 py-1 rounded-full font-bold shadow-sm">
                                 ⏱️ {msg.response.plan.totalDurationMinutes} {isRtl ? "دقيقة" : "min"}
                               </span>
                             </div>
@@ -250,22 +267,24 @@ export function AiAssistant() {
                                   <div
                                     key={i}
                                     onClick={() => p && setSelectedPlace(p)}
-                                    className="p-2.5 rounded-xl bg-[#FAF6F0] dark:bg-[#1A2221] border border-[#E2D3BE]/60 dark:border-white/10 hover:border-[#C96745] transition-all cursor-pointer"
+                                    className="p-3 rounded-2xl bg-[#FAF6F0] dark:bg-[#1A2221] border border-[#E2D3BE]/60 dark:border-white/10 hover:border-[#C96745] hover:shadow-md transition-all cursor-pointer group"
                                   >
                                     <div className="flex items-center gap-3">
                                       {p && (
                                         <img
                                           src={p.image}
                                           alt={p.nameAr}
-                                          className="h-10 w-10 rounded-lg object-cover shrink-0"
+                                          className="h-11 w-11 rounded-xl object-cover shrink-0 shadow-sm group-hover:scale-105 transition-transform"
                                         />
                                       )}
                                       <div className="flex-1 truncate">
                                         <div className="flex items-center justify-between text-xs font-bold text-[#252A28] dark:text-[#F5F1E8]">
                                           <span className="truncate">{i + 1}. {p ? (isRtl ? p.nameAr : p.nameEn) : stop.placeId}</span>
-                                          <span className="text-[10px] text-[#397C78] dark:text-[#5EAAA5]">{stop.arrivalTime}</span>
+                                          <span className="text-[10px] text-[#397C78] dark:text-[#5EAAA5] font-black bg-[#397C78]/10 px-2 py-0.5 rounded-full">
+                                            {stop.arrivalTime}
+                                          </span>
                                         </div>
-                                        <div className="text-[10px] text-[#6E716C] dark:text-[#B5B8B2] truncate">
+                                        <div className="text-[10px] text-[#6E716C] dark:text-[#B5B8B2] truncate mt-1">
                                           💡 {isRtl ? stop.reasonAr : stop.reasonEn}
                                         </div>
                                       </div>
@@ -275,27 +294,27 @@ export function AiAssistant() {
                               })}
                             </div>
 
-                            <div className="mt-3 flex items-center justify-between text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] bg-[#397C78]/10 p-2 rounded-lg">
+                            <div className="mt-3 flex items-center justify-between text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] bg-[#397C78]/10 p-2.5 rounded-xl border border-[#397C78]/20">
                               <span>💰 {isRtl ? "التكلفة التقديرية للفرد:" : "Estimated per person:"}</span>
-                              <span>{msg.response.plan.estimatedCostMin} - {msg.response.plan.estimatedCostMax} {isRtl ? "ر.س" : "SAR"}</span>
+                              <span className="text-xs font-black">{msg.response.plan.estimatedCostMin} - {msg.response.plan.estimatedCostMax} {isRtl ? "ر.س" : "SAR"}</span>
                             </div>
                           </div>
                         )}
                     </div>
                   )}
 
-                  {/* Follow-up Suggested Action Chips */}
+                  {/* Follow-up Suggested Action Chips - Premium Glass Pills */}
                   {msg.sender === "ai" &&
                     msg.response?.suggestedReplies &&
                     msg.response.suggestedReplies.length > 0 && (
-                      <div className="mt-2.5 flex flex-wrap gap-1.5 max-w-[90%]">
+                      <div className="mt-3 flex flex-wrap gap-2 max-w-[95%]">
                         {msg.response.suggestedReplies.map((reply, i) => (
                           <button
                             key={i}
                             onClick={() => handleSend(reply)}
-                            className="rounded-full bg-white dark:bg-[#253230] px-3 py-1.5 text-[11px] font-bold text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/15 hover:border-[#C96745] hover:text-[#C96745] transition-all cursor-pointer shadow-sm"
+                            className="rounded-full bg-gradient-to-r from-white via-[#FAF6F0] to-white dark:from-[#253230] dark:to-[#1C2422] px-3.5 py-2 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/15 hover:border-[#C96745] hover:text-[#C96745] hover:scale-[1.03] active:scale-95 transition-all cursor-pointer shadow-sm flex items-center gap-1.5"
                           >
-                            {reply}
+                            <span>{reply}</span>
                           </button>
                         ))}
                       </div>
@@ -304,16 +323,16 @@ export function AiAssistant() {
               ))}
 
               {isTyping && (
-                <div className="flex items-center gap-2 text-xs font-bold text-[#6E716C] dark:text-[#B5B8B2] bg-white dark:bg-[#253230] p-3 rounded-2xl w-fit border border-[#E2D3BE] dark:border-white/10 shadow-sm animate-pulse">
+                <div className="flex items-center gap-2.5 text-xs font-bold text-[#6E716C] dark:text-[#B5B8B2] bg-white dark:bg-[#253230] p-3.5 rounded-2xl w-fit border border-[#E2D3BE] dark:border-white/10 shadow-sm animate-pulse">
                   <Bot className="h-4 w-4 text-[#C96745] animate-spin" />
-                  <span>{isRtl ? "جاري المعالجة والتحقق الحتمي من قاعدة البيانات..." : "Processing intent & verifying database..."}</span>
+                  <span>{isRtl ? "جاري التفكير وتحليل أفضل الأماكن..." : "Analyzing best options for you..."}</span>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
             {/* Input Bar */}
-            <div className="border-t border-[#E2D3BE] dark:border-white/10 bg-white dark:bg-[#161B1A] p-3">
+            <div className="border-t border-[#E2D3BE]/60 dark:border-white/10 bg-white/80 dark:bg-[#161B1A]/80 backdrop-blur-md p-3 sm:p-4">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -327,15 +346,15 @@ export function AiAssistant() {
                   onChange={(e) => setInput(e.target.value)}
                   placeholder={
                     isRtl
-                      ? "اكتب رسالتك هنا (مثلاً: رتب لي طلعة، كافيه بالروضة)..."
-                      : "Type your message (e.g. build a plan, cafes in Rawdah)..."
+                      ? "اكتب طلبك (مثلاً: رتب لي طلعة، كافيهات بالروضة)..."
+                      : "Type your request (e.g. plan an outing, cafes in Rawdah)..."
                   }
-                  className="flex-1 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#253230] px-4 py-2.5 text-xs text-[#252A28] dark:text-[#F5F1E8] focus:outline-none focus:ring-2 focus:ring-[#C96745]"
+                  className="flex-1 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#253230] px-4 py-3 text-xs text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/70 focus:outline-none focus:border-[#C96745] focus:ring-4 focus:ring-[#C96745]/15 transition-all"
                 />
                 <button
                   type="submit"
                   disabled={!input.trim() || isTyping}
-                  className="grid h-10 w-10 place-items-center rounded-full bg-[#C96745] text-white shadow-lift hover:bg-[#b55837] disabled:opacity-50 transition-all cursor-pointer"
+                  className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-[#C96745] to-[#E4A23B] text-white shadow-md hover:scale-105 active:scale-95 disabled:opacity-40 transition-all cursor-pointer shrink-0"
                 >
                   <Send className="h-4 w-4" />
                 </button>
