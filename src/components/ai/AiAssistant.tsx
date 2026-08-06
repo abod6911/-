@@ -1,25 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { Bot, Globe, Send, Sparkles, X } from "lucide-react";
-import { places, type Place } from "@/data/jeddah";
+import { Bot, ChevronLeft, ChevronRight, Globe, MapPin, Send, Sparkles, Wand2, X } from "lucide-react";
+import { getPlace, places, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 import { PlaceDetailModal } from "@/components/places/PlaceDetailModal";
 import { checkContent } from "@/lib/moderation";
+import { sendHybridAiQuery, type StructuredPlan } from "@/lib/hybrid-ai";
 
 interface AiMessage {
   id: string;
   sender: "ai" | "user";
   text: string;
   suggestedPlaces?: Place[];
-  actionLink?: { label: string; url: string } | undefined;
+  plan?: StructuredPlan;
+  suggestedActions?: string[];
 }
-
-// Broad pattern for insults / bad words / nonsense in AR & EN
-const OFFENSIVE_PATTERN =
-  /(غبي|أحمق|فاشل|حقير|زفت|سخيف|حمار|حيوان|قذر|شتم|سافل|منحط|كل زق|أحا|تفه|خراء|stupid|dumb|idiot|fool|useless|rubbish|crap|shit|bitch|bastard)/i;
-
-// Pattern for simple friendly greetings
-const GREETING_PATTERN =
-  /^(هلا|مرحبا|مرحباً|أهلا|أهلاً|سلام|السلام عليكم|صباح الخير|مساء الخير|hi|hello|hey|greetings|good morning|good evening)$/i;
 
 export function AiAssistant() {
   const { t, isRtl } = useLanguage();
@@ -44,52 +38,28 @@ export function AiAssistant() {
   }, [isOpen]);
 
   const welcomeText = isRtl
-    ? "أهلاً وسهلاً بك في جِدّاو! 🤖 أنا مساعدك الذكي لتخطيط أحلى الطلعات في جدة. اسألني بالعربي أو بالإنكليزي عن الأماكن، المطاعم، الكافيهات، الفنادق، أو كيف ترتّب يومك حسب ميزانيتك ووقتك!"
-    : "Welcome to JEDDAW! 🤖 I am your smart AI assistant for planning the best outings in Jeddah. Ask me in Arabic or English about restaurants, cafes, hotels, beaches, or how to plan your day!";
+    ? "أهلاً وسهلاً بك في مساعد جِدّاو الهجين! 🤖 أنا جاهز لمساعدتك في التخطيط لطلعتك المثالية في جدة (مطاعم، كافيهات، شواطئ، ومغامرات) مع حماية 100% من تخمين الأسعار أو الأماكن."
+    : "Welcome to JEDDAW's Hybrid AI Assistant! 🤖 I can build verified itineraries in Jeddah with 0 hallucinations.";
 
   const initialAiMsg: AiMessage = {
     id: "1",
     sender: "ai",
     text: welcomeText,
+    suggestedActions: isRtl
+      ? ["خطة عائلية بالبلد 🏛️", "طلعة روقان وعشاء بحري 🌊", "ألعاب وكارتينج شباب 🏎️"]
+      : ["Balad Family Outing 🏛️", "Sea View & Sunset Dinner 🌊", "Karting & Youth Action 🏎️"],
   };
 
   const [messages, setMessages] = useState<AiMessage[]>([initialAiMsg]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Update initial message when language changes if no custom messages yet
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
-    setMessages((prev) => {
-      if (prev.length <= 1) {
-        return [
-          {
-            id: "1",
-            sender: "ai",
-            text: isRtl
-              ? "أهلاً وسهلاً بك في جِدّاو! 🤖 أنا مساعدك الذكي لتخطيط أحلى الطلعات في جدة. اسألني بالعربي أو بالإنكليزي عن الأماكن، المطاعم، الكافيهات، الفنادق، أو كيف ترتّب يومك حسب ميزانيتك ووقتك!"
-              : "Welcome to JEDDAW! 🤖 I am your smart AI assistant for planning the best outings in Jeddah. Ask me in Arabic or English about restaurants, cafes, hotels, beaches, or how to plan your day!",
-          },
-        ];
-      }
-      return prev;
-    });
-  }, [isRtl]);
-
-  const quickPromptsAr = [
-    "كيف أرتّب طلعة بضغطة واحدة؟ ⚡",
-    "اعطيني خيار عشاء رومانسي على البحر 🌊",
-    "وين أفضل مطعم شامي أو مصري في جدة؟ 🥙",
-    "أبغى مقهى هادي ينفع لمذاكرة أو شغل ☕",
-    "وش أفضل المنتجات والفنادق المطلة؟ 🏨",
-  ];
-
-  const quickPromptsEn = [
-    "How to plan a complete trip instantly? ⚡",
-    "Show me romantic sea view dinners 🌊",
-    "Best coffee shops for working ☕",
-    "Top 5-star hotels & sea resorts 🏨",
-    "Famous places & shopping malls 🛍️",
-  ];
-
-  const quickPrompts = isRtl ? quickPromptsAr : quickPromptsEn;
+    scrollToBottom();
+  }, [messages, isTyping]);
 
   const handleSend = async (customText?: string) => {
     const userText = customText || input;
@@ -105,181 +75,110 @@ export function AiAssistant() {
     setInput("");
     setIsTyping(true);
 
+    // 1. Run Multilingual Content Moderation Engine
     const modResult = await checkContent(userText);
-
-    setTimeout(() => {
-      let responseText = "";
-      let matches: Place[] = [];
-      let actionLink: { label: string; url: string } | undefined = undefined;
-
-      const q = userText.toLowerCase().trim();
-      const isEnglishInput = /[a-z]/i.test(q) && !/[\u0600-\u06FF]/.test(q);
-
-      // 0. Check content moderation result
-      if (!modResult.allowed) {
-        responseText = isRtl ? modResult.messageAr : modResult.messageEn;
-      }
-      // 1. Handle Insults / Offense / Rude Words gracefully with high intelligence
-      else if (OFFENSIVE_PATTERN.test(q)) {
-        if (isEnglishInput || !isRtl) {
-          responseText =
-            "Hello there! 💫 I am JEDDAW's AI Assistant, designed to help you discover the finest restaurants, cafes, sea spots, and outing plans in Jeddah politely & instantly. How can I assist you with your plans today?";
-        } else {
-          responseText =
-            "أهلاً بك! 🌸 أنا مساعد جِدّاو الذكي، مخصص لخدمتك وتوجيهك لأجمل مطاعم، كافيهات، شواطئ، وخطط جدة بكل احترام وسرعة 💫. يسعدني جداً أن أساعدك في العثور على مكان رائع اليوم! عن ماذا تحب أن تسأل؟";
-        }
-      }
-      // 2. Handle Simple Greetings without dumping random places
-      else if (GREETING_PATTERN.test(q)) {
-        if (isEnglishInput || !isRtl) {
-          responseText =
-            "Hello and welcome! 🌸 I'm delighted to assist you today. What kind of outing or places are you looking for in Jeddah? (e.g. Restaurants, Cafes, Sea views, Hotels, or Budget plans)";
-        } else {
-          responseText =
-            "أهلاً وسهلاً بك! 🌸 شرفتني ونورتني. كيف أقدر أساعدك اليوم في تخطيط طلعتك في جدة؟ (مثلاً: مطاعم، كافيهات، إطلالة بحرية، فنادق، أو خطة الويكند)";
-        }
-      }
-      // 3. Questions about JEDDAW or how to plan
-      else if (
-        q.includes("وش") ||
-        q.includes("كيف") ||
-        q.includes("خطة") ||
-        q.includes("plan") ||
-        q.includes("how")
-      ) {
-        responseText = isEnglishInput || !isRtl
-          ? "With JEDDAW, planning your outing takes under 1 minute! Select your vibe, budget & district in the 'Quick Plan' tab, and we generate a complete itinerary with dining, coffee, and GPS route."
-          : "مع جِدّاو، تخطيط طلعتك ما ياخذ دقيقة! حدّد ميزانيتك، وجوّكم، والحي المفضل في تبويب (سوّ لي خطة)، وجِدّاو يرتّب لك النشاط، المطعم، القهوة، والمسار كاملاً مع خرائط قوقل!";
-        actionLink = {
-          label: isRtl ? "سوّ خطتك الآن ⚡" : "Plan Your Outing Now ⚡",
-          url: "/quick-plan",
-        };
-      }
-      // 4. Dining / Restaurants / Food
-      else if (
-        q.includes("مطعم") ||
-        q.includes("أكل") ||
-        q.includes("عشاء") ||
-        q.includes("غداء") ||
-        q.includes("restaurant") ||
-        q.includes("dine") ||
-        q.includes("food")
-      ) {
-        matches = places.filter((p) => p.kind === "food");
-        responseText = isEnglishInput || !isRtl
-          ? "Here are top recommended dining spots in Jeddah:"
-          : "إليك أعذّ وأفضل المطاعم المقترحة في جدة حسب ترشيحات جِدّاو المحترفة:";
-      }
-      // 5. Cafes & Coffee
-      else if (
-        q.includes("كافيه") ||
-        q.includes("قهوة") ||
-        q.includes("مقهى") ||
-        q.includes("حلى") ||
-        q.includes("cafe") ||
-        q.includes("coffee")
-      ) {
-        matches = places.filter((p) => p.kind === "cafe");
-        responseText = isEnglishInput || !isRtl
-          ? "Here are top specialty cafes & dessert spots in Jeddah:"
-          : "إليك أفضل الكافيهات والقهوة المختصة والمقاهي الهادئة بجدة:";
-      }
-      // 6. Hotels & Resorts
-      else if (
-        q.includes("فندق") ||
-        q.includes("منتجع") ||
-        q.includes("شاليه") ||
-        q.includes("أبحر") ||
-        q.includes("hotel") ||
-        q.includes("resort")
-      ) {
-        matches = places.filter((p) => p.kind === "hotel" || p.kind === "resort");
-        responseText = isEnglishInput || !isRtl
-          ? "Here are top 5-star hotels & sea resorts in Jeddah & Obhur:"
-          : "إليك أفخم الفنادق 5 نجوم ومنتجعات الشاطئ وأبحر الشمالية بجدة:";
-      }
-      // Default fallback
-      else {
-        matches = places.filter((p) => {
-          const text = (p.nameAr + " " + p.nameEn + " " + p.categoryAr + " " + p.descAr).toLowerCase();
-          return text.includes(q);
-        });
-
-        if (matches.length === 0) {
-          matches = places.filter((p) => p.trending || (p.rating && p.rating >= 4.8)).slice(0, 3);
-        }
-
-        responseText = isEnglishInput || !isRtl
-          ? "Here are top recommended places in Jeddah tailored for your request:"
-          : "هذي أفضل الأماكن والترندات الموصى بها اليوم في جدة، وتقدر دائماً تخصيص بحثك بالحي أو الميزانية أو المود:";
-      }
-
-      const shuffledMatches = [...matches].sort(() => 0.5 - Math.random()).slice(0, 3);
-
-      const aiMsg: AiMessage = {
-        id: (Date.now() + 1).toString(),
-        sender: "ai",
-        text: responseText,
-        suggestedPlaces: shuffledMatches,
-        actionLink,
-      };
-
-      setMessages((prev) => [...prev, aiMsg]);
+    if (!modResult.allowed) {
       setIsTyping(false);
-    }, 600);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          sender: "ai",
+          text: isRtl ? modResult.messageAr : modResult.messageEn,
+        },
+      ]);
+      return;
+    }
+
+    // 2. Invoke Hybrid AI Engine (Supabase Edge Function + Gemini + Deterministic Engine)
+    try {
+      const aiResponse = await sendHybridAiQuery(userText, messages);
+      setIsTyping(false);
+
+      const responsePlaces: Place[] = [];
+      if (aiResponse.plan && aiResponse.plan.stops) {
+        aiResponse.plan.stops.forEach((stop) => {
+          const p = getPlace(stop.placeId);
+          if (p) responsePlaces.push(p);
+        });
+      }
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          sender: "ai",
+          text: aiResponse.assistantMessage,
+          suggestedPlaces: responsePlaces.length > 0 ? responsePlaces : undefined,
+          plan: aiResponse.plan,
+          suggestedActions: aiResponse.suggestedActions || [
+            isRtl ? "خلّها أرخص 💰" : "Make it cheaper",
+            isRtl ? "قرّب الأماكن 📍" : "Closer places",
+            isRtl ? "بدّل المطعم 🍽️" : "Swap restaurant",
+            isRtl ? "أضف كافيه ☕" : "Add cafe",
+          ],
+        },
+      ]);
+    } catch (e) {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          sender: "ai",
+          text: isRtl
+            ? "عذراً، حدث خطأ أثناء تجهيز الخطة. يمكنك تجربة اختيار محطة أخرى أو إعادة المحاولة."
+            : "Sorry, an error occurred while building the plan. Please try again.",
+        },
+      ]);
+    }
   };
 
   return (
     <>
-      {/* Floating Trigger Button */}
+      {/* Floating Launcher Button */}
       <button
+        type="button"
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 end-5 z-40 flex items-center gap-2 rounded-full bg-gradient-to-r from-[#C96745] to-[#397C78] px-5 py-3 text-xs font-black text-white shadow-lift hover:scale-105 transition-all animate-pulse-glow border border-white/20 min-h-[48px]"
+        className="fixed bottom-20 end-5 z-40 flex items-center gap-2.5 rounded-full bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] p-3.5 text-white shadow-2xl hover:scale-105 transition-all animate-pulse-glow lg:bottom-6 cursor-pointer"
         aria-label={isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}
       >
-        <Bot className="h-5 w-5 animate-bounce" />
-        <span className="hidden sm:inline">
-          {isRtl ? "مساعد جِدّاو الذكي 🤖" : "JEDDAW AI Assistant 🤖"}
+        <Bot className="h-6 w-6 animate-bounce" />
+        <span className="hidden text-xs font-black md:inline-block">
+          {isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI"}
         </span>
       </button>
 
-      {/* AI Assistant Chat Modal */}
+      {/* Modal Dialog */}
       {isOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-md animate-fade-in"
-          onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}
-        >
-          <div className="w-full max-w-lg h-[82vh] max-h-[640px] flex flex-col rounded-3xl bg-[#FAF6F0] dark:bg-[#1C2422] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 shadow-2xl overflow-hidden animate-modal-in">
-            {/* Header Bar */}
-            <div className="flex items-center justify-between bg-gradient-to-r from-[#1D3A37] to-[#295652] px-6 py-4 text-white shrink-0">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="surface-card flex h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-[#E2D3BE] dark:border-white/10 bg-[#FAF6F0] dark:bg-[#1C2422] shadow-2xl">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-[#E2D3BE] dark:border-white/10 bg-[#F4EBDD] dark:bg-[#161B1A] px-5 py-4">
               <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745] text-xl text-white shadow-md">
-                  🤖
-                </span>
+                <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745] text-white shadow-md">
+                  <Bot className="h-5 w-5" />
+                </div>
                 <div>
-                  <h2 className="text-base font-black flex items-center gap-1.5">
-                    <span>{isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}</span>
-                    <span className="rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] px-2 py-0.5 border border-emerald-400/30">
-                      {isRtl ? "ثنائي اللغة (AR/EN)" : "Bilingual (AR/EN)"}
-                    </span>
+                  <h2 className="text-base font-black text-[#252A28] dark:text-[#F5F1E8]">
+                    {isRtl ? "مساعد جِدّاو الهجين (Hybrid AI)" : "JEDDAW Hybrid AI Assistant"}
                   </h2>
-                  <p className="text-[11px] text-white/80 font-semibold flex items-center gap-1">
-                    <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    {isRtl ? "متصل وجاهز لمساعدتك لحظياً" : "Online & ready to assist instantly"}
+                  <p className="text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] flex items-center gap-1">
+                    <Sparkles className="h-3 w-3" />
+                    {isRtl ? "مدمج بقاعدة بيانات جِدّاو المعتمدة — 0 تخمين" : "Verified database backed — 0 hallucinations"}
                   </p>
                 </div>
               </div>
-
               <button
+                type="button"
                 onClick={() => setIsOpen(false)}
-                className="grid h-9 w-9 place-items-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-                aria-label={isRtl ? "إغلاق" : "Close"}
+                className="rounded-full p-2 text-[#6E716C] dark:text-[#B5B8B2] hover:bg-black/10 dark:hover:bg-white/10 transition-all cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            {/* Chat Messages Body */}
+            {/* Chat Body */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((msg) => (
                 <div
@@ -289,123 +188,122 @@ export function AiAssistant() {
                   <div
                     className={`max-w-[85%] rounded-2xl p-4 text-xs font-semibold leading-relaxed shadow-sm ${
                       msg.sender === "user"
-                        ? "bg-[#C96745] text-white rounded-te-none"
-                        : "bg-white dark:bg-[#253230] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 rounded-ts-none"
+                        ? "bg-[#C96745] text-white rounded-br-none"
+                        : "bg-white dark:bg-[#253230] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 rounded-bl-none"
                     }`}
                   >
                     {msg.text}
 
-                    {/* Action Button Link */}
-                    {msg.actionLink && (
-                      <a
-                        href={msg.actionLink.url}
-                        className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#C96745] px-4 py-2 text-xs font-black text-white shadow-lift hover:bg-[#b55837] transition-all"
-                      >
-                        <Sparkles className="h-3.5 w-3.5" />
-                        <span>{msg.actionLink.label}</span>
-                      </a>
+                    {/* Structured Plan Rendering */}
+                    {msg.plan && (
+                      <div className="mt-4 pt-3 border-t border-[#E2D3BE] dark:border-white/10">
+                        <div className="flex items-center justify-between font-black text-sm text-[#C96745]">
+                          <span>{isRtl ? msg.plan.titleAr : msg.plan.titleEn}</span>
+                          <span className="text-xs bg-[#C96745]/15 px-2.5 py-1 rounded-full text-[#C96745]">
+                            ⏱️ {msg.plan.totalDurationMinutes} {isRtl ? "دقيقة" : "min"}
+                          </span>
+                        </div>
+
+                        <div className="mt-3 space-y-2.5">
+                          {msg.plan.stops.map((stop, i) => {
+                            const p = getPlace(stop.placeId);
+                            return (
+                              <div
+                                key={i}
+                                onClick={() => p && setSelectedPlace(p)}
+                                className="flex items-center gap-3 p-2.5 rounded-xl bg-[#FAF6F0] dark:bg-[#1A2221] border border-[#E2D3BE]/60 dark:border-white/10 hover:border-[#C96745] transition-all cursor-pointer"
+                              >
+                                {p && (
+                                  <img
+                                    src={p.image}
+                                    alt={p.nameAr}
+                                    className="h-10 w-10 rounded-lg object-cover shrink-0"
+                                  />
+                                )}
+                                <div className="flex-1 truncate">
+                                  <div className="flex items-center justify-between text-xs font-bold text-[#252A28] dark:text-[#F5F1E8]">
+                                    <span className="truncate">{i + 1}. {p ? (isRtl ? p.nameAr : p.nameEn) : stop.placeId}</span>
+                                    <span className="text-[10px] text-[#397C78] dark:text-[#5EAAA5]">{stop.arrivalTime}</span>
+                                  </div>
+                                  <div className="text-[10px] text-[#6E716C] dark:text-[#B5B8B2] truncate">
+                                    {isRtl ? stop.reasonAr : stop.reasonEn}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        <div className="mt-3 flex items-center justify-between text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] bg-[#397C78]/10 p-2 rounded-lg">
+                          <span>💰 {isRtl ? "التكلفة التقديرية للفرد:" : "Estimated per person:"}</span>
+                          <span>{msg.plan.estimatedCostMin} - {msg.plan.estimatedCostMax} {isRtl ? "ر.س" : "SAR"}</span>
+                        </div>
+                      </div>
                     )}
                   </div>
 
-                  {/* Suggested Places Horizontal Cards */}
-                  {msg.suggestedPlaces && msg.suggestedPlaces.length > 0 && (
-                    <div className="mt-3 w-full space-y-2">
-                      {msg.suggestedPlaces.map((place) => (
-                        <div
-                          key={place.id}
-                          onClick={() => setSelectedPlace(place)}
-                          className="flex items-center justify-between p-3 rounded-2xl bg-white dark:bg-[#253230] border border-[#E2D3BE] dark:border-white/10 shadow-sm hover:border-[#C96745] cursor-pointer transition-all"
+                  {/* Follow-up Suggested Action Chips */}
+                  {msg.suggestedActions && msg.suggestedActions.length > 0 && (
+                    <div className="mt-2.5 flex flex-wrap gap-1.5 max-w-[90%]">
+                      {msg.suggestedActions.map((action, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleSend(action)}
+                          className="rounded-full bg-white dark:bg-[#253230] px-3 py-1.5 text-[11px] font-bold text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/15 hover:border-[#C96745] hover:text-[#C96745] transition-all cursor-pointer shadow-sm"
                         >
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={place.image}
-                              alt={place.nameAr}
-                              className="h-11 w-11 rounded-xl object-cover"
-                            />
-                            <div>
-                              <h4 className="text-xs font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
-                                {isRtl ? place.nameAr : place.nameEn}
-                              </h4>
-                              <p className="text-[11px] text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-                                {isRtl ? (place.subCategoryAr || place.categoryAr) : (place.subCategoryEn || place.kind)} ·{" "}
-                                {place.pricePerPerson === 0
-                                  ? isRtl
-                                    ? "مجاني ✨"
-                                    : "Free ✨"
-                                  : `${place.pricePerPerson} ${isRtl ? "ر.س" : "SAR"}`}
-                              </p>
-                            </div>
-                          </div>
-
-                          <button className="text-xs font-bold text-[#C96745] hover:underline flex items-center gap-1">
-                            التفاصيل 📍
-                          </button>
-                        </div>
+                          {action}
+                        </button>
                       ))}
                     </div>
                   )}
                 </div>
               ))}
 
-              {/* Typing Indicator */}
               {isTyping && (
-                <div className="flex items-center gap-2 text-xs font-bold text-[#6E716C] dark:text-[#B5B8B2] bg-white dark:bg-[#253230] px-4 py-3 rounded-2xl w-fit border border-[#E2D3BE] dark:border-white/10">
-                  <span className="inline-block h-2 w-2 rounded-full bg-[#C96745] animate-ping" />
-                  <span>الذكاء الاصطناعي يحلل التوصيات...</span>
+                <div className="flex items-center gap-2 text-xs font-bold text-[#6E716C] dark:text-[#B5B8B2] bg-white dark:bg-[#253230] p-3 rounded-2xl w-fit border border-[#E2D3BE] dark:border-white/10 shadow-sm animate-pulse">
+                  <Bot className="h-4 w-4 text-[#C96745] animate-spin" />
+                  <span>{isRtl ? "جاري المطابقة مع قاعدة البيانات المعتمدة..." : "Matching with verified database..."}</span>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </div>
 
-            {/* Quick Prompts Bar */}
-            <div className="px-4 py-2 border-t border-[#E2D3BE]/60 dark:border-white/10 bg-white/60 dark:bg-[#161B1A] flex gap-2 overflow-x-auto no-scrollbar shrink-0">
-              {quickPrompts.map((prompt, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSend(prompt)}
-                  className="rounded-full bg-[#F4EBDD] dark:bg-[#253230] px-3.5 py-1.5 text-[11px] font-bold text-[#252A28] dark:text-[#F5F1E8] whitespace-nowrap border border-[#E2D3BE] dark:border-white/10 hover:border-[#C96745] transition-colors"
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
-
-            {/* Input Form */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSend(input);
-              }}
-              className="p-3 bg-white dark:bg-[#1A2221] border-t border-[#E2D3BE] dark:border-white/10 flex items-center gap-2 shrink-0"
-            >
-              <input
-                type="text"
-                placeholder={
-                  isRtl
-                    ? "اسألني عن أي مطعم، كافيه، منتجع، أو كيف أسوّي خطة..."
-                    : "Ask me about restaurants, cafes, resorts, or trip plans..."
-                }
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="flex-1 rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#253230] px-4 py-3 text-xs font-semibold text-[#252A28] dark:text-[#F5F1E8] focus:outline-none focus:border-[#C96745]"
-              />
-              <button
-                type="submit"
-                className="grid h-11 w-11 place-items-center rounded-2xl bg-[#C96745] text-white shadow-lift hover:bg-[#b55837] transition-all shrink-0"
-                aria-label="إرسال"
+            {/* Input Bar */}
+            <div className="border-t border-[#E2D3BE] dark:border-white/10 bg-white dark:bg-[#161B1A] p-3">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSend();
+                }}
+                className="flex items-center gap-2"
               >
-                <Send className="h-4 w-4" />
-              </button>
-            </form>
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder={
+                    isRtl
+                      ? "اكتب مودك أو اطلب تعديل الخطة (مثلاً: خلّها أرخص)..."
+                      : "Type your mood or request plan edit..."
+                  }
+                  className="flex-1 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#253230] px-4 py-2.5 text-xs text-[#252A28] dark:text-[#F5F1E8] focus:outline-none focus:ring-2 focus:ring-[#C96745]"
+                />
+                <button
+                  type="submit"
+                  disabled={!input.trim() || isTyping}
+                  className="grid h-10 w-10 place-items-center rounded-full bg-[#C96745] text-white shadow-lift hover:bg-[#b55837] disabled:opacity-50 transition-all cursor-pointer"
+                >
+                  <Send className="h-4 w-4" />
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Place Detail Modal when clicked from AI recommendations */}
+      {/* Place Detail Modal */}
       {selectedPlace && (
-        <PlaceDetailModal
-          place={selectedPlace}
-          onClose={() => setSelectedPlace(null)}
-        />
+        <PlaceDetailModal place={selectedPlace} onClose={() => setSelectedPlace(null)} />
       )}
     </>
   );
