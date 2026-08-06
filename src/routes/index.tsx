@@ -109,7 +109,9 @@ function Index() {
 
           {/* Subtitle */}
           <p className="animate-fade-in-up delay-2 mt-4 mx-auto max-w-2xl text-base leading-relaxed text-white/90 md:text-lg font-semibold">
-            اختر وقتك وميزانيتك وجوّكم، وجِدّاو يرتّب لكم النشاط والمطعم والقهوة والمسار كاملاً في أقل من دقيقة.
+            {isRtl
+              ? "اختر وقتك وميزانيتك وجوّكم، وجِدّاو يرتّب لكم النشاط والمطعم والقهوة والمسار كاملاً في أقل من دقيقة."
+              : "Select your time, budget & vibe. JEDDAW arranges the activity, dining, coffee & complete route in under a minute."}
           </p>
 
           {/* ===== ULTRA-MODERN INTERACTIVE SEARCH & QUICK PLAN BAR ===== */}
@@ -119,7 +121,11 @@ function Index() {
                 <Search className="absolute start-4 top-3.5 h-5 w-5 text-white/70" />
                 <input
                   type="text"
-                  placeholder="وين حاب تروح؟ (مثلاً: مطعم شامي، كافيه هادي، روزوود، رد سي مول)..."
+                  placeholder={
+                    isRtl
+                      ? "وين حاب تروح؟ (مثلاً: مطعم شامي، كافيه هادي، روزوود، رد سي مول)..."
+                      : "Where do you want to go? (e.g. Red Sea Mall, Rosewood, Cafe)..."
+                  }
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full rounded-2xl bg-white/10 ps-12 pe-4 py-3 text-sm font-semibold text-white placeholder-white/60 border border-white/15 focus:outline-none focus:bg-white/20 focus:border-white/40 transition-all"
@@ -141,28 +147,28 @@ function Index() {
                   className="hidden sm:inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 border border-white/25 px-5 py-3.5 text-sm font-bold text-white backdrop-blur hover:bg-white/20 transition-all min-h-[48px] whitespace-nowrap"
                 >
                   <Navigation className="h-4 w-4" />
-                  <span>استكشف</span>
+                  <span>{isRtl ? "استكشف" : "Explore"}</span>
                 </Link>
               </div>
             </form>
 
             {/* Quick Category Shortcuts */}
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs font-bold">
-              <span className="text-white/70 me-1">اختصارات سريعة:</span>
+              <span className="text-white/70 me-1">{isRtl ? "اختصارات سريعة:" : "Quick Links:"}</span>
               <Link to="/places" className="rounded-full bg-white/10 px-3.5 py-1.5 border border-white/15 hover:bg-white/20 transition-colors">
-                🍽️ مطاعم
+                🍽️ {isRtl ? "مطاعم" : "Restaurants"}
               </Link>
               <Link to="/places" className="rounded-full bg-white/10 px-3.5 py-1.5 border border-white/15 hover:bg-white/20 transition-colors">
-                ☕ كافيهات
+                ☕ {isRtl ? "كافيهات" : "Cafes"}
               </Link>
               <Link to="/places" className="rounded-full bg-white/10 px-3.5 py-1.5 border border-white/15 hover:bg-white/20 transition-colors">
-                🛍️ مولات وتسوق
+                🛍️ {isRtl ? "مولات وتسوق" : "Malls & Shopping"}
               </Link>
               <Link to="/places" className="rounded-full bg-white/10 px-3.5 py-1.5 border border-white/15 hover:bg-white/20 transition-colors">
-                🏨 فنادق 5 نجوم
+                🏨 {isRtl ? "فنادق 5 نجوم" : "5-Star Hotels"}
               </Link>
               <Link to="/places" className="rounded-full bg-white/10 px-3.5 py-1.5 border border-white/15 hover:bg-white/20 transition-colors">
-                🏖️ منتجعات أبحر
+                🏖️ {isRtl ? "منتجعات أبحر" : "Obhur Resorts"}
               </Link>
             </div>
           </div>
@@ -175,7 +181,7 @@ function Index() {
               <span className="inline-block h-6 w-6 rounded-full bg-[#E4A23B] text-center text-xs font-bold text-white leading-6 shadow-sm">✨</span>
             </span>
             <span className="text-xs md:text-sm font-bold text-white/95">
-              ⭐ 4.9/5.0 تقييم أكثر من 15,000 طلعة تم تنظيمها هذا الشهر في جدة
+              ⭐ 4.9/5.0 — {isRtl ? "منصة جِدّاو الأولى لتخطيط الطلعات في جدة" : "JEDDAW — #1 Outing Planner Platform in Jeddah"}
             </span>
           </div>
         </div>
@@ -186,22 +192,30 @@ function Index() {
         <div className="rounded-3xl bg-gradient-to-r from-[#295652] via-[#397C78] to-[#C96745] text-white p-6 md:p-8 shadow-2xl border border-white/25 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-xl">
           <div className="text-center md:text-start">
             <span className="text-xs font-bold uppercase tracking-wider text-[#FF9D7A] block mb-2">
-              💡 ليش اختاروا جِدّاو؟
+              💡 {isRtl ? "ليش اختاروا جِدّاو؟" : "Why JEDDAW?"}
             </span>
             <p className="text-base md:text-lg font-extrabold text-white leading-relaxed">
-              المواقع الثانية تعطيك أماكن. <span className="underline underline-offset-6 decoration-[#FF9D7A]">جِدّاو يرتّب لك الطلعة كاملة.</span>
+              {isRtl ? (
+                <>
+                  المواقع الثانية تعطيك أماكن. <span className="underline underline-offset-6 decoration-[#FF9D7A]">جِدّاو يرتّب لك الطلعة كاملة.</span>
+                </>
+              ) : (
+                <>
+                  Other platforms show you places. <span className="underline underline-offset-6 decoration-[#FF9D7A]">JEDDAW builds the complete outing.</span>
+                </>
+              )}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-bold mt-2 md:mt-0">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15 shadow-sm">
-              ⚡ تخطيط فوري
+              ⚡ {isRtl ? "تخطيط فوري" : "Instant Planning"}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15 shadow-sm">
-              💰 موزون على ميزانيتك
+              💰 {isRtl ? "موزون على ميزانيتك" : "Budget Tailored"}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-black/25 px-4 py-2 border border-white/15 shadow-sm">
-              📍 مسار وخرائط مجهزة
+              📍 {isRtl ? "مسار وخرائط مجهزة" : "Complete Route Maps"}
             </span>
           </div>
         </div>
@@ -212,13 +226,15 @@ function Index() {
         <div className="mx-auto max-w-6xl px-4">
           <div className="mb-8 flex flex-col items-center text-center">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C96745]/15 dark:bg-[#C96745]/25 px-4 py-1 text-xs font-extrabold text-[#C96745] dark:text-[#FF9D7A] mb-2 border border-[#C96745]/20">
-              ✨ اختاروا جوّكم السريع
+              ✨ {isRtl ? "اختاروا جوّكم السريع" : "Quick Vibe Selector"}
             </span>
             <h2 className="text-3xl font-black text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">
               {t("quickVibeTitle")}
             </h2>
             <p className="text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold mt-1.5 max-w-md">
-              اضغط على أي جوّ لاستكشاف أفضل الأماكن المقترحة فوراً!
+              {isRtl
+                ? "اضغط على أي جوّ لاستكشاف أفضل الأماكن المقترحة فوراً!"
+                : "Click any vibe to see instant top recommendations!"}
             </p>
           </div>
 
@@ -268,10 +284,14 @@ function Index() {
                 </span>
                 <div>
                   <h3 className="text-xl md:text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">
-                    أفضل ترشيحات جِدّاو لـ ({isRtl ? selectedVibe.labelAr : selectedVibe.labelEn})
+                    {isRtl
+                      ? `أفضل ترشيحات جِدّاو لـ (${selectedVibe.labelAr})`
+                      : `Top JEDDAW Picks for (${selectedVibe.labelEn})`}
                   </h3>
                   <p className="text-xs font-bold text-[#6E716C] dark:text-[#B5B8B2] mt-0.5">
-                    مختارة وموزونة لتناسب جوكم المفضل
+                    {isRtl
+                      ? "مختارة وموزونة لتناسب جوكم المفضل"
+                      : "Handpicked & curated for your selected vibe"}
                   </p>
                 </div>
               </div>
@@ -281,7 +301,9 @@ function Index() {
                 className="inline-flex items-center gap-2 rounded-full bg-[#C96745] px-6 py-3 text-xs font-extrabold text-white shadow-lift hover:bg-[#b55837] transition-all min-h-[44px]"
               >
                 <Sparkles className="h-4 w-4" />
-                <span>سوّ لي خطة متكاملة لهذا الجو ⚡</span>
+                <span>
+                  {isRtl ? "سوّ لي خطة متكاملة لهذا الجو ⚡" : "Build My Complete Plan for This Vibe ⚡"}
+                </span>
               </Link>
             </div>
 
@@ -300,7 +322,7 @@ function Index() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-[#C96745]/15 px-4 py-1 text-xs font-bold text-[#C96745] mb-2">
-              <Zap className="h-4 w-4" /> الأكثر تداولاً وزيارة هذا الأسبوع
+              <Zap className="h-4 w-4" /> {isRtl ? "الأكثر تداولاً وزيارة هذا الأسبوع" : "Most popular spots this week"}
             </div>
             <h2 className="text-3xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">
               {t("trendingTitle")}
@@ -313,7 +335,7 @@ function Index() {
             to="/places"
             className="inline-flex items-center gap-2 rounded-full border border-[#C96745] px-5 py-2.5 text-xs font-bold text-[#C96745] hover:bg-[#C96745] hover:text-white transition-all min-h-[44px]"
           >
-            <span>استكشف كل ترندات جدة</span>
+            <span>{isRtl ? "استكشف كل ترندات جدة" : "Explore All Trending Spots"}</span>
             <ArrowLeft className={`h-4 w-4 ${isRtl ? "" : "rotate-180"}`} />
           </Link>
         </div>

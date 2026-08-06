@@ -41,25 +41,27 @@ function AccountPage() {
             </div>
 
             <h1 className="text-2xl md:text-3xl font-black text-[#252A28] dark:text-[#F5F1E8]">
-              تسجيل الدخول إلى جِدّاو 🔑
+              {isRtl ? "تسجيل الدخول إلى جِدّاو 🔑" : "Sign In to JEDDAW 🔑"}
             </h1>
             <p className="mt-2 text-xs md:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold leading-relaxed max-w-md mx-auto">
-              أنشئ حسابك الشخصي أو سجّل دخولك للاستفادة الكاملة من ميزات تخطيط وحفظ خطط الويكند!
+              {isRtl
+                ? "أنشئ حسابك الشخصي أو سجّل دخولك للاستفادة الكاملة من ميزات تخطيط وحفظ خطط الويكند!"
+                : "Sign in or create an account to save your plans and favorite spots!"}
             </p>
 
             {/* Features Checklist */}
             <ul className="mt-6 space-y-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] text-start max-w-sm mx-auto bg-[#F4EBDD]/60 dark:bg-[#253230]/60 p-4 rounded-2xl border border-[#E2D3BE]/60 dark:border-white/10">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-[#397C78] dark:text-[#5EAAA5] shrink-0" />
-                <span>حفظ خطط الويكند اللانهائية واسترجاعها بأي وقت</span>
+                <span>{isRtl ? "حفظ خطط الويكند اللانهائية واسترجاعها بأي وقت" : "Save unlimited weekend outing plans"}</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-[#397C78] dark:text-[#5EAAA5] shrink-0" />
-                <span>قائمة الأماكن والمطاعم المفضلة لديك بجدة</span>
+                <span>{isRtl ? "قائمة الأماكن والمطاعم المفضلة لديك بجدة" : "Personalized favorite spots in Jeddah"}</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-[#397C78] dark:text-[#5EAAA5] shrink-0" />
-                <span>مشاركة المسارات والتكلفة مع الشلة بنقرة واحدة</span>
+                <span>{isRtl ? "مشاركة المسارات والتكلفة مع الشلة بنقرة واحدة" : "Share routes & split costs with your group"}</span>
               </li>
             </ul>
 
@@ -69,7 +71,7 @@ function AccountPage() {
                 onClick={() => setShowAuthModal(true)}
                 className="w-full rounded-full bg-[#C96745] py-4 text-sm font-black text-white shadow-lift hover:bg-[#b55837] transition-all animate-pulse-glow min-h-[52px]"
               >
-                تسجيل الدخول / حساب جديد 🚀
+                {isRtl ? "تسجيل الدخول / حساب جديد 🚀" : "Sign In / Register 🚀"}
               </button>
 
               <Link
@@ -77,14 +79,14 @@ function AccountPage() {
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] py-3.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] transition-all min-h-[46px]"
               >
                 <Sparkles className="h-4 w-4 text-[#C96745]" />
-                سوّ لي خطة جديدة بدلاء ⚡
+                {isRtl ? "سوّ لي خطة جديدة كضيف ⚡" : "Plan an Outing as Guest ⚡"}
               </Link>
             </div>
 
             {/* Protection Security Badge */}
             <div className="mt-6 flex items-center justify-center gap-1.5 text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] pt-3 border-t border-[#E2D3BE]/60 dark:border-white/10">
               <ShieldCheck className="h-4 w-4" />
-              <span>نظام حماية مشفر وتشفير بيانات آمن 100% SSL</span>
+              <span>{isRtl ? "نظام حماية مشفر وتشفير بيانات آمن 100% SSL" : "100% SSL Secure Encrypted Portal"}</span>
             </div>
           </div>
         </div>
@@ -106,11 +108,11 @@ function AccountPage() {
             <div className="flex items-center gap-2">
               <h1 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">{user.name}</h1>
               <span className="rounded-full bg-[#397C78]/15 px-3 py-0.5 text-xs font-extrabold text-[#397C78] dark:text-[#5EAAA5]">
-                عضو جِدّاو 🌟
+                {isRtl ? "عضو جِدّاو 🌟" : "JEDDAW Member 🌟"}
               </span>
             </div>
             <p className="text-xs font-semibold text-[#6E716C] dark:text-[#B5B8B2] mt-1">
-              {user.email} · الحي المفضل: {user.district || "الكورنيش"}
+              {user.email} · {isRtl ? `الحي المفضل: ${user.district || "الكورنيش"}` : `Favorite Area: ${user.district || "Corniche"}`}
             </p>
           </div>
         </div>
@@ -120,7 +122,7 @@ function AccountPage() {
           className="inline-flex items-center gap-2 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] px-5 py-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#B84E4E] hover:text-[#B84E4E] transition-all min-h-[44px]"
         >
           <LogOut className="h-4 w-4" />
-          تسجيل الخروج
+          {isRtl ? "تسجيل الخروج" : "Log Out"}
         </button>
       </div>
 
@@ -129,14 +131,14 @@ function AccountPage() {
         <div className="flex items-center justify-between gap-4 mb-6">
           <h2 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] flex items-center gap-2">
             <Bookmark className="h-5 w-5 text-[#C96745]" />
-            الخطط المحفوظة ({savedPlans.length})
+            {isRtl ? `الخطط المحفوظة (${savedPlans.length})` : `Saved Plans (${savedPlans.length})`}
           </h2>
 
           <Link
             to="/quick-plan"
             className="inline-flex items-center gap-1.5 rounded-full bg-[#C96745] px-4 py-2 text-xs font-bold text-white shadow-lift min-h-[40px]"
           >
-            <Sparkles className="h-3.5 w-3.5" /> سوّ خطة جديدة
+            <Sparkles className="h-3.5 w-3.5" /> {isRtl ? "سوّ خطة جديدة" : "Build New Plan"}
           </Link>
         </div>
 
@@ -165,22 +167,22 @@ function AccountPage() {
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-3">
                       <span className="rounded-full bg-[#C96745]/15 px-3 py-1 text-xs font-extrabold text-[#C96745]">
-                        {"tagAr" in plan ? plan.tagAr : "خطة مخصصة ⚡"}
+                        {isRtl ? ("tagAr" in plan ? plan.tagAr : "خطة مخصصة ⚡") : "Saved Outing ⚡"}
                       </span>
                       <button
                         onClick={() => removeSavedPlan(plan.id)}
                         className="text-[#6E716C] hover:text-[#B84E4E] transition-colors p-1"
-                        title="حذف الخطة"
+                        title={isRtl ? "حذف الخطة" : "Delete Plan"}
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
 
                     <h3 className="text-xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
-                      {plan.titleAr}
+                      {isRtl ? plan.titleAr : (plan.titleAr || "Jeddah Outing")}
                     </h3>
                     <p className="text-xs text-[#6E716C] dark:text-[#B5B8B2] mt-1 line-clamp-2">
-                      {"subtitleAr" in plan ? plan.subtitleAr : plan.descAr}
+                      {isRtl ? ("subtitleAr" in plan ? plan.subtitleAr : plan.descAr) : ("subtitleAr" in plan ? plan.subtitleAr : plan.descAr)}
                     </p>
 
                     {/* Timeline stops preview */}
@@ -193,7 +195,7 @@ function AccountPage() {
                             <span className="grid h-5 w-5 place-items-center rounded-full bg-[#397C78] text-[10px] font-bold text-white shrink-0">
                               {i + 1}
                             </span>
-                            <span className="truncate">{place.nameAr}</span>
+                            <span className="truncate">{isRtl ? place.nameAr : place.nameEn}</span>
                           </li>
                         );
                       })}
@@ -202,13 +204,13 @@ function AccountPage() {
 
                   <div className="mt-5 border-t border-[#E2D3BE] dark:border-white/10 pt-3 flex items-center justify-between text-xs font-bold">
                     <span className="text-[#C96745] flex items-center gap-1">
-                      <Wallet className="h-4 w-4" /> {price} ر.س / شخص
+                      <Wallet className="h-4 w-4" /> {price} {isRtl ? "ر.س / شخص" : "SAR / person"}
                     </span>
                     <button
-                      onClick={() => alert(`رابط الخطة: https://jeddaw.sa/plans#${plan.id}`)}
+                      onClick={() => alert(isRtl ? `رابط الخطة: https://jeddaw.sa/plans#${plan.id}` : `Plan Link: https://jeddaw.sa/plans#${plan.id}`)}
                       className="inline-flex items-center gap-1 text-[#397C78] dark:text-[#5EAAA5] hover:underline"
                     >
-                      <Share2 className="h-3.5 w-3.5" /> مشاركة 📲
+                      <Share2 className="h-3.5 w-3.5" /> {isRtl ? "مشاركة 📲" : "Share 📲"}
                     </button>
                   </div>
                 </article>
@@ -222,13 +224,15 @@ function AccountPage() {
       <section className="mt-14">
         <h2 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] mb-6 flex items-center gap-2">
           <Heart className="h-5 w-5 text-[#C96745]" />
-          الأماكن المفضلة ({favorites.length})
+          {isRtl ? `الأماكن المفضلة (${favorites.length})` : `Favorite Places (${favorites.length})`}
         </h2>
 
         {favorites.length === 0 ? (
           <div className="surface-card p-8 text-center border border-[#E2D3BE] dark:border-white/10">
             <p className="text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-              لم تقم بتمييز أي مكان كمفضل بعد. تصفح الأماكن واضغط على ❤️ لإضافتها!
+              {isRtl
+                ? "لم تقم بتمييز أي مكان كمفضل بعد. تصفح الأماكن واضغط على ❤️ لإضافتها!"
+                : "You haven't saved any favorites yet. Explore places and tap ❤️ to save!"}
             </p>
           </div>
         ) : (

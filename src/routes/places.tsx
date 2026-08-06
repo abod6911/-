@@ -25,17 +25,17 @@ type MainCategory = "all" | "food" | "cafe" | "hotel" | "resort" | "activity" | 
 type SortOption = "topRated" | "trending" | "mostVisited" | "cheapest" | "priceDesc";
 
 const subCategoryChips = [
-  { id: "all", labelAr: "الكل 🌟" },
-  { id: "مطاعم شامية", labelAr: "🥙 مطاعم شامية" },
-  { id: "وجبات سريعة", labelAr: "🍔 وجبات سريعة" },
-  { id: "مطاعم سعودية قديمة", labelAr: "🇸🇦 مطاعم سعودية قديمة" },
-  { id: "مطاعم مصرية", labelAr: "🇪🇬 مطاعم مصرية" },
-  { id: "مشاوي ومأكولات بحرية", labelAr: "🐟 مشاوي ومأكولات بحرية" },
-  { id: "كافيهات مختصة ورائية", labelAr: "☕ كافيهات مختصة ورائية" },
-  { id: "مولات ومراكز تجارية", labelAr: "🛍️ مولات ومراكز تجارية" },
-  { id: "أسواق شعبية وتراثية", labelAr: "🏺 أسواق شعبية وتراثية" },
-  { id: "فنادق 5 نجوم وفاخرة", labelAr: "🏨 فنادق 5 نجوم وفاخرة" },
-  { id: "منتجعات البحر الأحمر وأبحر", labelAr: "🏖️ منتجعات أبحر والبحر" },
+  { id: "all", labelAr: "الكل 🌟", labelEn: "All 🌟" },
+  { id: "مطاعم شامية", labelAr: "🥙 مطاعم شامية", labelEn: "🥙 Levantine Dining" },
+  { id: "وجبات سريعة", labelAr: "🍔 وجبات سريعة", labelEn: "🍔 Fast Food & Burgers" },
+  { id: "مطاعم سعودية قديمة", labelAr: "🇸🇦 مطاعم سعودية قديمة", labelEn: "🇸🇦 Traditional Saudi" },
+  { id: "مطاعم مصرية", labelAr: "🇪🇬 مطاعم مصرية", labelEn: "🇪🇬 Egyptian Cuisine" },
+  { id: "مشاوي ومأكولات بحرية", labelAr: "🐟 مشاوي ومأكولات بحرية", labelEn: "🐟 Seafood & Grills" },
+  { id: "كافيهات مختصة ورائية", labelAr: "☕ كافيهات مختصة ورائية", labelEn: "☕ Specialty Cafes" },
+  { id: "مولات ومراكز تجارية", labelAr: "🛍️ مولات ومراكز تجارية", labelEn: "🛍️ Malls & Shopping" },
+  { id: "أسواق شعبية وتراثية", labelAr: "🏺 أسواق شعبية وتراثية", labelEn: "🏺 Heritage Souqs" },
+  { id: "فنادق 5 نجوم وفاخرة", labelAr: "🏨 فنادق 5 نجوم وفاخرة", labelEn: "🏨 5-Star Luxury Hotels" },
+  { id: "منتجعات البحر الأحمر وأبحر", labelAr: "🏖️ منتجعات أبحر والبحر", labelEn: "🏖️ Obhur Beach Resorts" },
 ];
 
 function PlacesPage() {
@@ -102,10 +102,12 @@ function PlacesPage() {
         <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#C96745]/15 text-2xl">🗺️</span>
         <div>
           <h1 className="text-3xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">
-            استكشف جدة على راحتك
+            {isRtl ? "استكشف جدة على راحتك" : "Explore Jeddah Your Way"}
           </h1>
           <p className="mt-1 text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-            دليلك الشامل لجميع مطاعم، كافيهات، فنادق، منتجعات وفعاليات جدة مع تفاصيل الموقع والخرائط
+            {isRtl
+              ? "دليلك الشامل لجميع مطاعم، كافيهات، فنادق، منتجعات وفعاليات جدة مع تفاصيل الموقع والخرائط"
+              : "Your complete guide to restaurants, cafes, hotels, resorts & activities in Jeddah."}
           </p>
         </div>
       </div>
@@ -113,13 +115,13 @@ function PlacesPage() {
       {/* Main Categories Tabs */}
       <div className="mt-8 flex flex-wrap gap-2.5 border-b border-[#E2D3BE] dark:border-white/10 pb-4">
         {[
-          { id: "all", label: "الكل 🌟" },
-          { id: "food", label: "🍽️ مطاعم" },
-          { id: "cafe", label: "☕ كافيهات وحلى" },
-          { id: "shopping", label: "🛍️ تسوق ومولات" },
-          { id: "hotel", label: "🏨 فنادق" },
-          { id: "resort", label: "🏖️ منتجعات" },
-          { id: "activity", label: "🎮 أنشطة وفعاليات" },
+          { id: "all", label: isRtl ? "الكل 🌟" : "All 🌟" },
+          { id: "food", label: isRtl ? "🍽️ مطاعم" : "🍽️ Dining" },
+          { id: "cafe", label: isRtl ? "☕ كافيهات وحلى" : "☕ Cafes & Sweets" },
+          { id: "shopping", label: isRtl ? "🛍️ تسوق ومولات" : "🛍️ Shopping & Malls" },
+          { id: "hotel", label: isRtl ? "🏨 فنادق" : "🏨 Hotels" },
+          { id: "resort", label: isRtl ? "🏖️ منتجعات" : "🏖️ Resorts" },
+          { id: "activity", label: isRtl ? "🎮 أنشطة وفعاليات" : "🎮 Activities & Events" },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -150,7 +152,7 @@ function PlacesPage() {
                 : "bg-[#F4EBDD] dark:bg-[#161B1A] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE]/60 dark:border-white/10 hover:border-[#397C78]"
             }`}
           >
-            {chip.labelAr}
+            {isRtl ? chip.labelAr : chip.labelEn}
           </button>
         ))}
       </div>
@@ -163,7 +165,11 @@ function PlacesPage() {
             <Search className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C]" />
             <input
               type="text"
-              placeholder="ابحث عن اسم المطعم، الكافيه، الفندق، أو نوع الأكل..."
+              placeholder={
+                isRtl
+                  ? "ابحث عن اسم المطعم، الكافيه، الفندق، أو نوع الأكل..."
+                  : "Search place name, cafe, hotel, or cuisine type..."
+              }
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] ps-10 pe-4 py-3 text-sm font-semibold text-[#252A28] dark:text-[#F5F1E8] transition-all focus:border-[#C96745] focus:outline-none"
@@ -177,7 +183,7 @@ function PlacesPage() {
               onChange={(e) => setSelectedDistrict(e.target.value as any)}
               className="rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] px-4 py-3 text-sm font-bold text-[#252A28] dark:text-[#F5F1E8]"
             >
-              <option value="all">📍 الحي: كل جدة</option>
+              <option value="all">{isRtl ? "📍 الحي: كل جدة" : "📍 District: All Jeddah"}</option>
               {districts.map((d) => (
                 <option key={d.id} value={d.id}>
                   {isRtl ? d.nameAr : d.nameEn}
@@ -191,11 +197,11 @@ function PlacesPage() {
               onChange={(e) => setSortBy(e.target.value as SortOption)}
               className="rounded-2xl border border-[#C96745] bg-[#C96745]/10 px-4 py-3 text-sm font-extrabold text-[#C96745]"
             >
-              <option value="trending">🔥 الترتيب: الترند أولاً</option>
-              <option value="topRated">⭐ الترتيب: الأفضل تقييماً</option>
-              <option value="mostVisited">👁️ الترتيب: الأكثر زيارة</option>
-              <option value="cheapest">💰 الترتيب: الأقل سعراً</option>
-              <option value="priceDesc">💎 الترتيب: الأكثر فخامة</option>
+              <option value="trending">{isRtl ? "🔥 الترتيب: الترند أولاً" : "🔥 Sort: Trending First"}</option>
+              <option value="topRated">{isRtl ? "⭐ الترتيب: الأفضل تقييماً" : "⭐ Sort: Top Rated"}</option>
+              <option value="mostVisited">{isRtl ? "👁️ الترتيب: الأكثر زيارة" : "👁️ Sort: Most Popular"}</option>
+              <option value="cheapest">{isRtl ? "💰 الترتيب: الأقل سعراً" : "💰 Sort: Lowest Price"}</option>
+              <option value="priceDesc">{isRtl ? "💎 الترتيب: الأكثر فخامة" : "💎 Sort: Luxury First"}</option>
             </select>
           </div>
         </div>
@@ -205,10 +211,12 @@ function PlacesPage() {
       <div className="mt-8">
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-bold text-[#6E716C] dark:text-[#B5B8B2]">
-            تم العثور على {filteredAndSorted.length} مكان في جدة
+            {isRtl
+              ? `تم العثور على ${filteredAndSorted.length} مكان في جدة`
+              : `Found ${filteredAndSorted.length} places in Jeddah`}
           </p>
           <span className="text-xs text-[#397C78] dark:text-[#5EAAA5] font-bold">
-            💡 اضغط على أي مكان لمعاينة تفاصيل الموقع والخرائط والتقييمات
+            💡 {isRtl ? "اضغط على أي مكان لمعاينة تفاصيل الموقع والخرائط والتقييمات" : "Click any place for location details, maps & reviews"}
           </span>
         </div>
 
@@ -216,10 +224,12 @@ function PlacesPage() {
           <div className="surface-card p-12 text-center border border-[#E2D3BE] dark:border-white/10">
             <span className="text-5xl block mb-3">🔍</span>
             <h2 className="text-xl font-bold text-[#252A28] dark:text-[#F5F1E8]">
-              ما لقينا أماكن تطابق الفلتر المحدد
+              {isRtl ? "ما لقينا أماكن تطابق الفلتر المحدد" : "No places match your filters"}
             </h2>
             <p className="text-sm text-[#6E716C] dark:text-[#B5B8B2] mt-2">
-              جرّب تغيير التصنيف أو مسح كلمة البحث لتظهر باقي خيارات جدة
+              {isRtl
+                ? "جرّب تغيير التصنيف أو مسح كلمة البحث لتظهر باقي خيارات جدة"
+                : "Try clearing search keywords or choosing another category."}
             </p>
           </div>
         ) : (

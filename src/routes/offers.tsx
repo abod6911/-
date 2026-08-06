@@ -52,8 +52,10 @@ function OffersPage() {
                 {offer.code}
               </span>
 
-              <h2 className="mt-2 text-xl font-extrabold text-[#252A28]">{offer.titleAr}</h2>
-              <p className="mt-1 text-sm font-semibold text-[#6E716C]">
+              <h2 className="mt-2 text-xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
+                {isRtl ? offer.titleAr : (offer.titleEn || offer.titleAr)}
+              </h2>
+              <p className="mt-1 text-sm font-semibold text-[#6E716C] dark:text-[#B5B8B2]">
                 {isRtl ? place.nameAr : place.nameEn}
               </p>
 
