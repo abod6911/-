@@ -129,6 +129,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -137,7 +138,9 @@ function RootComponent() {
           <div className="flex min-h-screen flex-col">
             <SiteHeader />
             <main className="flex-1 pb-20 lg:pb-0">
-              <Outlet />
+              <div key={router.state.location.href} className="animate-fade-in">
+                <Outlet />
+              </div>
             </main>
             <SiteFooter />
             <MobileTabBar />
