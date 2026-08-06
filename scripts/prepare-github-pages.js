@@ -57,6 +57,7 @@ const indexHtmlContent = `<!DOCTYPE html>
     ${cssFile ? `<link rel="stylesheet" href="./assets/${cssFile}" />` : ""}
   </head>
   <body class="bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
+    <div id="root"></div>
     ${jsFile ? `<script type="module" src="./assets/${jsFile}"></script>` : ""}
   </body>
 </html>
