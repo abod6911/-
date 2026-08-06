@@ -3,7 +3,7 @@
  * 
  * Invokes Supabase Edge Function `jeddaw-ai-assistant`.
  * Strictly enforces Intent Routing so short or ambiguous words like "كيس"
- * never trigger plan generation.
+ * never trigger plan generation, while search chips return real place cards.
  */
 
 import { getPlace, places, type Place } from "@/data/jeddah";
@@ -66,6 +66,7 @@ export type AssistantResponse =
       type: "place_results";
       message: string;
       places: Place[];
+      suggestedReplies?: string[];
       plan: null;
     }
   | {
@@ -91,7 +92,7 @@ const GREETING_REGEX =
   /^(هلا|مرحبا|مرحباً|أهلا|أهلاً|سلام|السلام عليكم|صباح الخير|مساء الخير|hi|hello|hey|greetings|good morning|good evening)$/i;
 
 const SEARCH_PLACES_REGEX =
-  /(مطعم|مطاعم|كافيه|كافيهات|قهوة|فندق|فنادق|شاطئ|شواطئ|ألعاب|كارتينج|منتجع|منتجعات|بروستد|أسماك|مشاوي)/i;
+  /(مطعم|مطاعم|كافيه|كافيهات|قهوة|فندق|فنادق|شاطئ|شواطئ|ألعاب|كارتينج|منتجع|منتجعات|بروستد|أسماك|مشاوي|أماكن|مكان|استكشاف|search|cafes|places|explore)/i;
 
 const MODIFY_COMMANDS_REGEX =
   /(خلها أرخص|خلّها أرخص|قرّب الأماكن|بدّل المطعم|بدل المطعم|أضف كافيه|احذف النشاط|اجعلها داخلية|مناسبة للأطفال|أرخص|غير المطعم|make it cheaper|closer places)/i;
@@ -114,7 +115,23 @@ export function classifyIntentLocally(
     matchedSignals.push(signalMatch[0]);
   }
 
-  // 1. Ambiguous / Short (< 3 words) without explicit plan signals
+  // 1. Check if user is searching for places (matches category search keywords or search chips)
+  if (SEARCH_PLACES_REGEX.test(normalized) && matchedSignals.length === 0) {
+    return {
+      intent: "search_places",
+      confidence: 0.9,
+      language: isEn ? "en" : "ar",
+      normalizedMessage: normalized,
+      planSignals: [],
+      missingInformation: [],
+      shouldBuildPlan: false,
+      clarifyingQuestion: isEn
+        ? "Here are top recommended cafes and places in Jeddah for you:"
+        : "إليك أفضل الكافيهات والأماكن المميزة الموصى بها في جدة:",
+    };
+  }
+
+  // 2. Ambiguous / Short (< 3 words) without explicit plan signals
   if (words.length < 3 && matchedSignals.length === 0) {
     // Check if it's a greeting
     if (GREETING_REGEX.test(normalized)) {
@@ -146,22 +163,6 @@ export function classifyIntentLocally(
       };
     }
 
-    // Check if user types "مطعم" or "كافيه" (Single category search)
-    if (SEARCH_PLACES_REGEX.test(normalized)) {
-      return {
-        intent: "search_places",
-        confidence: 0.85,
-        language: isEn ? "en" : "ar",
-        normalizedMessage: normalized,
-        planSignals: [],
-        missingInformation: ["district", "preferred_style"],
-        shouldBuildPlan: false,
-        clarifyingQuestion: isEn
-          ? `Are you looking for ${normalized} recommendations in a specific district like Rawdah or Corniche?`
-          : `هل تبحث عن تجارب ${prompt} في حي معين بجدة مثل الروضة أو الكورنيش؟`,
-      };
-    }
-
     // Ambiguous single/short word like "كيس", "كويس", "abc"
     return {
       intent: "unknown",
@@ -177,7 +178,7 @@ export function classifyIntentLocally(
     };
   }
 
-  // 2. Explicit Plan Creation Request
+  // 3. Explicit Plan Creation Request
   if (matchedSignals.length > 0) {
     return {
       intent: "create_plan",
@@ -191,7 +192,7 @@ export function classifyIntentLocally(
     };
   }
 
-  // 3. Modification request with active plan
+  // 4. Modification request with active plan
   if (hasCurrentPlan && MODIFY_COMMANDS_REGEX.test(normalized)) {
     return {
       intent: "modify_plan",
@@ -205,7 +206,7 @@ export function classifyIntentLocally(
     };
   }
 
-  // 4. Default fallback clarification
+  // 5. Default fallback clarification
   return {
     intent: "unknown",
     confidence: 0.4,
@@ -235,7 +236,7 @@ export async function processAssistantMessage({
   const hasPlan = Boolean(currentPlan && currentPlan.validated);
   const decision = classifyIntentLocally(message, hasPlan);
 
-  // Development Diagnostic Logging as requested
+  // Development Diagnostic Logging
   console.log({
     originalMessage: message,
     normalizedMessage: decision.normalizedMessage,
@@ -244,10 +245,38 @@ export async function processAssistantMessage({
     planSignals: decision.planSignals,
     shouldBuildPlan: decision.shouldBuildPlan,
     hasCurrentPlan: hasPlan,
-    actionExecuted: decision.shouldBuildPlan ? "execute_planner" : "ask_clarification",
+    actionExecuted: decision.intent === "search_places" ? "search_places" : (decision.shouldBuildPlan ? "execute_planner" : "ask_clarification"),
   });
 
   const isEn = decision.language === "en";
+
+  // Handle Search Places Intent Directly with Real Data
+  if (decision.intent === "search_places") {
+    const q = decision.normalizedMessage;
+    let matchedPlaces: Place[] = [];
+
+    if (q.includes("كافيه") || q.includes("قهوة") || q.includes("حلى")) {
+      matchedPlaces = places.filter((p) => p.kind === "cafe");
+    } else if (q.includes("مطعم") || q.includes("أكل") || q.includes("عشا") || q.includes("غدا")) {
+      matchedPlaces = places.filter((p) => p.kind === "food");
+    } else if (q.includes("شاطئ") || q.includes("بحر") || q.includes("منتجع")) {
+      matchedPlaces = places.filter((p) => p.kind === "resort" || p.moods.includes("sea"));
+    } else {
+      matchedPlaces = places.slice(0, 4);
+    }
+
+    if (matchedPlaces.length === 0) matchedPlaces = places.slice(0, 3);
+
+    return {
+      type: "place_results",
+      message: decision.clarifyingQuestion,
+      places: matchedPlaces,
+      suggestedReplies: isEn
+        ? ["Create an outing plan 🗓️", "Explore North Corniche 🌊", "Search fine dining 🍽️"]
+        : ["إنشاء خطة طلعة 🗓️", "استكشاف الكورنيش الشمالي 🌊", "مطاعم فاخرة 🍽️"],
+      plan: null,
+    };
+  }
 
   // Strict Protection Gate: Can ONLY build plan if create_plan OR (modify_plan WITH existing plan)
   const canBuildPlan =
@@ -262,16 +291,6 @@ export async function processAssistantMessage({
         suggestedReplies: isEn
           ? ["Create a plan 🗓️", "Search cafes ☕", "Explore Jeddah 🌊"]
           : ["إنشاء خطة 🗓️", "البحث عن كافيهات ☕", "استكشاف جدة 🌊"],
-        plan: null,
-      };
-    }
-
-    if (decision.intent === "search_places") {
-      const matchedPlaces = places.slice(0, 3);
-      return {
-        type: "place_results",
-        message: decision.clarifyingQuestion,
-        places: matchedPlaces,
         plan: null,
       };
     }
