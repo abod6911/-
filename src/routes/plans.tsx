@@ -3,6 +3,7 @@ import { Clock, MapPin, Sparkles, Star, Wallet } from "lucide-react";
 import { budgetLevels, getPlace, readyPlans } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
+import { PlaceImage } from "@/components/common/PlaceImage";
 
 export const Route = createFileRoute("/plans")({
   head: () => ({
@@ -47,12 +48,12 @@ function PlansPage() {
             >
               {/* Plan Image Header */}
               <div className="relative h-44 w-full overflow-hidden">
-                <img
+                <PlaceImage
                   src={plan.image}
-                  alt={plan.titleAr}
+                  alt={isRtl ? plan.titleAr : plan.titleEn}
                   className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
                 <div className="absolute top-3 start-3 end-3 flex items-center justify-between z-10">
                   <span className="rounded-full bg-[#C96745] px-3 py-1 text-xs font-extrabold text-white shadow-md">
                     {plan.tagAr}
@@ -76,9 +77,9 @@ function PlansPage() {
                       const place = getPlace(id);
                       return (
                         <li key={id} className="flex items-center gap-3">
-                          <img
+                          <PlaceImage
                             src={place.image}
-                            alt={place.nameAr}
+                            alt={isRtl ? place.nameAr : place.nameEn}
                             className="h-10 w-10 rounded-xl object-cover shrink-0 border border-[#E2D3BE] dark:border-white/10"
                           />
                           <div className="truncate">
@@ -86,7 +87,7 @@ function PlansPage() {
                               {i + 1}. {isRtl ? place.nameAr : place.nameEn}
                             </span>
                             <span className="text-xs text-[#397C78] dark:text-[#5EAAA5] font-semibold">
-                              {place.categoryAr} · {place.pricePerPerson} ر.س
+                              {isRtl ? (place.subCategoryAr || place.categoryAr) : (place.subCategoryEn || place.kind)} · {place.pricePerPerson} {isRtl ? "ر.س" : "SAR"}
                             </span>
                           </div>
                         </li>

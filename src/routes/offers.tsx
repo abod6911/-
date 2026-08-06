@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BadgeCheck, Sparkles, Tag } from "lucide-react";
 import { getPlace, offers } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
+import { PlaceImage } from "@/components/common/PlaceImage";
 
 export const Route = createFileRoute("/offers")({
   head: () => ({
@@ -40,37 +41,48 @@ function OffersPage() {
           return (
             <article
               key={offer.id}
-              className={`surface-card p-6 hover-lift relative overflow-hidden animate-fade-in-up delay-${(index % 6) + 1}`}
+              className={`surface-card overflow-hidden hover-lift relative group border border-[#E2D3BE] dark:border-white/10 flex flex-col justify-between animate-fade-in-up delay-${(index % 6) + 1}`}
             >
-              {discountPct > 0 && (
-                <div className="absolute top-0 end-0 bg-[#C96745] text-white text-xs font-bold px-3.5 py-1.5 rounded-bl-2xl shadow-sm">
-                  {discountPct}% {isRtl ? "خصم" : "OFF"}
-                </div>
-              )}
+              {/* Place Image Banner */}
+              <div className="relative h-44 w-full overflow-hidden">
+                <PlaceImage
+                  src={place.image}
+                  alt={isRtl ? place.nameAr : place.nameEn}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
-              <span className="inline-block rounded-full bg-[#252A28] px-2.5 py-1 text-[11px] font-bold text-[#FAF6F0] mb-2">
-                {offer.code}
-              </span>
+                {discountPct > 0 && (
+                  <div className="absolute top-3 end-3 bg-[#C96745] text-white text-xs font-black px-3.5 py-1.5 rounded-full shadow-md z-10">
+                    {discountPct}% {isRtl ? "خصم" : "OFF"}
+                  </div>
+                )}
 
-              <h2 className="mt-2 text-xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
-                {isRtl ? offer.titleAr : (offer.titleEn || offer.titleAr)}
-              </h2>
-              <p className="mt-1 text-sm font-semibold text-[#6E716C] dark:text-[#B5B8B2]">
-                {isRtl ? place.nameAr : place.nameEn}
-              </p>
-
-              <div className="mt-6 flex items-baseline gap-2 border-t border-[#E2D3BE] pt-4">
-                <span className="text-3xl font-extrabold text-[#C96745]">{offer.discountPct}%</span>
-                <span className="text-sm font-bold text-[#6E716C]">{isRtl ? "خصم" : "OFF"}</span>
+                <span className="absolute top-3 start-3 rounded-full bg-black/60 backdrop-blur px-3 py-1 text-[11px] font-extrabold text-[#E4A23B] z-10">
+                  كود: {offer.code}
+                </span>
               </div>
 
-              <div className="mt-4 flex items-center justify-between border-t border-[#E2D3BE] pt-3 text-xs text-[#6E716C]">
-                <span className="flex items-center gap-1 text-[#71805B] font-bold">
-                  <BadgeCheck className="h-4 w-4" /> {t("verifiedAt")}
-                </span>
-                <span>
-                  {t("expiresIn")} {offer.validUntil}
-                </span>
+              <div className="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
+                    {isRtl ? offer.titleAr : (offer.titleEn || offer.titleAr)}
+                  </h2>
+                  <p className="mt-1 text-xs font-extrabold text-[#C96745]">
+                    📍 {isRtl ? place.nameAr : place.nameEn}
+                  </p>
+                </div>
+
+                <div className="mt-6 flex items-center justify-between border-t border-[#E2D3BE] dark:border-white/10 pt-4">
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-2xl font-black text-[#C96745]">{offer.discountPct}%</span>
+                    <span className="text-xs font-bold text-[#6E716C]">{isRtl ? "خصم حقيقي" : "OFF"}</span>
+                  </div>
+
+                  <span className="flex items-center gap-1 text-[#397C78] dark:text-[#5EAAA5] text-xs font-bold">
+                    <BadgeCheck className="h-4 w-4 text-[#71805B]" /> {isRtl ? "عرض موثق" : "Verified Offer"}
+                  </span>
+                </div>
               </div>
             </article>
           );
