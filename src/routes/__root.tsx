@@ -129,7 +129,13 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const router = useRouter();
+  let locationKey = "route-root";
+  try {
+    const router = useRouter();
+    locationKey = router?.state?.location?.href || "route-root";
+  } catch (err) {
+    console.warn("Router context location check fallback:", err);
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -138,7 +144,7 @@ function RootComponent() {
           <div className="flex min-h-screen flex-col">
             <SiteHeader />
             <main className="flex-1 pb-20 lg:pb-0">
-              <div key={router.state.location.href} className="animate-fade-in">
+              <div key={locationKey} className="animate-fade-in">
                 <Outlet />
               </div>
             </main>
