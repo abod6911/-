@@ -256,7 +256,7 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, conversationHistory = [], userParams = {} } = await req.json();
+    const { prompt, conversationHistory = [], intentDecision = {} } = await req.json();
 
     if (!prompt || typeof prompt !== "string") {
       return new Response(
@@ -265,8 +265,34 @@ serve(async (req) => {
       );
     }
 
+    const isEn = intentDecision.language === "en";
+
+    // Server Protection Gate: Can ONLY build plan if create_plan OR modify_plan
+    const canBuildPlan =
+      (intentDecision.intent === "create_plan" && intentDecision.confidence >= 0.78 && intentDecision.shouldBuildPlan && intentDecision.planSignals?.length > 0) ||
+      (intentDecision.intent === "modify_plan");
+
+    if (!canBuildPlan) {
+      const clarificationResponse = {
+        type: "clarification",
+        message:
+          intentDecision.clarifyingQuestion ||
+          (isEn
+            ? `I'm not sure what you mean by "${prompt}". Would you like to create an outing plan, search for a place, or edit an existing plan?`
+            : `ما فهمت قصدك تماماً من كلمة «${prompt}». هل تريد إنشاء خطة طلعة، البحث عن مكان، أو تعديل خطة موجودة؟`),
+        suggestedReplies: isEn
+          ? ["Create a plan 🗓️", "Search cafes ☕", "Explore Jeddah 🌊"]
+          : ["إنشاء خطة جديدة 🗓️", "البحث عن كافيهات وأماكن ☕", "استكشاف جدة 🌊"],
+        plan: null,
+      };
+
+      return new Response(JSON.stringify(clarificationResponse), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // 1. Dialect Pre-Processing & Intent Enrichment
-    const enrichedParams = parseDialectKeywords(prompt, userParams);
+    const enrichedParams = parseDialectKeywords(prompt, {});
 
     // 2. Try Gemini API Request with Fallback Protection
     const apiKey = Deno.env.get("GEMINI_API_KEY");
@@ -301,11 +327,19 @@ serve(async (req) => {
   } catch (err: any) {
     console.error("[Hybrid AI Edge Error]:", err);
 
-    // Hard Emergency Fallback Result (Zero Crash Guarantee)
-    const emergencyFallback = executeDeterministicFallback("emergency", {});
-    return new Response(JSON.stringify(emergencyFallback), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    const isEn = /[a-z]/i.test(req.url);
+    return new Response(
+      JSON.stringify({
+        type: "clarification",
+        message: isEn
+          ? "I could not understand your request clearly. Would you like to create a plan, search for places, or modify a plan?"
+          : "ما فهمت طلبك تماماً. هل تريد إنشاء خطة، البحث عن مكان، أو تعديل خطة موجودة؟",
+        plan: null,
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
   }
 });
 
