@@ -3,6 +3,7 @@ import { Bot, Globe, Send, Sparkles, X } from "lucide-react";
 import { places, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 import { PlaceDetailModal } from "@/components/places/PlaceDetailModal";
+import { checkContent } from "@/lib/moderation";
 
 interface AiMessage {
   id: string;
@@ -90,7 +91,8 @@ export function AiAssistant() {
 
   const quickPrompts = isRtl ? quickPromptsAr : quickPromptsEn;
 
-  const handleSend = (userText: string) => {
+  const handleSend = async (customText?: string) => {
+    const userText = customText || input;
     if (!userText.trim()) return;
 
     const userMsg: AiMessage = {
@@ -103,6 +105,8 @@ export function AiAssistant() {
     setInput("");
     setIsTyping(true);
 
+    const modResult = await checkContent(userText);
+
     setTimeout(() => {
       let responseText = "";
       let matches: Place[] = [];
@@ -111,8 +115,12 @@ export function AiAssistant() {
       const q = userText.toLowerCase().trim();
       const isEnglishInput = /[a-z]/i.test(q) && !/[\u0600-\u06FF]/.test(q);
 
+      // 0. Check content moderation result
+      if (!modResult.allowed) {
+        responseText = isRtl ? modResult.messageAr : modResult.messageEn;
+      }
       // 1. Handle Insults / Offense / Rude Words gracefully with high intelligence
-      if (OFFENSIVE_PATTERN.test(q)) {
+      else if (OFFENSIVE_PATTERN.test(q)) {
         if (isEnglishInput || !isRtl) {
           responseText =
             "Hello there! 💫 I am JEDDAW's AI Assistant, designed to help you discover the finest restaurants, cafes, sea spots, and outing plans in Jeddah politely & instantly. How can I assist you with your plans today?";
