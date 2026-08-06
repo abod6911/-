@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Clock, MapPin, Navigation } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import type { Place } from "@/data/jeddah";
+import { getDistrict, type Place } from "@/data/jeddah";
 
 interface OutingTimelineProps {
   stops: Place[];
@@ -13,7 +13,9 @@ export function OutingTimeline({ stops }: OutingTimelineProps) {
 
   // Helper to add minutes to HH:MM format
   const addMinutesToTime = (timeStr: string, minsToAdd: number) => {
-    const [h, m] = timeStr.split(":").map(Number);
+    const [hRaw, mRaw] = timeStr.split(":");
+    const h = Number(hRaw ?? 0);
+    const m = Number(mRaw ?? 0);
     const date = new Date();
     date.setHours(h, m + minsToAdd, 0);
     let hours = date.getHours();
@@ -78,7 +80,11 @@ export function OutingTimeline({ stops }: OutingTimelineProps) {
                 </h4>
                 <p className="text-xs text-[#6E716C] dark:text-[#B5B8B2] font-semibold flex items-center gap-1 mt-1">
                   <MapPin className="h-3.5 w-3.5 text-[#C96745]" />
-                  {isRtl ? stop.addressAr : stop.addressEn}
+                  {(() => {
+                    const d = getDistrict(stop.districtId);
+                    const name = d ? (isRtl ? d.nameAr : d.nameEn) : "";
+                    return `${name}${name ? " · " : ""}${isRtl ? "جدة" : "Jeddah"}`;
+                  })()}
                 </p>
 
                 {index < stops.length - 1 && (
