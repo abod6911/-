@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, CheckCircle2, Flame, Megaphone, ShieldCheck, Sparkles, Star, Zap } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Flame, Megaphone, PhoneCall, ShieldCheck, Sparkles, Star, Zap } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export const Route = createFileRoute("/advertise")({
@@ -19,23 +19,25 @@ export const Route = createFileRoute("/advertise")({
 
 export function AdvertisePage() {
   const { t, isRtl } = useLanguage();
-  const [isYearly, setIsYearly] = useState(false);
+  const [isYearly, setIsYearly] = useState(true); // Default to yearly summer discount
+
+  const ownerWhatsapp = "966572563602";
 
   const packages = [
     {
       id: "p1",
       nameAr: "🚀 باقة الانطلاق",
       nameEn: "🚀 Starter Package",
-      badgeAr: "للمحلات الناشئة",
-      badgeEn: "For New Spots",
+      badgeAr: "للمحلات والمقاهي الناشئة",
+      badgeEn: "For Emerging Spots & Cafes",
       monthlyPrice: 490,
       yearlyPrice: 343,
-      descAr: "مثالية للمقاهي والمطاعم الناشئة للظهور المباشر في الخطط القريبة والبحث",
+      descAr: "مثالية للمقاهي والمطاعم الناشئة للظهور المباشر في الخطط القريبة والبحث في الأحياء",
       descEn: "Ideal for emerging cafes & spots to appear in local search & nearby routes.",
       featuresAr: [
         "إضافة المكان وتوثيق البيانات رسمياً بالمنصة",
         "الظهور في نتائج بحث الأحياء والخرائط القريبة",
-        "تحديث أوقات العمل والأسعار والمنيو",
+        "تحديث أوقات العمل والأسعار والمنيو الإلكتروني",
         "عرض الإيموجيات والشارات الخاصة بمكانك",
       ],
       featuresEn: [
@@ -50,11 +52,11 @@ export function AdvertisePage() {
       id: "p2",
       nameAr: "💫 الباقة المتقدمة",
       nameEn: "💫 Growth Package",
-      badgeAr: "الأكثر طلباً ⭐",
-      badgeEn: "Most Popular ⭐",
+      badgeAr: "الأكثر طلباً واختياراً ⭐",
+      badgeEn: "Most Popular Choice ⭐",
       monthlyPrice: 990,
       yearlyPrice: 693,
-      descAr: "خيار رائع للظهور في الخطط الموصى بها وتقديم العروض الحصرية وزيادة التفاعل",
+      descAr: "خيار رائع للظهور في الخطط الموصى بها وتقديم العروض الحصرية وزيادة التفاعل والزيارات",
       descEn: "Great option to feature in recommended plans, offer exclusive deals & boost engagement.",
       featuresAr: [
         "كل مميزات باقة الانطلاق الأساسية",
@@ -76,8 +78,8 @@ export function AdvertisePage() {
       id: "p3",
       nameAr: "🏆 الباقة الراعية VIP",
       nameEn: "🏆 VIP Sponsored Package",
-      badgeAr: "أقصى انتشار وإعلانات ممولة 🔥",
-      badgeEn: "Maximum Reach & Sponsored Ads 🔥",
+      badgeAr: "أقصى انتشار وإعلانات ممولة 📢",
+      badgeEn: "Maximum Reach & Sponsored Ads 📢",
       monthlyPrice: 1890,
       yearlyPrice: 1323,
       descAr: "للعلامات التجارية الكبيرة والفعاليات التي تبحث عن أقصى انتشار وتواجد إعلاني في جدة",
@@ -100,31 +102,51 @@ export function AdvertisePage() {
     },
   ];
 
+  const handleJoinPackage = (pkg: (typeof packages)[0]) => {
+    const price = isYearly ? pkg.yearlyPrice : pkg.monthlyPrice;
+    const planType = isYearly
+      ? isRtl
+        ? "اشتراك سنوي (خصم 30% عروض الصيف 🔥)"
+        : "Annual Subscription (30% OFF Summer Special 🔥)"
+      : isRtl
+      ? "اشتراك شهري"
+      : "Monthly Subscription";
+
+    const msg = isRtl
+      ? `مرحباً فريق جِدّاو | JEDDAW 👋\n\nأود الاشتراك والانضمام إلى منصة جِدّاو لتسويق مكاني/مطعمي/كافيهي في جدة!\n\n📋 تفاصيل الباقة المختارة:\n• الباقة: ${pkg.nameAr}\n• نوع الاشتراك: ${planType}\n• السعر: ${price.toLocaleString()} ر.س / شهرياً\n\nأرجو التواصل معي لاستكمال توثيق بيانات المكان وإضافته فوراً! 🚀`
+      : `Hello JEDDAW Team 👋\n\nI would like to subscribe & join JEDDAW platform to market our spot/restaurant/cafe in Jeddah!\n\n📋 Selected Package Details:\n• Package: ${pkg.nameEn}\n• Subscription Type: ${planType}\n• Rate: ${price.toLocaleString()} SAR / month\n\nPlease contact me to verify our business details and publish our spot! 🚀`;
+
+    const url = `https://api.whatsapp.com/send?phone=${ownerWhatsapp}&text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank");
+  };
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
       {/* Header Banner */}
       <div className="text-center max-w-3xl mx-auto animate-fade-in-up">
         <span className="inline-flex items-center gap-2 rounded-full bg-[#C96745]/15 px-4 py-1.5 text-xs font-black text-[#C96745] border border-[#C96745]/20">
-          <Zap className="h-4 w-4" /> {t("businessHeader")}
+          <Zap className="h-4 w-4" /> {isRtl ? "شريك جِدّاو التجاري" : "JEDDAW Business Partner"}
         </span>
         <h1 className="mt-4 text-3xl font-black text-[#252A28] dark:text-[#F5F1E8] md:text-5xl leading-tight">
-          {t("businessTitle")}
+          {isRtl ? "عندك مكان يستاهل يدخل خطط جِدّاو؟" : "Have a Spot That Belongs on JEDDAW?"}
         </h1>
         <p className="mt-4 text-sm md:text-base text-[#6E716C] dark:text-[#B5B8B2] leading-relaxed font-semibold">
-          {t("businessDesc")}
+          {isRtl
+            ? "حدّث معلومات مكانك، أضف عروضك، واظهر للآلاف من أهالي وزوار جدة يبحثون عن تجربة متميزة يومياً."
+            : "Update your spot info, list your exclusive offers, and reach thousands of Jeddah locals & tourists."}
         </p>
       </div>
 
       {/* ===== Summer Offer Banner & Billing Toggle ===== */}
       <div className="mt-10 max-w-2xl mx-auto text-center">
         {/* Summer Special Banner */}
-        <div className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] p-0.5 shadow-xl mb-6">
+        <div className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] p-0.5 shadow-xl mb-6 animate-pulse-glow">
           <div className="rounded-[14px] bg-[#FAF6F0] dark:bg-[#1A2221] px-5 py-2.5 flex items-center gap-2 text-xs font-black text-[#252A28] dark:text-[#F5F1E8]">
             <Flame className="h-4 w-4 text-[#C96745] animate-bounce" />
             <span>
               {isRtl
-                ? "☀️ عروض الصيف الخارقة — احصل على خصم 30% عند الاشتراك السنوي!"
-                : "☀️ Summer Special — Get 30% OFF on Annual Subscriptions!"}
+                ? "🔥 عروض الصيف الخارقة — احصل على خصم 30% عند الاشتراك السنوي!"
+                : "🔥 Summer Special — Get 30% OFF on Annual Subscriptions!"}
             </span>
           </div>
         </div>
@@ -174,7 +196,6 @@ export function AdvertisePage() {
                   ? "bg-gradient-to-b from-[#FAF6F0] via-white to-[#FAF6F0] dark:from-[#1E2826] dark:via-[#192220] dark:to-[#1E2826] border-2 border-[#C96745] shadow-2xl ring-4 ring-[#C96745]/15 scale-[1.03]"
                   : "bg-white/90 dark:bg-[#1A2221] border border-[#E2D3BE] dark:border-white/10 shadow-lg"
               }`}
-              style={{ animationDelay: `${i * 0.1}s` }}
             >
               {/* Badge Tag */}
               {pkg.featured ? (
@@ -215,7 +236,7 @@ export function AdvertisePage() {
                 {/* Features List */}
                 <ul className="mt-6 space-y-3.5 text-xs">
                   {features.map((feat, index) => (
-                    <li key={index} className="flex items-start gap-2 text-[#252A28] dark:text-[#F5F1E8] font-bold">
+                    <li key={index} className="flex items-start gap-2 text-[#252A28] dark:text-[#F5F1E8] font-bold leading-normal">
                       <CheckCircle2 className="h-4.5 w-4.5 text-[#397C78] dark:text-[#5EAAA5] shrink-0 mt-0.5" />
                       <span>{feat}</span>
                     </li>
@@ -223,22 +244,21 @@ export function AdvertisePage() {
                 </ul>
               </div>
 
-              {/* CTA Button */}
+              {/* Direct WhatsApp CTA Button */}
               <button
-                onClick={() =>
-                  alert(
-                    isRtl
-                      ? `مرحباً بك! اخترت ${pkg.nameAr} (${isYearly ? "سنوي مع خصم 30%" : "شهري"}). سنتواصل معك فوراً لتأكيد انضمامك!`
-                      : `Welcome! You selected ${pkg.nameEn} (${isYearly ? "Annual 30% OFF" : "Monthly"}). We will contact you shortly!`
-                  )
-                }
-                className={`mt-8 w-full rounded-full py-3.5 text-center text-xs font-black transition-all min-h-[50px] shadow-lift ${
+                onClick={() => handleJoinPackage(pkg)}
+                className={`mt-8 w-full rounded-full py-3.5 px-4 text-center text-xs font-black transition-all min-h-[50px] shadow-lift flex items-center justify-center gap-2 cursor-pointer ${
                   pkg.featured
-                    ? "bg-[#C96745] text-white hover:bg-[#b55837] animate-pulse-glow"
-                    : "bg-[#397C78] text-white hover:bg-[#2e6562]"
+                    ? "bg-[#25D366] text-white hover:bg-[#20bd5a] animate-pulse-glow"
+                    : "bg-[#25D366] text-white hover:bg-[#20bd5a]"
                 }`}
               >
-                {isRtl ? "انضم الآن وأضف مكانك 🚀" : "Join Now & Add Your Place 🚀"}
+                <PhoneCall className="h-4 w-4" />
+                <span>
+                  {isRtl
+                    ? "انضم الآن عبر WhatsApp (0572563602) 📲"
+                    : "Join via WhatsApp (0572563602) 📲"}
+                </span>
               </button>
             </div>
           );
