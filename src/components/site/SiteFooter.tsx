@@ -26,7 +26,7 @@ export function SiteFooter() {
 
             <div className="inline-flex items-center gap-2 rounded-full bg-white/5 px-3.5 py-1.5 border border-white/10 text-xs font-semibold text-[#5EAAA5]">
               <ShieldCheck className="h-4 w-4 text-[#397C78]" />
-              <span>جميع الأماكن موثوقة ومحدّثة 100%</span>
+              <span>{isRtl ? "جميع الأماكن موثوقة ومحدّثة 100%" : "100% Verified Place Listings"}</span>
             </div>
           </div>
 
@@ -50,12 +50,12 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link to="/places" className="hover:text-[#FF9D7A] transition-colors">
-                  استكشف جدة 🗺️
+                  {t("places")}
                 </Link>
               </li>
               <li>
                 <Link to="/offers" className="hover:text-[#FF9D7A] transition-colors">
-                  عروض جدة 🔥
+                  {t("offers")}
                 </Link>
               </li>
             </ul>
@@ -70,7 +70,7 @@ export function SiteFooter() {
             <ul className="space-y-2.5 text-xs md:text-sm font-semibold text-[#FAF6F0]/80">
               <li>
                 <Link to="/advertise" className="hover:text-[#5EAAA5] transition-colors">
-                  {t("advertise")}
+                  {isRtl ? "للأعمال والشراكات" : "For Businesses"}
                 </Link>
               </li>
               <li>
@@ -80,12 +80,12 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link to="/advertise" className="hover:text-[#5EAAA5] transition-colors">
-                  أضف مكانك في جدة 📍
+                  {isRtl ? "أضف مكانك في جدة 📍" : "Add Your Place 📍"}
                 </Link>
               </li>
               <li>
                 <Link to="/advertise" className="hover:text-[#5EAAA5] transition-colors">
-                  باقات الرعاية والإعلانات 💎
+                  {isRtl ? "باقات الرعاية والإعلانات 💎" : "Sponsorship Packages 💎"}
                 </Link>
               </li>
             </ul>
@@ -156,11 +156,17 @@ export function SiteFooter() {
           </p>
 
           <div className="flex items-center gap-4 text-xs font-semibold text-[#FAF6F0]/60">
-            <Link to="/plans" className="hover:text-white transition-colors">الخطط الجاهزة</Link>
+            <Link to="/plans" className="hover:text-white transition-colors">
+              {t("readyPlans")}
+            </Link>
             <span>·</span>
-            <Link to="/places" className="hover:text-white transition-colors">استكشف جدة</Link>
+            <Link to="/places" className="hover:text-white transition-colors">
+              {t("places")}
+            </Link>
             <span>·</span>
-            <Link to="/advertise" className="hover:text-white transition-colors">أعلن معنا</Link>
+            <Link to="/advertise" className="hover:text-white transition-colors">
+              {isRtl ? "أعلن معنا" : "For Businesses"}
+            </Link>
           </div>
         </div>
       </div>
