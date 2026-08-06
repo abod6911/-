@@ -13,7 +13,8 @@
       (function() {
         try {
           var saved = localStorage.getItem("jeddaw_theme") || localStorage.getItem("wesh_theme");
-          if (saved === "dark") {
+          var isDark = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (isDark) {
             document.documentElement.classList.add("dark");
           } else {
             document.documentElement.classList.remove("dark");
@@ -22,8 +23,7 @@
       })();
     </script>
   </head>
-  <body>
-    <div id="root"></div>
+  <body class="bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
     <script type="module" src="/src/start.ts"></script>
   </body>
 </html>

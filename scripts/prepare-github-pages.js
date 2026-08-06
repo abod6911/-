@@ -45,7 +45,8 @@ const indexHtmlContent = `<!DOCTYPE html>
       (function() {
         try {
           var saved = localStorage.getItem("jeddaw_theme") || localStorage.getItem("wesh_theme");
-          if (saved === "dark") {
+          var isDark = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (isDark) {
             document.documentElement.classList.add("dark");
           } else {
             document.documentElement.classList.remove("dark");
@@ -55,8 +56,7 @@ const indexHtmlContent = `<!DOCTYPE html>
     </script>
     ${cssFile ? `<link rel="stylesheet" href="./assets/${cssFile}" />` : ""}
   </head>
-  <body>
-    <div id="root"></div>
+  <body class="bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
     ${jsFile ? `<script type="module" src="./assets/${jsFile}"></script>` : ""}
   </body>
 </html>
