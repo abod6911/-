@@ -64,6 +64,7 @@ export interface Place {
   nameEn: string;
   kind: PlaceKind;
   categoryAr: string;
+  categoryEn?: string;
   subCategoryAr?: string;
   subCategoryEn?: string;
   districtId: string;
@@ -81,7 +82,9 @@ export interface Place {
   descAr: string;
   descEn: string;
   whyAr: string;
+  whyEn?: string;
   parkingAr: string;
+  parkingEn?: string;
   rating?: number;
   viewsCount?: number;
   trending?: boolean;

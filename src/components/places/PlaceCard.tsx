@@ -68,7 +68,7 @@ export function PlaceCard({ place }: { place: Place }) {
           {/* Top Badges */}
           <div className="absolute top-3 start-3 flex flex-wrap items-center gap-1.5 z-10">
             <span className="rounded-full bg-[#FAF6F0]/90 dark:bg-[#161B1A]/90 backdrop-blur px-3 py-1 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] shadow-sm">
-              {kindEmoji[place.kind]} {isRtl ? (place.subCategoryAr || place.categoryAr) : (place.subCategoryEn || place.kind)}
+              {kindEmoji[place.kind]} {isRtl ? (place.subCategoryAr || place.categoryAr) : (place.subCategoryEn || place.categoryEn || place.kind.toUpperCase())}
             </span>
             {place.trending && (
               <span className="rounded-full bg-[#C96745] px-2.5 py-1 text-[11px] font-extrabold text-white shadow-sm flex items-center gap-1">

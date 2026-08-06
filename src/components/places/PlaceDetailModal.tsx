@@ -223,7 +223,7 @@ export function PlaceDetailModal({
                     {isRtl ? "وضعية المواقف" : "Parking Availability"}
                   </span>
                   <span className="font-bold text-[#397C78] dark:text-[#5EAAA5] text-xs">
-                    {place.parkingAr}
+                    {isRtl ? place.parkingAr : (place.parkingEn || "Available Parking Spots")}
                   </span>
                 </div>
               </div>
@@ -234,7 +234,7 @@ export function PlaceDetailModal({
                   💡 {isRtl ? "لماذا اخترنا هذا المكان في جِدّاو؟" : "Why JEDDAW recommends this spot?"}
                 </span>
                 <p className="text-xs font-semibold text-[#252A28] dark:text-[#F5F1E8]">
-                  {isRtl ? place.whyAr : place.descEn}
+                  {isRtl ? place.whyAr : (place.whyEn || place.descEn)}
                 </p>
               </div>
             </div>
