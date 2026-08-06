@@ -25,22 +25,36 @@ export function SiteHeader() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem("jeddaw_theme") || localStorage.getItem("wesh_theme");
+      let isDark = false;
       if (savedTheme === "dark") {
+        isDark = true;
+      } else if (savedTheme === "light") {
+        isDark = false;
+      } else {
+        isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      }
+
+      if (isDark) {
         document.documentElement.classList.add("dark");
-        setDarkMode(true);
       } else {
         document.documentElement.classList.remove("dark");
-        setDarkMode(false);
       }
+      setDarkMode(isDark);
     }
   }, []);
 
   const toggleTheme = () => {
     if (typeof window !== "undefined") {
-      const isDark = document.documentElement.classList.toggle("dark");
-      setDarkMode(isDark);
-      localStorage.setItem("jeddaw_theme", isDark ? "dark" : "light");
-      localStorage.setItem("wesh_theme", isDark ? "dark" : "light");
+      const isCurrentlyDark = document.documentElement.classList.contains("dark");
+      const newDark = !isCurrentlyDark;
+      if (newDark) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+      setDarkMode(newDark);
+      localStorage.setItem("jeddaw_theme", newDark ? "dark" : "light");
+      localStorage.setItem("wesh_theme", newDark ? "dark" : "light");
     }
   };
 
