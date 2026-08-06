@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { Bot, ChevronLeft, ChevronRight, Globe, MapPin, Send, Sparkles, Wand2, X } from "lucide-react";
+import { Bot, ChevronLeft, ChevronRight, Globe, Info, MapPin, Send, Sparkles, Wand2, X } from "lucide-react";
 import { getPlace, places, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 import { PlaceDetailModal } from "@/components/places/PlaceDetailModal";
 import { checkContent } from "@/lib/moderation";
 import {
-  processAssistantMessage,
+  processMasterAssistantMessage,
   type AssistantResponse,
-  type ValidatedPlan,
 } from "@/lib/hybrid-ai";
+import { type GeneratedPlan } from "@/lib/plan-builder";
 
 interface AiChatMessage {
   id: string;
@@ -23,7 +23,7 @@ export function AiAssistant() {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  const [currentPlan, setCurrentPlan] = useState<ValidatedPlan | null>(null);
+  const [currentPlan, setCurrentPlan] = useState<GeneratedPlan | null>(null);
 
   // Body scroll lock effect when assistant modal is open
   useEffect(() => {
@@ -41,8 +41,8 @@ export function AiAssistant() {
   }, [isOpen]);
 
   const welcomeText = isRtl
-    ? "أهلاً وسهلاً بك في مساعد جِدّاو! 🤖 أنا جاهز لمساعدتك في التخطيط لطلعتك أو البحث عن أفضل كافيهات ومطاعم جدة."
-    : "Welcome to JEDDAW Assistant! 🤖 How can I help you plan your outing or discover spots in Jeddah?";
+    ? "أهلاً وسهلاً بك في مساعد جِدّاو الهجين! 🤖 أنا جاهز لمساعدتك في التخطيط لطلعتك أو البحث عن أفضل كافيهات ومطاعم جدة بدقة 100%."
+    : "Welcome to JEDDAW's Master Hybrid AI Assistant! 🤖 How can I help you plan your outing or discover spots in Jeddah?";
 
   const initialAiMsg: AiChatMessage = {
     id: "1",
@@ -101,9 +101,9 @@ export function AiAssistant() {
       return;
     }
 
-    // 2. Intent Routing & Assistant Message Processor
+    // 2. Intent Routing & Assistant Processor
     try {
-      const response = await processAssistantMessage({
+      const response = await processMasterAssistantMessage({
         message: userText,
         currentPlan,
         conversationHistory: messages,
@@ -111,8 +111,8 @@ export function AiAssistant() {
 
       setIsTyping(false);
 
-      // Update active plan state ONLY if intent is plan and validated is true
-      if (response.type === "plan" && response.plan?.validated) {
+      // Update active plan state ONLY if type is plan/plan_update and plan is validated
+      if ((response.type === "plan" || response.type === "plan_update") && response.plan?.validated) {
         setCurrentPlan(response.plan);
       }
 
@@ -170,7 +170,7 @@ export function AiAssistant() {
                 </div>
                 <div>
                   <h2 className="text-base font-black text-[#252A28] dark:text-[#F5F1E8]">
-                    {isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}
+                    {isRtl ? "مساعد جِدّاو الذكي (Hybrid AI)" : "JEDDAW Master Hybrid AI"}
                   </h2>
                   <p className="text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] flex items-center gap-1">
                     <Sparkles className="h-3 w-3" />
@@ -231,8 +231,8 @@ export function AiAssistant() {
                         </div>
                       )}
 
-                      {/* STRICT CONDITION: Plan Card renders ONLY when type === 'plan' AND validated === true */}
-                      {msg.response?.type === "plan" &&
+                      {/* STRICT CONDITION: Plan Card renders ONLY when type === 'plan' || 'plan_update' AND validated === true */}
+                      {(msg.response?.type === "plan" || msg.response?.type === "plan_update") &&
                         msg.response.plan &&
                         msg.response.plan.validated === true && (
                           <div className="mt-4 pt-3 border-t border-[#E2D3BE] dark:border-white/10">
@@ -250,22 +250,24 @@ export function AiAssistant() {
                                   <div
                                     key={i}
                                     onClick={() => p && setSelectedPlace(p)}
-                                    className="flex items-center gap-3 p-2.5 rounded-xl bg-[#FAF6F0] dark:bg-[#1A2221] border border-[#E2D3BE]/60 dark:border-white/10 hover:border-[#C96745] transition-all cursor-pointer"
+                                    className="p-2.5 rounded-xl bg-[#FAF6F0] dark:bg-[#1A2221] border border-[#E2D3BE]/60 dark:border-white/10 hover:border-[#C96745] transition-all cursor-pointer"
                                   >
-                                    {p && (
-                                      <img
-                                        src={p.image}
-                                        alt={p.nameAr}
-                                        className="h-10 w-10 rounded-lg object-cover shrink-0"
-                                      />
-                                    )}
-                                    <div className="flex-1 truncate">
-                                      <div className="flex items-center justify-between text-xs font-bold text-[#252A28] dark:text-[#F5F1E8]">
-                                        <span className="truncate">{i + 1}. {p ? (isRtl ? p.nameAr : p.nameEn) : stop.placeId}</span>
-                                        <span className="text-[10px] text-[#397C78] dark:text-[#5EAAA5]">{stop.arrivalTime}</span>
-                                      </div>
-                                      <div className="text-[10px] text-[#6E716C] dark:text-[#B5B8B2] truncate">
-                                        {isRtl ? stop.reasonAr : stop.reasonEn}
+                                    <div className="flex items-center gap-3">
+                                      {p && (
+                                        <img
+                                          src={p.image}
+                                          alt={p.nameAr}
+                                          className="h-10 w-10 rounded-lg object-cover shrink-0"
+                                        />
+                                      )}
+                                      <div className="flex-1 truncate">
+                                        <div className="flex items-center justify-between text-xs font-bold text-[#252A28] dark:text-[#F5F1E8]">
+                                          <span className="truncate">{i + 1}. {p ? (isRtl ? p.nameAr : p.nameEn) : stop.placeId}</span>
+                                          <span className="text-[10px] text-[#397C78] dark:text-[#5EAAA5]">{stop.arrivalTime}</span>
+                                        </div>
+                                        <div className="text-[10px] text-[#6E716C] dark:text-[#B5B8B2] truncate">
+                                          💡 {isRtl ? stop.reasonAr : stop.reasonEn}
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -304,7 +306,7 @@ export function AiAssistant() {
               {isTyping && (
                 <div className="flex items-center gap-2 text-xs font-bold text-[#6E716C] dark:text-[#B5B8B2] bg-white dark:bg-[#253230] p-3 rounded-2xl w-fit border border-[#E2D3BE] dark:border-white/10 shadow-sm animate-pulse">
                   <Bot className="h-4 w-4 text-[#C96745] animate-spin" />
-                  <span>{isRtl ? "جاري تحليل نية الطلب واستخراج الرد..." : "Analyzing intent & processing..."}</span>
+                  <span>{isRtl ? "جاري المعالجة والتحقق الحتمي من قاعدة البيانات..." : "Processing intent & verifying database..."}</span>
                 </div>
               )}
               <div ref={messagesEndRef} />
