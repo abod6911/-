@@ -570,6 +570,15 @@ function QuickPlanPage() {
                   </span>
                 </div>
 
+                {/* Primary Action Button: Start Live Outing */}
+                <button
+                  onClick={() => setActiveLivePlan({ placeIds: plan.stops.map((s) => s.place.id), titleAr: plan.titleAr, titleEn: plan.subtitleAr })}
+                  className="w-full rounded-full bg-gradient-to-r from-[#C96745] to-[#397C78] px-4 py-3 text-xs font-black text-white shadow-lift hover:opacity-95 transition-all min-h-[44px] flex items-center justify-center gap-2 mb-2 animate-pulse-glow"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  <span>{isRtl ? "🚀 ابدأ الطلعة الآن (الوضع المباشر)" : "🚀 Start Live Outing Now"}</span>
+                </button>
+
                 {/* Secondary Actions */}
                 <div className="grid grid-cols-3 gap-1.5 mt-2">
                   <button
@@ -603,6 +612,15 @@ function QuickPlanPage() {
           );
         })}
       </div>
+
+      {activeLivePlan && (
+        <LiveOutingModal
+          initialPlaceIds={activeLivePlan.placeIds}
+          titleAr={activeLivePlan.titleAr}
+          titleEn={activeLivePlan.titleEn}
+          onClose={() => setActiveLivePlan(null)}
+        />
+      )}
 
       {/* Modals */}
       {selectedPlanForMap && (

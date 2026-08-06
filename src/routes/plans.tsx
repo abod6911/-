@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { Clock, MapPin, Sparkles, Star, Wallet } from "lucide-react";
 import { budgetLevels, getPlace, readyPlans } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { PlaceImage } from "@/components/common/PlaceImage";
+import { LiveOutingModal } from "@/components/outing/LiveOutingModal";
 
 export const Route = createFileRoute("/plans")({
   head: () => ({
@@ -22,6 +24,7 @@ export const Route = createFileRoute("/plans")({
 function PlansPage() {
   const { t, isRtl } = useLanguage();
   const { savePlan, isPlanSaved } = useAuth();
+  const [activeLivePlan, setActiveLivePlan] = useState<{ placeIds: string[]; titleAr: string; titleEn: string } | null>(null);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -114,10 +117,11 @@ function PlansPage() {
 
                   <div className="space-y-2">
                     <button
-                      onClick={() => alert(isRtl ? `عرض مسار ${plan.titleAr} بالكامل…` : `Viewing full route for ${plan.titleEn}…`)}
-                      className="w-full rounded-full bg-[#C96745] px-4 py-3 text-xs font-extrabold text-white shadow-lift hover:bg-[#b55837] transition-all min-h-[44px]"
+                      onClick={() => setActiveLivePlan({ placeIds: plan.stops, titleAr: plan.titleAr, titleEn: plan.titleEn })}
+                      className="w-full rounded-full bg-gradient-to-r from-[#C96745] to-[#397C78] px-4 py-3 text-xs font-black text-white shadow-lift hover:opacity-95 transition-all min-h-[44px] flex items-center justify-center gap-2 animate-pulse-glow"
                     >
-                      {isRtl ? "عرض الخطة كاملة والمسار 🗺️" : "View Full Plan & Route 🗺️"}
+                      <Sparkles className="h-4 w-4" />
+                      <span>{isRtl ? "🚀 ابدأ الطلعة الآن (الوضع المباشر)" : "🚀 Start Live Outing Now"}</span>
                     </button>
 
                     <button
@@ -138,6 +142,15 @@ function PlansPage() {
           );
         })}
       </div>
+
+      {activeLivePlan && (
+        <LiveOutingModal
+          initialPlaceIds={activeLivePlan.placeIds}
+          titleAr={activeLivePlan.titleAr}
+          titleEn={activeLivePlan.titleEn}
+          onClose={() => setActiveLivePlan(null)}
+        />
+      )}
     </div>
   );
 }
