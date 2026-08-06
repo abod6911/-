@@ -556,37 +556,44 @@ function QuickPlanPage() {
 
               {/* Card Footer Actions */}
               <div className="mt-6 border-t border-[#E2D3BE] pt-4">
-                <div className="flex items-center justify-between text-sm font-bold text-[#252A28] mb-4">
-                  <span className="text-[#C96745]">{plan.pricePerPerson} {isRtl ? "ر.س / شخص" : "SAR / person"}</span>
-                  <span className="text-[#6E716C] text-xs">{formatDuration(plan.durationMin)}</span>
+                <div className="flex items-center justify-between text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] mb-4">
+                  <span className="text-[#C96745] font-black">
+                    {plan.pricePerPerson} {isRtl ? "ر.س / للشخص" : "SAR / person"}
+                  </span>
+                  <span className="text-[#6E716C] dark:text-[#B5B8B2] text-xs font-semibold">
+                    ⏱️ {formatDuration(plan.durationMin, isRtl)}
+                  </span>
                 </div>
 
+                {/* Primary Action Button: View Full Plan */}
+                <button
+                  onClick={() => setSelectedPlanForMap(plan)}
+                  className="w-full rounded-full bg-[#C96745] px-4 py-3 text-center text-xs font-extrabold text-white shadow-lift hover:bg-[#b55837] transition-all mb-2 min-h-[44px]"
+                >
+                  {isRtl ? "عرض الخطة كاملة والمسار 🗺️" : "View Full Plan & Route 🗺️"}
+                </button>
+
+                {/* Secondary Actions */}
                 <div className="grid grid-cols-2 gap-2">
                   <button
-                    onClick={() => setSelectedPlanForMap(plan)}
-                    className="rounded-full bg-[#397C78] px-4 py-2.5 text-center text-xs font-bold text-white hover:bg-[#2e6562] transition-colors"
+                    onClick={() => savePlan(plan)}
+                    className={`rounded-full border px-3 py-2 text-center text-xs font-bold transition-all ${
+                      isSaved
+                        ? "bg-[#397C78] text-white border-[#397C78]"
+                        : "border-[#E2D3BE] bg-[#FAF6F0] dark:bg-[#161B1A] text-[#252A28] dark:text-[#F5F1E8] hover:border-[#397C78]"
+                    }`}
                   >
-                    {t("openRoute")}
+                    <Star className={`inline h-3.5 w-3.5 me-1 ${isSaved ? "fill-white" : ""}`} />
+                    {isSaved ? (isRtl ? "تم الحفظ 🎉" : "Saved 🎉") : (isRtl ? "احفظ الخطة ⭐" : "Save Plan ⭐")}
                   </button>
+
                   <button
                     onClick={() => setSplitPlan(plan)}
-                    className="rounded-full border border-[#E2D3BE] px-4 py-2.5 text-center text-xs font-bold text-[#252A28] hover:border-[#C96745]"
+                    className="rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] px-3 py-2 text-center text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745]"
                   >
-                    {t("calculateSplit")}
+                    {isRtl ? "تقسيم الفاتورة 💰" : "Split Bill 💰"}
                   </button>
                 </div>
-
-                <button
-                  onClick={() => savePlan(plan)}
-                  className={`mt-2.5 w-full rounded-full border px-4 py-2.5 text-xs font-bold transition-all ${
-                    isSaved
-                      ? "bg-[#C96745] text-white border-[#C96745]"
-                      : "border-[#E2D3BE] bg-[#FAF6F0] text-[#252A28] hover:border-[#C96745]"
-                  }`}
-                >
-                  <Star className={`inline h-3.5 w-3.5 me-1 ${isSaved ? "fill-white" : ""}`} />
-                  {isSaved ? t("planSaved") : t("savePlan")}
-                </button>
               </div>
             </article>
           );

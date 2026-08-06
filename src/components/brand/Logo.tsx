@@ -2,11 +2,11 @@ import logoImg from "@/assets/jeddaw-logo.png";
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center rounded-2xl bg-[#FAF6F0] px-3.5 py-1.5 shadow-sm border border-[#E2D3BE]/80 hover:scale-105 transition-transform ${className}`}>
+    <span className={`inline-flex items-center gap-2 transition-transform hover:opacity-95 ${className}`}>
       <img
         src={logoImg}
-        alt="شعار جِدّاو — مخطط طلعات جدة"
-        className="h-8.5 w-auto object-contain shrink-0"
+        alt="شعار جِدّاو — JEDDAW Outing Planner"
+        className="h-10 md:h-11 w-auto object-contain shrink-0 drop-shadow-sm"
       />
     </span>
   );

@@ -248,12 +248,22 @@ export const formatClock = (minutes: number) => {
   return `${h12}:${String(m).padStart(2, "0")} ${suffix}`;
 };
 
-export const formatDuration = (min: number) => {
+export const formatDuration = (min: number, isRtl: boolean = true) => {
+  if (min >= 1200) {
+    // Hotel / Resort overnight stays
+    return isRtl ? "ليلة واحدة / يومان 🏖️" : "1 Night / 2 Days 🏖️";
+  }
   const h = Math.floor(min / 60);
   const m = min % 60;
-  if (h && m) return `${h} ساعة و${m} دقيقة`;
-  if (h) return `${h} ساعات`;
-  return `${m} دقيقة`;
+  if (isRtl) {
+    if (h && m) return `${h} ساعة و${m} دقيقة`;
+    if (h) return `${h} ساعات`;
+    return `${m} دقيقة`;
+  } else {
+    if (h && m) return `${h} hrs ${m} mins`;
+    if (h) return `${h} hrs`;
+    return `${m} mins`;
+  }
 };
 
 export const allDistricts = districts;

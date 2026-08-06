@@ -4,6 +4,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { PlaceDetailModal } from "./PlaceDetailModal";
+import { PlaceImage } from "@/components/common/PlaceImage";
 
 const kindEmoji: Record<Place["kind"], string> = {
   activity: "🎮",
@@ -17,7 +18,7 @@ const kindEmoji: Record<Place["kind"], string> = {
 };
 
 export function PlaceCard({ place }: { place: Place }) {
-  const { isRtl } = useLanguage();
+  const { t, isRtl } = useLanguage();
   const { isFavorite, toggleFavorite } = useAuth();
   const district = getDistrict(place.districtId);
   const fav = isFavorite(place.id);
@@ -33,6 +34,22 @@ export function PlaceCard({ place }: { place: Place }) {
     }
   };
 
+  // Format pricing with explicit unit
+  const formatPrice = () => {
+    if (place.pricePerPerson === 0) {
+      return isRtl ? "مجاني ✨" : "Free ✨";
+    }
+    const unitLabel =
+      place.kind === "hotel" || place.kind === "resort"
+        ? isRtl
+          ? "ر.س / للغرفة"
+          : "SAR / room"
+        : isRtl
+        ? "ر.س / للشخص"
+        : "SAR / person";
+    return `${place.pricePerPerson} ${unitLabel}`;
+  };
+
   return (
     <>
       <article
@@ -41,22 +58,21 @@ export function PlaceCard({ place }: { place: Place }) {
       >
         {/* Place Image with Hover Zoom */}
         <div className="relative h-48 w-full overflow-hidden bg-slate-900">
-          <img
+          <PlaceImage
             src={place.image}
-            alt={place.nameAr}
-            loading="lazy"
+            alt={isRtl ? place.nameAr : place.nameEn}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
           {/* Top Badges */}
           <div className="absolute top-3 start-3 flex flex-wrap items-center gap-1.5 z-10">
             <span className="rounded-full bg-[#FAF6F0]/90 dark:bg-[#161B1A]/90 backdrop-blur px-3 py-1 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] shadow-sm">
-              {kindEmoji[place.kind]} {place.subCategoryAr || place.categoryAr}
+              {kindEmoji[place.kind]} {isRtl ? (place.subCategoryAr || place.categoryAr) : (place.subCategoryEn || place.kind)}
             </span>
             {place.trending && (
               <span className="rounded-full bg-[#C96745] px-2.5 py-1 text-[11px] font-extrabold text-white shadow-sm flex items-center gap-1">
-                <Flame className="h-3 w-3 fill-white" /> ترند
+                <Flame className="h-3 w-3 fill-white" /> {isRtl ? "ترند" : "Trending"}
               </span>
             )}
           </div>
@@ -64,7 +80,7 @@ export function PlaceCard({ place }: { place: Place }) {
           {/* Favorite button */}
           <button
             onClick={handleFav}
-            aria-label="المفضلة"
+            aria-label={isRtl ? "المفضلة" : "Favorite"}
             className={`absolute top-3 end-3 z-10 rounded-full p-2.5 shadow-md backdrop-blur transition-all duration-300
               ${fav
                 ? "bg-[#C96745] text-white scale-110"
@@ -83,7 +99,7 @@ export function PlaceCard({ place }: { place: Place }) {
             </span>
             {place.rating && (
               <span className="flex items-center gap-1 bg-[#E4A23B] text-white px-2.5 py-1 rounded-full shadow-sm">
-                <Star className="h-3.5 w-3.5 fill-white" /> {place.rating}
+                <Star className="h-3.5 w-3.5 fill-white" /> Google {place.rating} ★
               </span>
             )}
           </div>
@@ -104,11 +120,11 @@ export function PlaceCard({ place }: { place: Place }) {
           <div className="mt-4 border-t border-[#E2D3BE] dark:border-white/10 pt-3.5 flex items-center justify-between text-xs font-bold">
             <span className="flex items-center gap-1 text-[#C96745]">
               <Wallet className="h-4 w-4" />
-              {place.pricePerPerson === 0 ? "مجاني ✨" : `${place.pricePerPerson} ر.س / شخص`}
+              {formatPrice()}
             </span>
 
             <span className="flex items-center gap-1 text-[#397C78] dark:text-[#5EAAA5] group-hover:underline">
-              <ExternalLink className="h-3.5 w-3.5" /> التفاصيل والخرائط
+              <ExternalLink className="h-3.5 w-3.5" /> {isRtl ? "التفاصيل والخرائط" : "Details & Maps"}
             </span>
           </div>
         </div>

@@ -111,17 +111,26 @@ function PlansPage() {
                     </span>
                   </div>
 
-                  <button
-                    onClick={() => savePlan(plan)}
-                    className={`w-full rounded-full border px-4 py-3 text-xs font-bold transition-all min-h-[44px] ${
-                      isSaved
-                        ? "bg-[#C96745] text-white border-[#C96745]"
-                        : "border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745]"
-                    }`}
-                  >
-                    <Star className={`inline h-4 w-4 me-1.5 ${isSaved ? "fill-white" : ""}`} />
-                    {isSaved ? t("planSaved") : t("savePlan")}
-                  </button>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => alert(isRtl ? `عرض مسار ${plan.titleAr} بالكامل…` : `Viewing full route for ${plan.titleEn}…`)}
+                      className="w-full rounded-full bg-[#C96745] px-4 py-3 text-xs font-extrabold text-white shadow-lift hover:bg-[#b55837] transition-all min-h-[44px]"
+                    >
+                      {isRtl ? "عرض الخطة كاملة والمسار 🗺️" : "View Full Plan & Route 🗺️"}
+                    </button>
+
+                    <button
+                      onClick={() => savePlan(plan)}
+                      className={`w-full rounded-full border px-4 py-2.5 text-xs font-bold transition-all min-h-[40px] ${
+                        isSaved
+                          ? "bg-[#397C78] text-white border-[#397C78]"
+                          : "border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] text-[#252A28] dark:text-[#F5F1E8] hover:border-[#397C78]"
+                      }`}
+                    >
+                      <Star className={`inline h-3.5 w-3.5 me-1.5 ${isSaved ? "fill-white" : ""}`} />
+                      {isSaved ? t("planSaved") : t("savePlan")}
+                    </button>
+                  </div>
                 </div>
               </div>
             </article>

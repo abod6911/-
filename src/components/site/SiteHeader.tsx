@@ -49,7 +49,7 @@ export function SiteHeader() {
     { to: "/plans", label: isRtl ? "خطط جاهزة" : "Plans" },
     { to: "/places", label: isRtl ? "استكشف جدة 🗺️" : "Explore 🗺️" },
     { to: "/offers", label: isRtl ? "عروض جدة 🔥" : "Offers 🔥" },
-    { to: "/advertise", label: t("advertise") },
+    { to: "/advertise", label: isRtl ? "للأعمال 🤝" : "For Businesses 🤝" },
   ] as const;
 
   return (
