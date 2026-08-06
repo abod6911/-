@@ -393,6 +393,169 @@ function Index() {
           ))}
         </div>
       </section>
+
+      {/* ===== Curated Jeddah Districts Showcase ===== */}
+      <section className="bg-[#FAF6F0] dark:bg-[#161B1A] py-16 border-t border-b border-[#E2D3BE]/60 dark:border-white/10">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="text-center mb-10">
+            <span className="rounded-full bg-[#397C78]/15 px-4 py-1 text-xs font-extrabold text-[#397C78] dark:text-[#5EAAA5] mb-2 inline-block">
+              🗺️ {isRtl ? "استكشف أحياء جدة البارزة" : "Featured Jeddah Neighborhoods"}
+            </span>
+            <h2 className="text-3xl font-black text-[#252A28] dark:text-[#F5F1E8]">
+              {isRtl ? "لكل حي بجدة نكهة وطلعة خاصة 🌊" : "Every District Has a Unique Vibe 🌊"}
+            </h2>
+            <p className="text-sm font-semibold text-[#6E716C] dark:text-[#B5B8B2] mt-1">
+              {isRtl
+                ? "من بحر أبحر الساحر إلى عراقة حارات البلد التاريخية"
+                : "From Obhur's turquoise beaches to historic Al Balad heritage"}
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {/* District Card 1: Corniche */}
+            <div className="group relative h-64 rounded-3xl overflow-hidden shadow-xl border border-white/20 hover-lift cursor-pointer">
+              <img
+                src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
+                alt="الكورنيش والبحر"
+                className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-6 flex flex-col justify-end text-white">
+                <span className="text-xs font-extrabold text-[#FF9D7A]">🏖️ 45+ {isRtl ? "وجهة" : "spots"}</span>
+                <h3 className="text-xl font-black">{isRtl ? "الكورنيش والشاطئ" : "Corniche & Waterfront"}</h3>
+                <p className="text-xs font-semibold text-white/80 mt-1">
+                  {isRtl ? "جلسات بحرية، كافيهات إطلالة، ومشي غروب" : "Seaside cafes, sunset walks & luxury dining"}
+                </p>
+              </div>
+            </div>
+
+            {/* District Card 2: Obhur */}
+            <div className="group relative h-64 rounded-3xl overflow-hidden shadow-xl border border-white/20 hover-lift cursor-pointer">
+              <img
+                src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80"
+                alt="أبحر الشمالية والمنتجعات"
+                className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-6 flex flex-col justify-end text-white">
+                <span className="text-xs font-extrabold text-[#FF9D7A]">⛵ 30+ {isRtl ? "منتجع ونادي" : "resorts"}</span>
+                <h3 className="text-xl font-black">{isRtl ? "أبحر الشمالية واليخوت" : "North Obhur & Marinas"}</h3>
+                <p className="text-xs font-semibold text-white/80 mt-1">
+                  {isRtl ? "منتجعات مسبح خاص، شاليهات، وفعاليات بحرية" : "Private beach resorts & water sports"}
+                </p>
+              </div>
+            </div>
+
+            {/* District Card 3: Al Balad */}
+            <div className="group relative h-64 rounded-3xl overflow-hidden shadow-xl border border-white/20 hover-lift cursor-pointer">
+              <img
+                src="https://images.unsplash.com/photo-1578895210405-907db48a56ad?auto=format&fit=crop&w=800&q=80"
+                alt="البلد التاريخية"
+                className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-6 flex flex-col justify-end text-white">
+                <span className="text-xs font-extrabold text-[#FF9D7A]">🏛️ 25+ {isRtl ? "معلم وتراث" : "heritage spots"}</span>
+                <h3 className="text-xl font-black">{isRtl ? "البلد والتراث التاريخي" : "Historic Al Balad"}</h3>
+                <p className="text-xs font-semibold text-white/80 mt-1">
+                  {isRtl ? "بيوت حجازية عريقة، كافيهات انتيك، وشاهي جمر" : "Traditional Hijazi houses & antique cafes"}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Authentic Human Reviews & Community Testimonials ===== */}
+      <section className="mx-auto max-w-6xl px-4 py-16">
+        <div className="text-center mb-10">
+          <span className="rounded-full bg-[#C96745]/15 px-4 py-1 text-xs font-extrabold text-[#C96745] mb-2 inline-block">
+            💬 {isRtl ? "تجارب مجتمع جِدّاو الحقيقية" : "Authentic Community Experiences"}
+          </span>
+          <h2 className="text-3xl font-black text-[#252A28] dark:text-[#F5F1E8]">
+            {isRtl ? "ماذا يقول أهل جدة وزوارها عن جِدّاو؟ ❤️" : "What Jeddah Locals & Visitors Say ❤️"}
+          </h2>
+          <p className="text-sm font-semibold text-[#6E716C] dark:text-[#B5B8B2] mt-1">
+            {isRtl
+              ? "أكثر من 15,000 خطة طلعة تم تنظيمها ومشاركتها هذا الشهر"
+              : "Over 15,000 outing plans curated and enjoyed this month"}
+          </p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          {/* Review 1 */}
+          <div className="surface-card p-6 rounded-3xl border border-[#E2D3BE] dark:border-white/10 shadow-md hover-lift">
+            <div className="flex items-center gap-1 text-[#E4A23B] mb-3">
+              {"★".repeat(5)}
+            </div>
+            <p className="text-xs font-semibold text-[#252A28] dark:text-[#F5F1E8] leading-relaxed italic">
+              "{isRtl
+                ? "جِدّاو وفر علي ساعتين تدوير بإنستقرام للطلعات! اخترت الجو والميزانية وعطاني مسار كامل بالمطعم والقهوة والمسار بالخريطة."
+                : "JEDDAW saved me 2 hours of searching Instagram! Selected my vibe & budget, and it built the complete route in seconds."}"
+            </p>
+            <div className="mt-5 pt-3 border-t border-[#E2D3BE]/60 dark:border-white/10 flex items-center gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-full bg-[#C96745] text-xs font-bold text-white">
+                د.ع
+              </div>
+              <div>
+                <h4 className="text-xs font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
+                  {isRtl ? "دانة العمودي" : "Dana Al-Amoudi"}
+                </h4>
+                <span className="text-[11px] text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+                  {isRtl ? "حي الشاطئ · جدة" : "Al Shati · Jeddah"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Review 2 */}
+          <div className="surface-card p-6 rounded-3xl border border-[#E2D3BE] dark:border-white/10 shadow-md hover-lift">
+            <div className="flex items-center gap-1 text-[#E4A23B] mb-3">
+              {"★".repeat(5)}
+            </div>
+            <p className="text-xs font-semibold text-[#252A28] dark:text-[#F5F1E8] leading-relaxed italic">
+              "{isRtl
+                ? "خاصية تقسيم الفاتورة ومشاركة الكرت على الواتساب مع الشلة فكّت أزمة! الكل صار يصوت ويعرف حصته بدون أي أحراج."
+                : "The WhatsApp bill splitter and share card features solved all group planning issues! Everyone votes and knows their exact share."}"
+            </p>
+            <div className="mt-5 pt-3 border-t border-[#E2D3BE]/60 dark:border-white/10 flex items-center gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-full bg-[#397C78] text-xs font-bold text-white">
+                س.غ
+              </div>
+              <div>
+                <h4 className="text-xs font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
+                  {isRtl ? "سعود الغامدي" : "Saud Al-Ghamdi"}
+                </h4>
+                <span className="text-[11px] text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+                  {isRtl ? "حي الخالدية · جدة" : "Al Khalidiyyah · Jeddah"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Review 3 */}
+          <div className="surface-card p-6 rounded-3xl border border-[#E2D3BE] dark:border-white/10 shadow-md hover-lift">
+            <div className="flex items-center gap-1 text-[#E4A23B] mb-3">
+              {"★".repeat(5)}
+            </div>
+            <p className="text-xs font-semibold text-[#252A28] dark:text-[#F5F1E8] leading-relaxed italic">
+              "{isRtl
+                ? "كنت زائر لجدة لأول مرة وما أعرف الأماكن، جِدّاو سوى لي برنامج 3 أيام من منتجعات أبحر لمطاعم الكورنيش والبلد وكله بالدقيقة!"
+                : "Visited Jeddah for the first time; JEDDAW gave me a 3-day complete itinerary from Obhur resorts to Corniche cafes!"}"
+            </p>
+            <div className="mt-5 pt-3 border-t border-[#E2D3BE]/60 dark:border-white/10 flex items-center gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-full bg-[#E4A23B] text-xs font-bold text-white">
+                ف.ش
+              </div>
+              <div>
+                <h4 className="text-xs font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
+                  {isRtl ? "فهد الشهري" : "Fahad Al-Shehri"}
+                </h4>
+                <span className="text-[11px] text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+                  {isRtl ? "زائر من الرياض 🇸🇦" : "Visitor from Riyadh 🇸🇦"}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
