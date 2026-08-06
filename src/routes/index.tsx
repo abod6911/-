@@ -437,7 +437,7 @@ function Index() {
             {/* District Card 2: Obhur */}
             <div className="group relative h-64 rounded-3xl overflow-hidden shadow-xl border border-white/20 hover-lift cursor-pointer">
               <img
-                src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80"
+                src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
                 alt="أبحر الشمالية والمنتجعات"
                 className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
@@ -453,7 +453,7 @@ function Index() {
             {/* District Card 3: Al Balad */}
             <div className="group relative h-64 rounded-3xl overflow-hidden shadow-xl border border-white/20 hover-lift cursor-pointer">
               <img
-                src="https://images.unsplash.com/photo-1578895210405-907db48a56ad?auto=format&fit=crop&w=800&q=80"
+                src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80"
                 alt="البلد التاريخية"
                 className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
