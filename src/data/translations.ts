@@ -561,6 +561,8 @@ export const translations = {
     allPlans: "All Ready Plans",
     allOffers: "All Jeddah Offers",
     offersTitle: "Jeddah Offers Today 🔥",
+    trendingTitle: "Trending Outings 🔥",
+    trendingSub: "Most requested & trending spots, cafes, and dining in Jeddah this week",
     readyPlansTitle: "Ready Outing Plans 📋",
     placesTitle: "Places & Activities in Jeddah 📍",
     placesDesc: "Discover entertainment, restaurants, cafes, and activities in Jeddah.",

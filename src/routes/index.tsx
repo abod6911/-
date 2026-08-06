@@ -333,11 +333,13 @@ function Index() {
             <div className="inline-flex items-center gap-2 rounded-full bg-[#C96745]/15 px-4 py-1 text-xs font-bold text-[#C96745] mb-2">
               <Zap className="h-4 w-4" /> {isRtl ? "الأكثر تداولاً وزيارة هذا الأسبوع" : "Most popular spots this week"}
             </div>
-            <h2 className="text-3xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">
-              {t("trendingTitle")}
+            <h2 className="text-3xl font-black text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">
+              {isRtl ? "طلعة ترند 🔥" : "Trending Outings 🔥"}
             </h2>
             <p className="mt-2 text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold max-w-xl">
-              {t("trendingSub")}
+              {isRtl
+                ? "أكثر الأماكن والكافيهات والمطاعم طلباً وتداولاً في جدة هذا الأسبوع"
+                : "Most requested & trending spots, cafes, and dining in Jeddah this week"}
             </p>
           </div>
           <Link
