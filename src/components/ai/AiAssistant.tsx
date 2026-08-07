@@ -29,14 +29,11 @@ export function AiAssistant() {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
-      document.body.style.touchAction = "none";
     } else {
-      document.body.style.overflow = "auto";
-      document.body.style.touchAction = "auto";
+      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = "auto";
-      document.body.style.touchAction = "auto";
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
 
@@ -195,10 +192,10 @@ export function AiAssistant() {
         </button>
       </div>
 
-      {/* Modal Dialog - Glassmorphism Aesthetic */}
+      {/* Modal Dialog - Mobile Dynamic Viewport Sheet */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/65 backdrop-blur-md animate-fade-in">
-          <div className="surface-card flex h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-[#E2D3BE] dark:border-white/10 bg-gradient-to-b from-[#FAF6F0] via-white to-[#FAF6F0] dark:from-[#1C2422] dark:via-[#161B1A] dark:to-[#1C2422] shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-md animate-fade-in">
+          <div className="surface-card flex h-[92dvh] sm:h-[86vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl border border-[#E2D3BE] dark:border-white/10 bg-gradient-to-b from-[#FAF6F0] via-white to-[#FAF6F0] dark:from-[#1C2422] dark:via-[#161B1A] dark:to-[#1C2422] shadow-2xl">
             
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[#E2D3BE]/60 dark:border-white/10 bg-[#F4EBDD]/90 dark:bg-[#161B1A]/90 backdrop-blur-md px-5 py-4">
@@ -378,7 +375,7 @@ export function AiAssistant() {
                       ? "اكتب طلبك (مثلاً: رتب لي طلعة، كافيهات بالروضة)..."
                       : "Type your request (e.g. plan an outing, cafes in Rawdah)..."
                   }
-                  className="flex-1 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#253230] px-4 py-3 text-xs text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/70 focus:outline-none focus:border-[#C96745] focus:ring-4 focus:ring-[#C96745]/15 transition-all"
+                  className="flex-1 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#253230] px-4 py-3 text-base sm:text-xs text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/70 focus:outline-none focus:border-[#C96745] focus:ring-4 focus:ring-[#C96745]/15 transition-all"
                 />
                 <button
                   type="submit"

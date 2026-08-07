@@ -155,7 +155,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                   placeholder={isRtl ? "محمد العتيبي" : "John Doe"}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#C96745]"
+                  className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-3 py-2.5 text-base sm:text-xs font-semibold focus:outline-none focus:border-[#C96745]"
                 />
               </div>
             </div>
@@ -173,7 +173,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#C96745]"
+                className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-3 py-2.5 text-base sm:text-xs font-semibold focus:outline-none focus:border-[#C96745]"
               />
             </div>
           </div>
@@ -190,7 +190,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-10 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#C96745]"
+                className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-10 py-2.5 text-base sm:text-xs font-semibold focus:outline-none focus:border-[#C96745]"
               />
               <button
                 type="button"
@@ -221,7 +221,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 <select
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
-                  className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#C96745]"
+                  className="w-full rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#253230] ps-10 pe-3 py-2.5 text-base sm:text-xs font-semibold focus:outline-none focus:border-[#C96745]"
                 >
                   {districts.map((d) => (
                     <option key={d.id} value={d.id}>

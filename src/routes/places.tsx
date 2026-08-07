@@ -172,7 +172,7 @@ function PlacesPage() {
               }
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] ps-10 pe-4 py-3 text-sm font-semibold text-[#252A28] dark:text-[#F5F1E8] transition-all focus:border-[#C96745] focus:outline-none"
+              className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] ps-10 pe-4 py-3 text-base sm:text-sm font-semibold text-[#252A28] dark:text-[#F5F1E8] transition-all focus:border-[#C96745] focus:outline-none"
             />
           </div>
 

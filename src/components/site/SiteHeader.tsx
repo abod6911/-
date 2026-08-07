@@ -156,14 +156,14 @@ export function SiteHeader() {
 
         {/* Mobile Dropdown Menu */}
         {open && (
-          <div className="border-t border-[#E2D3BE] dark:border-white/10 bg-[#FAF6F0] dark:bg-[#161B1A] px-4 py-4 lg:hidden animate-fade-in-down">
-            <nav className="flex flex-col gap-2.5">
+          <div className="border-t border-[#E2D3BE] dark:border-white/10 bg-[#FAF6F0] dark:bg-[#161B1A] px-3.5 py-3 lg:hidden animate-fade-in-down">
+            <nav className="flex flex-col gap-1.5">
               {nav.map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}
                   onClick={() => setOpen(false)}
-                  className="rounded-xl px-4 py-3 text-base font-bold text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#F4EBDD] dark:hover:bg-[#222826]"
+                  className="rounded-xl px-3.5 py-2.5 text-sm sm:text-base font-bold text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#F4EBDD] dark:hover:bg-[#222826] transition-colors"
                 >
                   {item.label}
                 </Link>
@@ -171,7 +171,7 @@ export function SiteHeader() {
               <Link
                 to="/quick-plan"
                 onClick={() => setOpen(false)}
-                className="mt-2 flex items-center justify-center gap-2 rounded-full bg-[#C96745] py-3.5 text-center text-sm font-extrabold text-white shadow-lift"
+                className="mt-1.5 flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#C96745] to-[#B84E4E] py-2.5 text-center text-xs sm:text-sm font-extrabold text-white shadow-lift"
               >
                 <Sparkles className="h-4 w-4" />
                 {t("quickPlan")}
