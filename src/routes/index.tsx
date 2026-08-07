@@ -26,7 +26,6 @@ import { places, type Mood, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 import { FlashOffersBanner } from "@/components/home/FlashOffersBanner";
 import { JeddawHeroVisual } from "@/components/home/JeddawHeroVisual";
-import { HeroQuickPlanner, type HeroPlannerState } from "@/components/home/HeroQuickPlanner";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -72,14 +71,7 @@ function Index() {
   const { t, isRtl } = useLanguage();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedVibe, setSelectedVibe] = useState<VibeChip>(quickVibes[0]!);
-  const [heroPlannerState, setHeroPlannerState] = useState<HeroPlannerState>({
-    group: "friends",
-    mood: "food",
-    time: "4h",
-    budget: "medium",
-  });
 
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,8 +96,8 @@ function Index() {
 
   return (
     <div>
-      {/* ===== BRAND EXPERIENTIAL INTERACTIVE JEDDAH HERO SECTION ===== */}
-      <section className="relative min-h-[85vh] lg:min-h-[90vh] flex items-center overflow-hidden bg-[#051413] text-[#FAF6F0] pt-20 pb-14 lg:pt-24 lg:pb-18 shadow-2xl">
+      {/* ===== BRAND EXPERIENTIAL JEDDAH HERO SECTION ===== */}
+      <section className="relative min-h-[82vh] lg:min-h-[88vh] flex items-center overflow-hidden bg-[#051413] text-[#FAF6F0] pt-20 pb-14 lg:pt-24 lg:pb-18 shadow-2xl">
         {/* Subtle Red Sea Atmospheric Background Image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -136,11 +128,11 @@ function Index() {
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
-            {/* RIGHT SIDE (Arabic/English Main Content ~45% / 5 cols) */}
+            {/* RIGHT SIDE (Arabic Main Content ~45% / 5 cols) */}
             <div className="lg:col-span-5 flex flex-col items-start text-start">
               
               {/* Compact Weather & Eyebrow Chip */}
-              <div className="flex flex-wrap items-center gap-2.5 mb-4 animate-fade-in-up">
+              <div className="flex flex-wrap items-center gap-2.5 mb-5 animate-fade-in-up">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-extrabold text-[#FAF6F0] backdrop-blur border border-white/15 shadow-xs">
                   34° · {isRtl ? "جدة الآن" : "Jeddah Now"}
                 </span>
@@ -152,46 +144,54 @@ function Index() {
 
               {/* Main Headline Stack */}
               <div className="animate-fade-in-up delay-1 space-y-1 max-w-xl">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.18] text-[#FAF6F0]">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.18] text-[#FAF6F0]">
                   <span className="block text-[#FAF6F0]/90">
-                    {isRtl ? "جدة كثيرة…" : "Jeddah has endless options…"}
+                    {isRtl ? "جدة كثيرة…" : "Jeddah is endless…"}
                   </span>
                   <span className="inline-block bg-gradient-to-r from-[#FF9D7A] via-[#FAF6F0] to-[#5EAAA5] bg-clip-text text-transparent drop-shadow-md pt-1 pb-2">
-                    {isRtl ? "بس خطتك وحدة." : "but your plan should be one."}
+                    {isRtl ? "بس خطتك وحدة." : "One plan fits you."}
                   </span>
                 </h1>
                 <div className="h-[3.5px] w-full max-w-[220px] sm:max-w-[320px] bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] rounded-full opacity-90" />
               </div>
 
               {/* Supporting Copy */}
-              <p className="animate-fade-in-up delay-2 mt-4 max-w-md text-xs sm:text-sm leading-relaxed text-[#FAF6F0]/85 font-semibold">
+              <p className="animate-fade-in-up delay-2 mt-5 max-w-md text-base sm:text-lg leading-relaxed text-[#FAF6F0]/85 font-semibold">
                 {isRtl
-                  ? "قل لنا وقتك، مودك وميزانيتك، وجِدّاو يرتّب لك طلعة كاملة."
-                  : "Tell us your time, mood, and budget — JEDDAW will organize the outing for you."}
+                  ? "قل لنا وقتك، مودك وميزانيتك، وجِدّاو يرتب لك طلعة كاملة."
+                  : "Tell us your time, mood, and budget, and JEDDAW builds your complete outing."}
               </p>
 
-              {/* INTERACTIVE MINI PLANNER STARTER */}
-              <div className="animate-fade-in-up delay-3 mt-5 w-full">
-                <HeroQuickPlanner
-                  onPlanChange={(state) => setHeroPlannerState(state)}
-                  onBuildPlan={(state) => {
-                    navigate({
-                      to: "/quick-plan",
-                    });
-                  }}
-                />
+              {/* CTAs Group */}
+              <div className="animate-fade-in-up delay-3 mt-7 flex flex-wrap items-center gap-3.5 w-full sm:w-auto">
+                <Link
+                  to="/quick-plan"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-[#C96745] to-[#B84E4E] px-8 py-4 text-base font-black text-white shadow-lift hover:scale-[1.02] hover:shadow-2xl border border-white/20 transition-all min-h-[54px] cursor-pointer group"
+                >
+                  <Sparkles className="h-5 w-5 text-white transition-transform duration-300 group-hover:rotate-12" />
+                  <span>{isRtl ? "سوِّ لي خطة" : "Plan My Outing"}</span>
+                  <ArrowLeft className={`h-5 w-5 transition-transform duration-300 group-hover:-translate-x-1 ${isRtl ? "" : "rotate-180"}`} />
+                </Link>
+
+                <Link
+                  to="/places"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 px-6 py-4 text-sm font-bold text-[#FAF6F0] backdrop-blur-xl transition-all min-h-[54px] cursor-pointer"
+                >
+                  <Navigation className="h-4.5 w-4.5" />
+                  <span>{isRtl ? "استكشف جدة" : "Explore Jeddah"}</span>
+                </Link>
               </div>
 
               {/* Small Contextual Microcopy Underneath */}
-              <div className="animate-fade-in-up delay-4 mt-4 text-[11px] font-extrabold text-[#FAF6F0]/60 tracking-wide">
-                <span>{isRtl ? "مطاعم • كافيهات • فعاليات • بحر" : "Restaurants • Cafés • Activities • Sea"}</span>
+              <div className="animate-fade-in-up delay-4 mt-6 text-xs font-extrabold text-[#FAF6F0]/60 tracking-wide">
+                <span>{isRtl ? "مطاعم • كافيهات • فعاليات • بحر" : "Dining • Cafes • Activities • Sea"}</span>
               </div>
 
             </div>
 
-            {/* LEFT SIDE (Signature Spatial Visual with Live Route Preview ~55% / 7 cols) */}
-            <div className="lg:col-span-7 relative h-[420px] sm:h-[480px] lg:h-[540px] w-full flex items-center justify-center">
-              <JeddawHeroVisual plannerState={heroPlannerState} />
+            {/* LEFT SIDE (Signature Route Spatial Visual ~55% / 7 cols) */}
+            <div className="lg:col-span-7 relative h-[380px] sm:h-[460px] lg:h-[520px] w-full flex items-center justify-center">
+              <JeddawHeroVisual />
             </div>
 
           </div>
