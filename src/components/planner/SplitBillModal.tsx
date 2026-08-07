@@ -21,7 +21,7 @@ export function SplitBillModal({
   const { t, isRtl } = useLanguage();
   const [people, setPeople] = useState(groupSize || 2);
   const [extras, setExtras] = useState<ExtraItem[]>([
-    { id: "1", label: isRtl ? "تأكسي / أوبر" : "Taxi / Uber", amount: 40 },
+    { id: "1", label: isRtl ? "تاكسي / أوبر" : "Taxi / Uber", amount: 40 },
   ]);
   const [newLabel, setNewLabel] = useState("");
   const [newAmount, setNewAmount] = useState("");
@@ -47,54 +47,64 @@ export function SplitBillModal({
   };
 
   const generateWhatsAppMessage = () => {
-    const title = `💰 قطة طلعة: ${plan.titleAr}`;
+    const title = isRtl ? `💰 قطة طلعة: ${plan.titleAr}` : `💰 Outing Bill Split: ${plan.subtitleAr || plan.titleAr}`;
     const stopsList = plan.stops
       ? plan.stops.map((s, i) => `${i + 1}. ${isRtl ? s.place.nameAr : s.place.nameEn}`).join("\n")
       : "";
     const extrasList = extras.length
-      ? `\n\n📌 المصاريف الإضافية:\n` + extras.map((e) => `• ${e.label}: ${e.amount} ر.س`).join("\n")
+      ? `\n\n📌 ${isRtl ? "المصاريف الإضافية" : "Extras"}:\n` + extras.map((e) => `• ${e.label}: ${e.amount} ${isRtl ? "ر.س" : "SAR"}`).join("\n")
       : "";
 
-    const msg = `${title}\n\n📍 المحطات:\n${stopsList}${extrasList}\n\n👥 عدد الأشخاص: ${people}\n💳 إجمالي القطة: ${grandTotal} ر.س\n👉 المطلوب من كل شخص: ${finalPerPerson} ر.س`;
+    const curr = isRtl ? "ر.س" : "SAR";
+    const msg = `${title}\n\n📍 ${isRtl ? "المحطات" : "Stops"}:\n${stopsList}${extrasList}\n\n👥 ${isRtl ? "عدد الأشخاص" : "People"}: ${people}\n💳 ${isRtl ? "إجمالي القطة" : "Total Bill"}: ${grandTotal} ${curr}\n👉 ${isRtl ? "المطلوب من كل شخص" : "Amount per Person"}: ${finalPerPerson} ${curr}`;
 
     return `https://wa.me/?text=${encodeURIComponent(msg)}`;
   };
 
+  const currencySymbol = isRtl ? "ر.س" : "SAR";
+
   return (
-    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal-content max-w-lg animate-modal-in">
-        <div className="flex items-center justify-between border-b border-border pb-4">
-          <div className="flex items-center gap-2">
-            <Calculator className="h-6 w-6 text-coral" />
-            <h2 className="text-xl font-bold">{t("splitTitle")}</h2>
+    <div className="modal-overlay z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="modal-content max-w-lg w-full p-6 sm:p-7 rounded-3xl animate-modal-in surface-card bg-[#FAF6F0] dark:bg-[#161B1A] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 shadow-2xl">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-[#E2D3BE] dark:border-white/10 pb-4">
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745]/15 text-xl">
+              🧮
+            </span>
+            <h2 className="text-xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
+              {t("splitTitle")}
+            </h2>
           </div>
           <button
             onClick={onClose}
-            className="rounded-full p-1.5 hover:bg-mist transition-colors"
+            className="grid h-9 w-9 place-items-center rounded-full bg-black/5 dark:bg-white/10 hover:bg-[#C96745] hover:text-white transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <p className="mt-3 text-sm text-muted-foreground">{t("splitDesc")}</p>
+        <p className="mt-3 text-xs sm:text-sm font-semibold text-[#6E716C] dark:text-[#B5B8B2]">
+          {t("splitDesc")}
+        </p>
 
-        <div className="mt-5 space-y-4 text-sm">
+        <div className="mt-5 space-y-4 text-xs sm:text-sm">
           {/* Group size adjustment */}
-          <div className="flex items-center justify-between rounded-xl bg-mist/60 p-3">
-            <span className="font-semibold">{t("groupCount")}</span>
+          <div className="flex items-center justify-between rounded-2xl bg-white dark:bg-[#1A2221] p-4 border border-[#E2D3BE] dark:border-white/10">
+            <span className="font-extrabold text-[#252A28] dark:text-[#F5F1E8]">{t("groupCount")}</span>
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setPeople(Math.max(1, people - 1))}
-                className="h-8 w-8 rounded-full bg-pearl font-bold shadow-soft"
+                className="h-9 w-9 rounded-xl bg-[#FAF6F0] dark:bg-white/10 font-black text-base text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#C96745] hover:text-white transition-colors shadow-sm"
               >
                 −
               </button>
-              <span className="w-6 text-center font-bold text-base">{people}</span>
+              <span className="w-6 text-center font-black text-base text-[#C96745]">{people}</span>
               <button
                 type="button"
                 onClick={() => setPeople(people + 1)}
-                className="h-8 w-8 rounded-full bg-pearl font-bold shadow-soft"
+                className="h-9 w-9 rounded-xl bg-[#FAF6F0] dark:bg-white/10 font-black text-base text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#C96745] hover:text-white transition-colors shadow-sm"
               >
                 +
               </button>
@@ -102,34 +112,34 @@ export function SplitBillModal({
           </div>
 
           {/* Base cost breakdown */}
-          <div className="rounded-xl border border-border p-4 space-y-2">
-            <div className="flex justify-between text-muted-foreground">
+          <div className="rounded-2xl border border-[#E2D3BE] dark:border-white/10 bg-white dark:bg-[#1A2221] p-4 space-y-2">
+            <div className="flex justify-between text-[#6E716C] dark:text-[#B5B8B2] font-semibold text-xs">
               <span>{t("baseCostPerPerson")}</span>
-              <span className="font-semibold">{basePricePerPerson} ر.س</span>
+              <span className="font-bold text-[#252A28] dark:text-[#F5F1E8]">{basePricePerPerson} {currencySymbol}</span>
             </div>
-            <div className="flex justify-between font-bold text-navy">
-              <span>مجموع الأنشطة والوجبات ({people} أشخاص)</span>
-              <span>{baseTotal} ر.س</span>
+            <div className="flex justify-between font-extrabold text-[#252A28] dark:text-[#F5F1E8] text-sm pt-1 border-t border-[#E2D3BE]/50 dark:border-white/10">
+              <span>{isRtl ? `مجموع الأنشطة والوجبات (${people} أشخاص)` : `Total Activities (${people} people)`}</span>
+              <span className="text-[#397C78] dark:text-[#5EAAA5]">{baseTotal} {currencySymbol}</span>
             </div>
           </div>
 
           {/* Extras list */}
           <div>
-            <h3 className="font-bold text-navy mb-2">{t("extraExpenses")}</h3>
+            <h3 className="font-extrabold text-[#252A28] dark:text-[#F5F1E8] mb-2">{t("extraExpenses")}</h3>
             <div className="space-y-2 max-h-36 overflow-y-auto pr-1">
               {extras.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between rounded-xl bg-sand/60 px-3 py-2 text-xs"
+                  className="flex items-center justify-between rounded-xl bg-white dark:bg-[#1A2221] px-3.5 py-2.5 text-xs font-bold border border-[#E2D3BE] dark:border-white/10"
                 >
-                  <span className="font-semibold">{item.label}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold">{item.amount} ر.س</span>
+                  <span className="text-[#252A28] dark:text-[#F5F1E8]">{item.label}</span>
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-[#C96745] font-extrabold">{item.amount} {currencySymbol}</span>
                     <button
                       onClick={() => removeExtraItem(item.id)}
-                      className="text-destructive hover:opacity-80"
+                      className="text-[#B84E4E] hover:text-red-700 transition-colors p-1"
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
@@ -137,58 +147,59 @@ export function SplitBillModal({
             </div>
 
             {/* Add extra form */}
-            <div className="mt-3 grid grid-cols-[1fr_80px_auto] gap-2">
+            <div className="mt-3 grid grid-cols-[1fr_90px_auto] gap-2">
               <input
                 type="text"
                 placeholder={t("extraLabel")}
                 value={newLabel}
                 onChange={(e) => setNewLabel(e.target.value)}
-                className="rounded-xl border border-border px-3 py-1.5 text-xs bg-pearl"
+                className="rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#1A2221] px-3 py-2 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 focus:border-[#C96745] focus:outline-none"
               />
               <input
                 type="number"
                 placeholder="0"
                 value={newAmount}
                 onChange={(e) => setNewAmount(e.target.value)}
-                className="rounded-xl border border-border px-3 py-1.5 text-xs bg-pearl"
+                className="rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#1A2221] px-3 py-2 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 focus:border-[#C96745] focus:outline-none"
               />
               <button
                 type="button"
                 onClick={addExtraItem}
-                className="rounded-xl bg-teal px-3 py-1.5 text-xs font-bold text-primary-foreground hover:bg-teal/90"
+                className="rounded-xl bg-[#397C78] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#2d6360] transition-colors"
               >
                 <Plus className="h-4 w-4" />
               </button>
             </div>
           </div>
 
-          {/* Final summary */}
-          <div className="rounded-2xl bg-navy p-4 text-pearl shadow-soft">
-            <div className="flex items-center justify-between">
-              <span className="text-xs opacity-80">{t("totalBill")}</span>
-              <span className="text-lg font-bold">{grandTotal} ر.س</span>
+          {/* Final summary banner */}
+          <div className="rounded-2xl bg-gradient-to-r from-[#255C56] to-[#397C78] p-4 text-white shadow-md">
+            <div className="flex items-center justify-between text-xs font-bold text-white/80">
+              <span>{t("totalBill")}</span>
+              <span className="text-base font-extrabold text-white">{grandTotal} {currencySymbol}</span>
             </div>
-            <div className="mt-2 flex items-center justify-between border-t border-pearl/20 pt-2">
-              <span className="font-bold text-coral">نصيب الشخص الواحد</span>
-              <span className="text-2xl font-bold text-coral">{finalPerPerson} ر.س</span>
+            <div className="mt-2 flex items-center justify-between border-t border-white/20 pt-2">
+              <span className="font-extrabold text-white">{isRtl ? "نصيب الشخص الواحد" : "Cost Per Person"}</span>
+              <span className="text-2xl font-black text-[#FF9D7A]">{finalPerPerson} {currencySymbol}</span>
             </div>
           </div>
         </div>
 
         {/* WhatsApp Share Action */}
-        <div className="mt-6 flex justify-between gap-3">
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-[#E2D3BE] dark:border-white/10 pt-5">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold hover:bg-mist"
+            className="rounded-full border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#1A2221] px-6 py-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] min-h-[44px]"
           >
             {t("close")}
           </button>
+
           <a
             href={generateWhatsAppMessage()}
             target="_blank"
             rel="noreferrer"
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-success px-5 py-2.5 text-sm font-bold text-white shadow-soft hover:bg-success/90"
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-[#71805B] px-6 py-2.5 text-xs font-black text-white shadow-lift hover:bg-[#5e6b4a] transition-all min-h-[44px]"
           >
             <Share2 className="h-4 w-4" />
             {t("shareBillWhatsApp")}

@@ -287,6 +287,21 @@ export const translations = {
     free: "مجاني",
     sponsored: "مموّل",
     verifiedAt: "تم التحقق:",
+
+    // Modals & Polls & Split
+    pollTitle: "تصويت المجموعة على الخطة 📊",
+    pollDesc: "صوتوا على الخطة المفضلة قبل الخروج في الطلعة!",
+    sharePollWhatsApp: "مشاركة التصويت عبر واتساب 📲",
+    splitTitle: "حاسبة الفاتورة والقطية 💰",
+    splitDesc: "احسب تكلفة الطلعة كاملة مع المصاريف الجانبية وقسمها على المجموع",
+    groupCount: "عدد الأشخاص",
+    baseCostPerPerson: "تكلفة الأنشطة الأساسية (للشخص)",
+    extraExpenses: "المصاريف والإضافات الجانبية",
+    extraLabel: "اسم المصروف (مثال: أوبر)",
+    totalBill: "إجمالي الفاتورة",
+    shareBillWhatsApp: "مشاركة الفاتورة عبر واتساب 💬",
+    close: "إغلاق",
+    editAnswers: "تعديل الإجابات",
   },
   en: {
     // Brand & Slogans
@@ -572,6 +587,21 @@ export const translations = {
     free: "Free",
     sponsored: "Sponsored",
     verifiedAt: "Verified:",
+
+    // Modals & Polls & Split
+    pollTitle: "Group Outing Poll 📊",
+    pollDesc: "Vote on your favorite plan with your group before heading out!",
+    sharePollWhatsApp: "Share Poll via WhatsApp 📲",
+    splitTitle: "Bill & Expense Splitter 💰",
+    splitDesc: "Calculate total outing cost & split fairly with your group",
+    groupCount: "Group Size (People)",
+    baseCostPerPerson: "Base Activity Cost (per person)",
+    extraExpenses: "Extra Expenses & Transportation",
+    extraLabel: "Expense Name (e.g. Uber)",
+    totalBill: "Total Outing Bill",
+    shareBillWhatsApp: "Share Bill via WhatsApp 💬",
+    close: "Close",
+    editAnswers: "Edit Answers",
   },
 } as const;
 

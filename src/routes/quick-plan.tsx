@@ -90,9 +90,9 @@ function OptionChip({
         </span>
       )}
       <div className="flex-1 min-w-0">
-        <span className="block text-sm font-extrabold leading-snug truncate">{label}</span>
+        <span className="block text-xs sm:text-sm font-extrabold leading-snug break-words">{label}</span>
         {subLabel && (
-          <span className={`block text-xs font-medium mt-0.5 truncate ${active ? "text-white/80" : "text-[#6E716C] dark:text-[#B5B8B2]"}`}>
+          <span className={`block text-[11px] font-medium mt-0.5 break-words ${active ? "text-white/80" : "text-[#6E716C] dark:text-[#B5B8B2]"}`}>
             {subLabel}
           </span>
         )}
@@ -697,8 +697,12 @@ function QuickPlanPage() {
                   )}
                 </div>
 
-                <h2 className="mt-4 text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">{plan.titleAr}</h2>
-                <p className="mt-1 text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">{plan.subtitleAr}</p>
+                <h2 className="mt-4 text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
+                  {isRtl ? plan.titleAr : (plan.subtitleAr || plan.titleAr)}
+                </h2>
+                <p className="mt-1 text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+                  {isRtl ? plan.subtitleAr : "Curated Jeddah outing with optimal route & budget"}
+                </p>
 
                 {/* Timeline stops */}
                 <ol className="mt-6 space-y-4 border-t border-[#E2D3BE] dark:border-white/10 pt-4">
@@ -720,10 +724,10 @@ function QuickPlanPage() {
                         </button>
                       </div>
                       <p className="text-xs text-[#6E716C] dark:text-[#B5B8B2] mt-0.5 font-medium">
-                        {getDistrict(stop.place.districtId).nameAr} · {stop.place.durationMin} دقيقة
+                        {isRtl ? getDistrict(stop.place.districtId).nameAr : getDistrict(stop.place.districtId).nameEn} · {stop.place.durationMin} {isRtl ? "دقيقة" : "mins"}
                       </p>
                       <p className="mt-1 text-[11px] text-[#71805B] font-semibold">
-                        💡 اخترناه لأنه قريب وفي مسار الخطة ومناسب لميزانيتكم
+                        {isRtl ? "💡 اخترناه لأنه قريب وفي مسار الخطة ومناسب لميزانيتكم" : "💡 Selected: Nearby, budget-friendly & optimal route"}
                       </p>
                     </li>
                   ))}
