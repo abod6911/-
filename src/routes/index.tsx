@@ -147,11 +147,11 @@ function Index() {
                 <span className="block text-[#FAF6F0]/90 font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight leading-tight">
                   {isRtl ? "محتار وين تروح اليوم؟" : "Wondering where to go today?"}
                 </span>
-                <div className="pt-2">
-                  <span className="relative inline-block bg-gradient-to-r from-[#FF9D7A] via-[#FAF6F0] to-[#5EAAA5] bg-clip-text text-transparent font-black text-4xl sm:text-6xl lg:text-7xl drop-shadow-md">
+                <div className="pt-2 flex flex-col items-start">
+                  <span className="bg-gradient-to-r from-[#FF9D7A] via-[#FAF6F0] to-[#5EAAA5] bg-clip-text text-transparent font-black text-4xl sm:text-6xl lg:text-7xl drop-shadow-md pb-2">
                     {isRtl ? "جِدّاو يرتّبها." : "JEDDAW plans it."}
-                    <span className="absolute bottom-0 start-0 w-full h-[3px] bg-gradient-to-r from-[#C96745] to-[#397C78] rounded-full opacity-80" />
                   </span>
+                  <div className="h-[4px] w-full max-w-[280px] sm:max-w-[420px] bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] rounded-full opacity-90 -mt-1" />
                 </div>
               </div>
 
