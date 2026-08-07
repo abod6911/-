@@ -4,6 +4,7 @@ import path from "node:path";
 const rootDir = process.cwd();
 const outputPublicDir = path.join(rootDir, ".output", "public");
 const distDir = path.join(rootDir, "dist");
+const rootAssetsDir = path.join(rootDir, "assets");
 
 // Reset dist directory
 if (fs.existsSync(distDir)) {
@@ -69,9 +70,16 @@ fs.writeFileSync(path.join(distDir, "index.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(distDir, "404.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(distDir, ".nojekyll"), "", "utf-8");
 
-// Also sync root index.html, 404.html, .nojekyll so root branch deployments work 100%
+// Also sync root assets folder and root index.html, 404.html, .nojekyll for GitHub Pages root deployment
+if (fs.existsSync(assetsDir)) {
+  if (fs.existsSync(rootAssetsDir)) {
+    fs.rmSync(rootAssetsDir, { recursive: true, force: true });
+  }
+  fs.cpSync(assetsDir, rootAssetsDir, { recursive: true });
+}
+
 fs.writeFileSync(path.join(rootDir, "index.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, "404.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, ".nojekyll"), "", "utf-8");
 
-console.log("Successfully prepared static distribution for GitHub Pages in dist/!");
+console.log("Successfully prepared static distribution for GitHub Pages in dist/ and root assets!");
