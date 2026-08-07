@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "node scripts/clean-assets.js && vite build && node scripts/prepare-github-pages.js",
+    "build": "node scripts/clean-assets.js && vite build && node scripts/prepare-github-pages.js && node scripts/verify-build.js",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",

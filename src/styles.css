@@ -535,6 +535,11 @@ html[lang="ar"] label {
   }
 }
 
+/* Global Typing-Safe Mode: disable smooth scroll during text entry */
+html[data-input-focused="true"] {
+  scroll-behavior: auto !important;
+}
+
 /* ==========================================================================
    Mobile Input Focus & Keyboard UI Behavior
    ========================================================================== */
@@ -544,13 +549,25 @@ html[lang="ar"] label {
   will-change: opacity, transform;
 }
 
-html[data-input-focused="true"] .mobile-tab-bar,
-html[data-input-focused="true"] .ai-launcher,
-html[data-keyboard-open="true"] .mobile-tab-bar,
-html[data-keyboard-open="true"] .ai-launcher {
-  opacity: 0 !important;
-  pointer-events: none !important;
-  transform: translateY(120%) !important;
+@media (max-width: 768px) {
+  html[data-input-focused="true"] .mobile-tab-bar,
+  html[data-input-focused="true"] .ai-launcher,
+  html[data-keyboard-open="true"] .mobile-tab-bar,
+  html[data-keyboard-open="true"] .ai-launcher {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateY(120%) !important;
+  }
+
+  html[data-input-focused="true"] .site-header {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: #FAF6F0 !important;
+  }
+
+  html[data-input-focused="true"].dark .site-header {
+    background-color: #121817 !important;
+  }
 }
 
 /* Mobile Visual Viewport Sheet Container */

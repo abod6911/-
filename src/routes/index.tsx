@@ -67,18 +67,52 @@ const quickVibes: VibeChip[] = [
   { id: "v12", labelAr: "أول مرة في جدة", labelEn: "First Time in Jeddah", icon: Compass, mood: "culture", accentColor: "from-[#C96745] to-[#71805B]" },
 ];
 
-function Index() {
-  const { t, isRtl } = useLanguage();
+const HomeSearch = React.memo(function HomeSearch() {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedVibe, setSelectedVibe] = useState<VibeChip>(quickVibes[0]!);
+  const { isRtl } = useLanguage();
+  const [query, setQuery] = useState("");
 
-  const handleHeroSearch = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate({ to: "/places", search: { q: searchQuery.trim() } });
+    if (query.trim()) {
+      navigate({ to: "/places", search: { q: query.trim() } });
     }
   };
+
+  return (
+    <div className="rounded-3xl bg-white dark:bg-[#1A2221] p-4 sm:p-5 border border-[#E2D3BE] dark:border-white/10 shadow-2xl backdrop-blur-xl">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-3">
+        <div className="relative flex-1 w-full">
+          <Search className="absolute start-4 top-3.5 h-5 w-5 text-[#6E716C] dark:text-[#B5B8B2]" />
+          <input
+            type="search"
+            inputMode="search"
+            enterKeyHint="search"
+            placeholder={
+              isRtl
+                ? "ابحث عن مكان في جدة (مطعم شامي، كافيه هادي، رد سي مول)..."
+                : "Search Jeddah places (Red Sea Mall, Rosewood, Cafe)..."
+            }
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] ps-12 pe-4 py-3 text-base sm:text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 focus:border-[#C96745] focus:outline-none min-h-[48px]"
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#C96745] px-6 py-3 text-xs font-black text-white shadow-lift hover:bg-[#b55837] transition-all min-h-[48px] cursor-pointer shrink-0"
+        >
+          <Search className="h-4.5 w-4.5" />
+          <span>{isRtl ? "بحث الفعاليات والأماكن" : "Search Places"}</span>
+        </button>
+      </form>
+    </div>
+  );
+});
+
+function Index() {
+  const { t, isRtl } = useLanguage();
+  const [selectedVibe, setSelectedVibe] = useState<VibeChip>(quickVibes[0]!);
 
   const getMatchingVibePlaces = (vibe: VibeChip): Place[] => {
     return places
@@ -201,30 +235,7 @@ function Index() {
       {/* ===== BELOW THE FOLD: INSTANT SEARCH & DISCOVERY ===== */}
       <section className="relative z-30 -mt-8 mx-auto max-w-5xl px-4 space-y-6">
         {/* Instant Search Bar */}
-        <div className="rounded-3xl bg-white dark:bg-[#1A2221] p-4 sm:p-5 border border-[#E2D3BE] dark:border-white/10 shadow-2xl backdrop-blur-xl">
-          <form onSubmit={handleHeroSearch} className="flex flex-col sm:flex-row items-center gap-3">
-            <div className="relative flex-1 w-full">
-              <Search className="absolute start-4 top-3.5 h-5 w-5 text-[#6E716C] dark:text-[#B5B8B2]" />
-              <input
-                type="text"
-                placeholder={
-                  isRtl
-                    ? "ابحث عن مكان في جدة (مطعم شامي، كافيه هادي، رد سي مول)..."
-                    : "Search Jeddah places (Red Sea Mall, Rosewood, Cafe)..."
-                }
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] ps-12 pe-4 py-3 text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 focus:border-[#C96745] focus:outline-none min-h-[48px]"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full sm:w-auto rounded-2xl bg-[#397C78] px-7 py-3 text-sm font-black text-white hover:bg-[#2d6360] transition-colors min-h-[48px]"
-            >
-              {isRtl ? "بحث فوري" : "Search"}
-            </button>
-          </form>
-        </div>
+        <HomeSearch />
 
         {/* SINGLE NON-DUPLICATED FLASH OFFERS BANNER */}
         <FlashOffersBanner />
