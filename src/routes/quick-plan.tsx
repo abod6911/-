@@ -1,8 +1,31 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, MapPin, RefreshCw, Share2, Sparkles, Star, User, Vote, Wallet } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  Compass,
+  Edit3,
+  MapPin,
+  RefreshCw,
+  Share2,
+  Sparkles,
+  Star,
+  User,
+  Vote,
+  Wallet,
+} from "lucide-react";
 import { PlaceCard } from "@/components/places/PlaceCard";
-import { districts, getDistrict, getPlace, groupLabels, readyPlans, type DistrictId, type GroupType, type Mood } from "@/data/jeddah";
+import {
+  districts,
+  getDistrict,
+  getPlace,
+  groupLabels,
+  readyPlans,
+  type DistrictId,
+  type GroupType,
+  type Mood,
+} from "@/data/jeddah";
 import { formatDuration, generatePlans, type GeneratedPlan, type PlanRequest } from "@/lib/planner";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
@@ -14,6 +37,7 @@ import { OutingTimeline } from "@/components/plan/OutingTimeline";
 import { RouteMapModal } from "@/components/planner/RouteMapModal";
 import { SplitBillModal } from "@/components/planner/SplitBillModal";
 import { GroupPollModal } from "@/components/planner/GroupPollModal";
+import { LiveOutingModal } from "@/components/outing/LiveOutingModal";
 
 export const Route = createFileRoute("/quick-plan")({
   head: () => ({
@@ -32,13 +56,17 @@ export const Route = createFileRoute("/quick-plan")({
   component: QuickPlanPage,
 });
 
-function Chip({
+function OptionChip({
   active,
-  children,
+  emoji,
+  label,
+  subLabel,
   onClick,
 }: {
   active: boolean;
-  children: React.ReactNode;
+  emoji?: string;
+  label: string;
+  subLabel?: string;
   onClick: () => void;
 }) {
   return (
@@ -46,13 +74,31 @@ function Chip({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded-2xl border px-4 py-3.5 text-sm font-bold transition-all duration-200 min-h-[48px] ${
+      className={`group relative flex items-center gap-3 rounded-2xl border p-4 text-start transition-all duration-200 min-h-[56px] ${
         active
-          ? "border-[#C96745] bg-[#C96745] text-white shadow-lift scale-[1.02]"
-          : "border-[#E2D3BE] bg-[#FAF6F0] text-[#252A28] hover:border-[#C96745] hover:scale-[1.01] active:scale-[0.98]"
+          ? "border-[#C96745] bg-[#C96745] text-white shadow-lift ring-2 ring-[#C96745]/30 scale-[1.02]"
+          : "border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#1A2221] text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] hover:scale-[1.01] active:scale-[0.98]"
       }`}
     >
-      {children}
+      {emoji && (
+        <span
+          className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl text-lg transition-transform group-hover:scale-110 ${
+            active ? "bg-white/20 text-white" : "bg-[#C96745]/15 text-[#C96745]"
+          }`}
+        >
+          {emoji}
+        </span>
+      )}
+      <div className="flex-1 min-w-0">
+        <span className="block text-sm font-extrabold leading-snug truncate">{label}</span>
+        {subLabel && (
+          <span className={`block text-xs font-medium mt-0.5 truncate ${active ? "text-white/80" : "text-[#6E716C] dark:text-[#B5B8B2]"}`}>
+            {subLabel}
+          </span>
+        )}
+      </div>
+
+      {active && <CheckCircle2 className="h-5 w-5 shrink-0 text-white" />}
     </button>
   );
 }
@@ -63,6 +109,9 @@ function QuickPlanPage() {
 
   const [step, setStep] = useState(0);
   const [districtId, setDistrictId] = useState<DistrictId | "">("");
+  const [locationMode, setLocationMode] = useState<"any" | "preset" | "manual">("any");
+  const [manualLocation, setManualLocation] = useState<string>("");
+
   const [group, setGroup] = useState<GroupType>("duo");
   const [groupSize, setGroupSize] = useState<number>(2);
   const [durationMin, setDurationMin] = useState<number>(240);
@@ -102,6 +151,7 @@ function QuickPlanPage() {
   const [selectedPlanForMap, setSelectedPlanForMap] = useState<GeneratedPlan | null>(null);
   const [splitPlan, setSplitPlan] = useState<GeneratedPlan | null>(null);
   const [showPollModal, setShowPollModal] = useState(false);
+  const [activeLivePlan, setActiveLivePlan] = useState<{ placeIds: string[]; titleAr: string; titleEn: string } | null>(null);
 
   const loadingMessages = [
     t("loadMsg1"),
@@ -138,8 +188,9 @@ function QuickPlanPage() {
     }, 450);
 
     setTimeout(() => {
+      const selectedDistrict = locationMode === "preset" ? districtId || null : null;
       const req: PlanRequest = {
-        districtId: districtId || null,
+        districtId: selectedDistrict,
         durationMin,
         group,
         groupSize,
@@ -168,12 +219,12 @@ function QuickPlanPage() {
   if (building) {
     return (
       <div className="mx-auto max-w-xl px-4 py-24 text-center animate-fade-in">
-        <div className="surface-card p-10 flex flex-col items-center justify-center">
+        <div className="surface-card p-10 flex flex-col items-center justify-center rounded-3xl border border-[#E2D3BE] dark:border-white/10 shadow-2xl">
           <div className="relative mb-6">
             <span className="text-6xl animate-bounce block">🧭</span>
             <div className="absolute -inset-4 rounded-full bg-[#C96745]/20 blur-xl animate-pulse-glow" />
           </div>
-          <h2 className="text-2xl font-extrabold text-[#252A28]">{t("loadingHeader")}</h2>
+          <h2 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">{t("loadingHeader")}</h2>
           <p className="mt-3 text-base font-bold text-[#C96745]">{loadingMessages[loadingTextIndex]}</p>
 
           <svg viewBox="0 0 200 30" className="mt-8 h-8 w-48 opacity-70">
@@ -195,84 +246,159 @@ function QuickPlanPage() {
   if (!plans) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-10">
-        {/* Step indicator */}
-        <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C96745]/15 px-3.5 py-1 text-sm font-bold text-[#C96745]">
-            <Sparkles className="h-4 w-4" />
-            {t("wizardStep")} {step + 1} {t("wizardOf")} {steps.length}
+        {/* Step Header Badge */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C96745] px-4 py-1.5 text-xs font-black text-white shadow-md">
+              <Sparkles className="h-4 w-4" />
+              {t("wizardStep")} {step + 1} {t("wizardOf")} {steps.length}
+            </span>
+            <span className="text-sm font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
+              — {steps[step]}
+            </span>
+          </div>
+
+          <span className="text-xs font-extrabold text-[#397C78] dark:text-[#5EAAA5]">
+            {Math.round(((step + 1) / steps.length) * 100)}%
           </span>
-          <span className="text-sm font-bold text-[#6E716C]">— {steps[step]}</span>
         </div>
 
-        {/* Progress bar */}
-        <div className="mt-3 h-2.5 w-full rounded-full bg-[#EADECB] overflow-hidden">
+        {/* Progress Bar */}
+        <div className="mt-3.5 h-3 w-full rounded-full bg-[#EADECB] dark:bg-white/10 overflow-hidden p-0.5 shadow-inner">
           <div
-            className="h-2.5 rounded-full bg-[#C96745] transition-all duration-500 ease-out"
+            className="h-full rounded-full bg-gradient-to-r from-[#C96745] to-[#397C78] transition-all duration-500 ease-out"
             style={{ width: `${((step + 1) / steps.length) * 100}%` }}
           />
         </div>
 
-        {/* Step content card */}
-        <div className="surface-card mt-6 p-6 md:p-8 animate-fade-in">
+        {/* Wizard Card Box */}
+        <div className="surface-card mt-6 p-6 sm:p-8 rounded-3xl border border-[#E2D3BE] dark:border-white/10 shadow-xl bg-[#FAF6F0] dark:bg-[#161B1A] animate-fade-in">
           {/* Step 0: Location */}
           {step === 0 && (
-            <fieldset>
-              <legend className="text-2xl font-extrabold text-[#252A28] mb-2">{t("step0Title")}</legend>
-              <p className="text-sm text-[#6E716C] font-semibold mb-6">حدد مكانك في جدة لتصفية المسافة والمشوار</p>
-              
-              <div className="space-y-3">
-                <button
-                  type="button"
-                  onClick={() => setDistrictId("")}
-                  className={`w-full rounded-2xl border p-4 text-start font-bold transition-all min-h-[52px] ${
-                    districtId === ""
-                      ? "border-[#C96745] bg-[#C96745]/10 text-[#C96745]"
-                      : "border-[#E2D3BE] bg-[#FAF6F0] text-[#252A28] hover:border-[#C96745]"
-                  }`}
-                >
-                  {t("locationAny")} 🌊 (جدة كاملة)
-                </button>
-
-                <div className="grid gap-2.5 sm:grid-cols-2">
-                  {districts.map((d) => (
-                    <button
-                      key={d.id}
-                      type="button"
-                      onClick={() => setDistrictId(d.id)}
-                      className={`rounded-xl border px-4 py-3 text-start text-sm font-semibold transition-all min-h-[48px] ${
-                        districtId === d.id
-                          ? "border-[#C96745] bg-[#C96745] text-white font-bold"
-                          : "border-[#E2D3BE] bg-[#FAF6F0] text-[#252A28] hover:border-[#C96745]"
-                      }`}
-                    >
-                      📍 {isRtl ? d.nameAr : d.nameEn}
-                    </button>
-                  ))}
+            <fieldset className="space-y-6">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745]/15 text-xl">📍</span>
+                  <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">
+                    {t("step0Title")}
+                  </legend>
                 </div>
+                <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+                  حدد مكانك الحالي أو اختر الحي المناسب لتصفية المسافات وتنظيم مشوار الطلعة
+                </p>
               </div>
+
+              {/* Location Mode Option Selector */}
+              <div className="grid gap-3 sm:grid-cols-3">
+                <OptionChip
+                  active={locationMode === "any"}
+                  emoji="🌊"
+                  label={t("locationAny")}
+                  subLabel="جدة كاملة بدون تقييد"
+                  onClick={() => {
+                    setLocationMode("any");
+                    setDistrictId("");
+                  }}
+                />
+
+                <OptionChip
+                  active={locationMode === "preset"}
+                  emoji="🏙️"
+                  label="اختيار حي محدد"
+                  subLabel="قائمة الأحياء الرئيسية"
+                  onClick={() => setLocationMode("preset")}
+                />
+
+                <OptionChip
+                  active={locationMode === "manual"}
+                  emoji="✏️"
+                  label="تحديد يدوي خاص"
+                  subLabel="حي، شارع، أو معلم خاص"
+                  onClick={() => setLocationMode("manual")}
+                />
+              </div>
+
+              {/* Preset Districts Grid */}
+              {locationMode === "preset" && (
+                <div className="animate-fade-in space-y-3 pt-2">
+                  <span className="text-xs font-extrabold text-[#6E716C] dark:text-[#B5B8B2] block">
+                    اختر الحي الأقرب لكم:
+                  </span>
+                  <div className="grid gap-2.5 grid-cols-2 sm:grid-cols-3">
+                    {districts.map((d) => (
+                      <button
+                        key={d.id}
+                        type="button"
+                        onClick={() => setDistrictId(d.id)}
+                        className={`rounded-2xl border px-4 py-3.5 text-start text-xs sm:text-sm font-bold transition-all min-h-[50px] flex items-center justify-between ${
+                          districtId === d.id
+                            ? "border-[#C96745] bg-[#C96745] text-white shadow-md scale-[1.02]"
+                            : "border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#1A2221] text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745]"
+                        }`}
+                      >
+                        <span className="truncate">📍 {isRtl ? d.nameAr : d.nameEn}</span>
+                        {districtId === d.id && <CheckCircle2 className="h-4 w-4 shrink-0 text-white" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Manual Input Mode */}
+              {locationMode === "manual" && (
+                <div className="animate-fade-in space-y-3 pt-2">
+                  <label className="text-xs font-extrabold text-[#6E716C] dark:text-[#B5B8B2] block">
+                    أدخل اسم الحي، الشارع، أو نقطة الانطلاق يدويًا:
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={manualLocation}
+                      onChange={(e) => setManualLocation(e.target.value)}
+                      placeholder="مثال: حي الشاطئ، كورنيش النورس، شارع التحلية..."
+                      className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#1A2221] p-4 pe-12 text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 focus:border-[#C96745] focus:outline-none focus:ring-2 focus:ring-[#C96745]/30 min-h-[54px]"
+                    />
+                    <Edit3 className="absolute end-4 top-4 h-5 w-5 text-[#C96745]" />
+                  </div>
+                  <p className="text-[11px] text-[#71805B] font-semibold">
+                    💡 سيقوم ذكاء جِدّاو بتخصيص خطة الطلعة حول موقعك المدخل بكل دقة!
+                  </p>
+                </div>
+              )}
             </fieldset>
           )}
 
           {/* Step 1: Group */}
           {step === 1 && (
-            <fieldset>
-              <legend className="text-2xl font-extrabold text-[#252A28] mb-2">{t("step1Title")}</legend>
-              <p className="text-sm text-[#6E716C] font-semibold mb-6">اختر طبيعة المجموعة لمعرفة المكان المناسب</p>
+            <fieldset className="space-y-6">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745]/15 text-xl">👥</span>
+                  <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step1Title")}</legend>
+                </div>
+                <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+                  اختر طبيعة المجموعة لترشيح الأماكن المتواكبة مع الخصوصية والأجواء
+                </p>
+              </div>
 
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {[
-                  { g: "solo" as const, l: t("groupSolo") },
-                  { g: "duo" as const, l: t("groupDuo") },
-                  { g: "friends" as const, l: t("groupFriends") },
-                  { g: "family" as const, l: t("groupFamily") },
-                  { g: "kids" as const, l: t("groupKids") },
-                  { g: "work" as const, l: t("groupWork") },
-                  { g: "tourists" as const, l: t("groupTourists") },
-                  { g: "seniors" as const, l: t("groupSeniors") },
+                  { g: "solo" as const, l: t("groupSolo"), e: "👤" },
+                  { g: "duo" as const, l: t("groupDuo"), e: "👩‍❤️‍👨" },
+                  { g: "friends" as const, l: t("groupFriends"), e: "👯‍♂️" },
+                  { g: "family" as const, l: t("groupFamily"), e: "👨‍👩‍👧‍👦" },
+                  { g: "kids" as const, l: t("groupKids"), e: "🎈" },
+                  { g: "work" as const, l: t("groupWork"), e: "💼" },
+                  { g: "tourists" as const, l: t("groupTourists"), e: "🧳" },
+                  { g: "seniors" as const, l: t("groupSeniors"), e: "☕" },
                 ].map((item) => (
-                  <Chip key={item.g} active={group === item.g} onClick={() => setGroup(item.g)}>
-                    {item.l}
-                  </Chip>
+                  <OptionChip
+                    key={item.g}
+                    active={group === item.g}
+                    emoji={item.e}
+                    label={item.l}
+                    onClick={() => setGroup(item.g)}
+                  />
                 ))}
               </div>
             </fieldset>
@@ -280,25 +406,32 @@ function QuickPlanPage() {
 
           {/* Step 2: Time */}
           {step === 2 && (
-            <fieldset>
-              <legend className="text-2xl font-extrabold text-[#252A28] mb-2">{t("step2Title")}</legend>
-              <p className="text-sm text-[#6E716C] font-semibold mb-6">كم ساعة متاحة معكم للطلعة؟</p>
-              
+            <fieldset className="space-y-6">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745]/15 text-xl">⏱️</span>
+                  <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step2Title")}</legend>
+                </div>
+                <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+                  كم ساعة متاحة معكم للطلعة لتحديد عدد المحطات والمسافات؟
+                </p>
+              </div>
+
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {[
-                  { m: 100, l: t("durUnder2h") },
-                  { m: 180, l: t("dur2to4h") },
-                  { m: 300, l: t("dur4to6h") },
-                  { m: 420, l: t("durHalfDay") },
-                  { m: 600, l: t("durFullDay") },
+                  { m: 100, l: t("durUnder2h"), e: "⚡" },
+                  { m: 180, l: t("dur2to4h"), e: "☕" },
+                  { m: 300, l: t("dur4to6h"), e: "🌆" },
+                  { m: 420, l: t("durHalfDay"), e: "🌙" },
+                  { m: 600, l: t("durFullDay"), e: "🚀" },
                 ].map((item) => (
-                  <Chip
+                  <OptionChip
                     key={item.m}
                     active={durationMin === item.m}
+                    emoji={item.e}
+                    label={item.l}
                     onClick={() => setDurationMin(item.m)}
-                  >
-                    ⏱️ {item.l}
-                  </Chip>
+                  />
                 ))}
               </div>
             </fieldset>
@@ -306,26 +439,37 @@ function QuickPlanPage() {
 
           {/* Step 3: Mood */}
           {step === 3 && (
-            <fieldset>
-              <legend className="text-2xl font-extrabold text-[#252A28] mb-2">{t("step3Title")}</legend>
-              <p className="text-sm text-[#6E716C] font-semibold mb-6">اختر الجو والمود المطلوب</p>
+            <fieldset className="space-y-6">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745]/15 text-xl">🎭</span>
+                  <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step3Title")}</legend>
+                </div>
+                <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+                  اختر المود والطابع الرئيسي المطلوبة طلعتكم عليه
+                </p>
+              </div>
 
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {[
-                  { m: "food" as const, l: t("moodFood") },
-                  { m: "coffee" as const, l: t("moodCoffee") },
-                  { m: "sea" as const, l: t("moodSea") },
-                  { m: "games" as const, l: t("moodGames") },
-                  { m: "adventure" as const, l: t("moodAdventure") },
-                  { m: "calm" as const, l: t("moodCalm") },
-                  { m: "culture" as const, l: t("moodCulture") },
-                  { m: "shopping" as const, l: t("moodShopping") },
-                  { m: "new" as const, l: t("moodNew") },
-                  { m: "surprise" as const, l: t("moodSurprise") },
+                  { m: "food" as const, l: t("moodFood"), e: "🍽️" },
+                  { m: "coffee" as const, l: t("moodCoffee"), e: "☕" },
+                  { m: "sea" as const, l: t("moodSea"), e: "🌊" },
+                  { m: "games" as const, l: t("moodGames"), e: "🎯" },
+                  { m: "adventure" as const, l: t("moodAdventure"), e: "🏎️" },
+                  { m: "calm" as const, l: t("moodCalm"), e: "🌿" },
+                  { m: "culture" as const, l: t("moodCulture"), e: "🏛️" },
+                  { m: "shopping" as const, l: t("moodShopping"), e: "🛍️" },
+                  { m: "new" as const, l: t("moodNew"), e: "✨" },
+                  { m: "surprise" as const, l: t("moodSurprise"), e: "🎁" },
                 ].map((item) => (
-                  <Chip key={item.m} active={mood === item.m} onClick={() => setMood(item.m)}>
-                    {item.l}
-                  </Chip>
+                  <OptionChip
+                    key={item.m}
+                    active={mood === item.m}
+                    emoji={item.e}
+                    label={item.l}
+                    onClick={() => setMood(item.m)}
+                  />
                 ))}
               </div>
             </fieldset>
@@ -333,20 +477,31 @@ function QuickPlanPage() {
 
           {/* Step 4: Environment */}
           {step === 4 && (
-            <fieldset>
-              <legend className="text-2xl font-extrabold text-[#252A28] mb-2">{t("step4Title")}</legend>
-              <p className="text-sm text-[#6E716C] font-semibold mb-6">اختر بيئة الجو المفضلة للطلعة</p>
+            <fieldset className="space-y-6">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745]/15 text-xl">🌿</span>
+                  <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step4Title")}</legend>
+                </div>
+                <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+                  حدد البيئة المناسبة لأجواء الطقس الحالية في جدة
+                </p>
+              </div>
 
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {[
-                  { env: "indoor" as const, l: t("envIndoor") },
-                  { env: "outdoor" as const, l: t("envOutdoor") },
-                  { env: "mix" as const, l: t("envMix") },
-                  { env: "any" as const, l: t("envAny") },
+                  { env: "indoor" as const, l: t("envIndoor"), e: "🏛️" },
+                  { env: "outdoor" as const, l: t("envOutdoor"), e: "🌴" },
+                  { env: "mix" as const, l: t("envMix"), e: "🔄" },
+                  { env: "any" as const, l: t("envAny"), e: "✨" },
                 ].map((item) => (
-                  <Chip key={item.env} active={environment === item.env} onClick={() => setEnvironment(item.env)}>
-                    {item.l}
-                  </Chip>
+                  <OptionChip
+                    key={item.env}
+                    active={environment === item.env}
+                    emoji={item.e}
+                    label={item.l}
+                    onClick={() => setEnvironment(item.env)}
+                  />
                 ))}
               </div>
             </fieldset>
@@ -354,32 +509,34 @@ function QuickPlanPage() {
 
           {/* Step 5: Budget */}
           {step === 5 && (
-            <fieldset>
-              <legend className="text-2xl font-extrabold text-[#252A28] mb-2">{t("step5Title")}</legend>
-              <p className="text-sm text-[#6E716C] font-semibold mb-6">الميزانية التقديرية للشخص الواحد</p>
+            <fieldset className="space-y-6">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745]/15 text-xl">💰</span>
+                  <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step5Title")}</legend>
+                </div>
+                <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+                  الميزانية التقديرية للشخص الواحد للطلعة كاملة
+                </p>
+              </div>
 
               <div className="grid gap-3 sm:grid-cols-3">
                 {[
-                  { tKey: "economy" as const, title: t("budgetEconoTitle"), sub: t("budgetEconoSub"), val: 60 },
-                  { tKey: "balanced" as const, title: t("budgetMidTitle"), sub: t("budgetMidSub"), val: 150 },
-                  { tKey: "premium" as const, title: t("budgetOpenTitle"), sub: t("budgetOpenSub"), val: 350 },
+                  { tKey: "economy" as const, title: t("budgetEconoTitle"), sub: t("budgetEconoSub"), val: 60, e: "💸" },
+                  { tKey: "balanced" as const, title: t("budgetMidTitle"), sub: t("budgetMidSub"), val: 150, e: "💰" },
+                  { tKey: "premium" as const, title: t("budgetOpenTitle"), sub: t("budgetOpenSub"), val: 350, e: "👑" },
                 ].map((item) => (
-                  <button
+                  <OptionChip
                     key={item.tKey}
-                    type="button"
+                    active={budgetTier === item.tKey}
+                    emoji={item.e}
+                    label={item.title}
+                    subLabel={item.sub}
                     onClick={() => {
                       setBudgetTier(item.tKey);
                       setBudgetPerPerson(item.val);
                     }}
-                    className={`surface-card p-4 text-start transition-all min-h-[90px] ${
-                      budgetTier === item.tKey
-                        ? "border-[#C96745] bg-[#C96745]/15 ring-2 ring-[#C96745]"
-                        : "hover:border-[#C96745]"
-                    }`}
-                  >
-                    <h3 className="font-extrabold text-base text-[#252A28]">{item.title}</h3>
-                    <p className="text-xs text-[#6E716C] mt-1 font-medium">{item.sub}</p>
-                  </button>
+                  />
                 ))}
               </div>
             </fieldset>
@@ -387,22 +544,29 @@ function QuickPlanPage() {
 
           {/* Step 6: Preferences */}
           {step === 6 && (
-            <fieldset>
-              <legend className="text-2xl font-extrabold text-[#252A28] mb-2">{t("step6Title")}</legend>
-              <p className="text-sm text-[#6E716C] font-semibold mb-6">حدد أي تفضيلات تشغيلية تحب نراعيها</p>
+            <fieldset className="space-y-6">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745]/15 text-xl">⚙️</span>
+                  <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step6Title")}</legend>
+                </div>
+                <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+                  حدد أي تفضيلات تشغيلية تحب نراعيها عند ابتكار الخطة
+                </p>
+              </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 {[
-                  { key: "noCrowd", l: t("prefNoCrowd") },
-                  { key: "easyParking", l: t("prefEasyParking") },
-                  { key: "noLongDrive", l: t("prefNoLongDrive") },
-                  { key: "kidsFriendly", l: t("prefKidsFriendly") },
-                  { key: "calm", l: t("prefCalm") },
-                  { key: "indoorOnly", l: t("prefIndoor") },
-                  { key: "wheelchair", l: t("prefWheelchair") },
-                  { key: "noReservation", l: t("prefNoReservation") },
-                  { key: "vegan", l: t("prefVegan") },
-                  { key: "none", l: t("prefNone") },
+                  { key: "noCrowd", l: t("prefNoCrowd"), e: "🤫" },
+                  { key: "easyParking", l: t("prefEasyParking"), e: "🅿️" },
+                  { key: "noLongDrive", l: t("prefNoLongDrive"), e: "🚗" },
+                  { key: "kidsFriendly", l: t("prefKidsFriendly"), e: "👶" },
+                  { key: "calm", l: t("prefCalm"), e: "🌿" },
+                  { key: "indoorOnly", l: t("prefIndoor"), e: "❄️" },
+                  { key: "wheelchair", l: t("prefWheelchair"), e: "♿" },
+                  { key: "noReservation", l: t("prefNoReservation"), e: "🎟️" },
+                  { key: "vegan", l: t("prefVegan"), e: "🥗" },
+                  { key: "none", l: t("prefNone"), e: "✨" },
                 ].map((item) => (
                   <button
                     key={item.key}
@@ -413,36 +577,44 @@ function QuickPlanPage() {
                         [item.key as keyof typeof p]: !p[item.key as keyof typeof p],
                       }))
                     }
-                    className={`rounded-2xl border p-4 text-start font-semibold transition-all min-h-[48px] ${
+                    className={`flex items-center justify-between rounded-2xl border p-4 text-start font-bold transition-all min-h-[54px] ${
                       prefs[item.key as keyof typeof prefs]
-                        ? "border-[#C96745] bg-[#C96745]/15 text-[#C96745] font-bold"
-                        : "border-[#E2D3BE] bg-[#FAF6F0] text-[#252A28] hover:border-[#C96745]"
+                        ? "border-[#C96745] bg-[#C96745] text-white shadow-lift scale-[1.01]"
+                        : "border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#1A2221] text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745]"
                     }`}
                   >
-                    {prefs[item.key as keyof typeof prefs] ? "✅ " : "⚪ "}
-                    {item.l}
+                    <span className="flex items-center gap-2.5 text-xs sm:text-sm">
+                      <span className="text-lg">{item.e}</span>
+                      <span>{item.l}</span>
+                    </span>
+                    {prefs[item.key as keyof typeof prefs] ? (
+                      <CheckCircle2 className="h-5 w-5 shrink-0 text-white" />
+                    ) : (
+                      <span className="h-5 w-5 rounded-full border-2 border-[#E2D3BE] dark:border-white/20" />
+                    )}
                   </button>
                 ))}
               </div>
             </fieldset>
           )}
 
-          {/* Navigation Buttons */}
-          <div className="mt-8 flex items-center justify-between gap-3 border-t border-[#E2D3BE] pt-6">
+          {/* Navigation Controls */}
+          <div className="mt-8 flex items-center justify-between gap-3 border-t border-[#E2D3BE] dark:border-white/10 pt-6">
             <button
               type="button"
               onClick={() => setStep((s) => Math.max(0, s - 1))}
               disabled={step === 0}
-              className="inline-flex items-center gap-2 rounded-full border border-[#E2D3BE] px-6 py-3 font-bold transition-all hover:border-[#C96745] disabled:opacity-40 min-h-[48px]"
+              className="inline-flex items-center gap-2 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#1A2221] px-6 py-3 text-xs sm:text-sm font-extrabold text-[#252A28] dark:text-[#F5F1E8] transition-all hover:border-[#C96745] disabled:opacity-40 min-h-[48px]"
             >
-              {isRtl ? <ArrowRight className="h-4 w-4" /> : <ArrowLeft className="h-4 w-4" />}{" "}
+              {isRtl ? <ArrowRight className="h-4 w-4" /> : <ArrowLeft className="h-4 w-4" />}
               {t("prev")}
             </button>
+
             {step < steps.length - 1 ? (
               <button
                 type="button"
                 onClick={() => setStep((s) => s + 1)}
-                className="inline-flex items-center gap-2 rounded-full bg-[#397C78] px-7 py-3 font-bold text-white shadow-sm transition-all hover:bg-[#2e6562] min-h-[48px]"
+                className="inline-flex items-center gap-2 rounded-full bg-[#397C78] px-8 py-3.5 text-xs sm:text-sm font-extrabold text-white shadow-lift transition-all hover:bg-[#2e6562] min-h-[48px]"
               >
                 {t("next")} {isRtl ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
               </button>
@@ -450,7 +622,7 @@ function QuickPlanPage() {
               <button
                 type="button"
                 onClick={() => build()}
-                className="inline-flex items-center gap-2 rounded-full bg-[#C96745] px-8 py-3.5 font-bold text-white shadow-lift transition-all hover:bg-[#b55837] animate-pulse-glow min-h-[48px]"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#C96745] to-[#397C78] px-9 py-3.5 text-xs sm:text-sm font-black text-white shadow-lift transition-all hover:opacity-95 animate-pulse-glow min-h-[48px]"
               >
                 <Sparkles className="h-5 w-5" /> {t("generateFinal")}
               </button>
@@ -461,13 +633,13 @@ function QuickPlanPage() {
     );
   }
 
-  /* Results Display Screen (Section 13) */
+  /* Generated Results Screen */
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <div className="animate-fade-in-up flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-[#252A28] md:text-4xl">{t("resultsHeader")}</h1>
-          <p className="mt-2 text-[#6E716C] font-semibold max-w-2xl">
+          <h1 className="text-3xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">{t("resultsHeader")}</h1>
+          <p className="mt-2 text-[#6E716C] dark:text-[#B5B8B2] font-semibold max-w-2xl">
             {t("resultsSub")}
           </p>
         </div>
@@ -492,14 +664,14 @@ function QuickPlanPage() {
           <button
             key={a.label}
             onClick={a.fn}
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#E2D3BE] bg-[#FAF6F0] px-4 py-2.5 text-sm font-bold text-[#252A28] transition-all hover:border-[#C96745] hover:shadow-sm"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] px-4 py-2.5 text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] transition-all hover:border-[#C96745] hover:shadow-sm"
           >
             <RefreshCw className="h-4 w-4 text-[#C96745]" /> {a.label}
           </button>
         ))}
       </div>
 
-      {/* 3 Plans Grid (Section 13) */}
+      {/* 3 Generated Plans Grid */}
       <div className="animate-fade-in-up delay-2 mt-8 grid gap-6 lg:grid-cols-3">
         {plans.slice(0, 3).map((plan, idx) => {
           const isSaved = isPlanSaved(plan.id);
@@ -509,7 +681,7 @@ function QuickPlanPage() {
           return (
             <article
               key={plan.id}
-              className={`surface-card flex flex-col justify-between p-6 hover-lift ${
+              className={`surface-card flex flex-col justify-between p-6 hover-lift border border-[#E2D3BE] dark:border-white/10 ${
                 idx === 1 ? "ring-2 ring-[#C96745]" : ""
               }`}
             >
@@ -525,11 +697,11 @@ function QuickPlanPage() {
                   )}
                 </div>
 
-                <h2 className="mt-4 text-2xl font-extrabold text-[#252A28]">{plan.titleAr}</h2>
-                <p className="mt-1 text-sm text-[#6E716C] font-semibold">{plan.subtitleAr}</p>
+                <h2 className="mt-4 text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">{plan.titleAr}</h2>
+                <p className="mt-1 text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">{plan.subtitleAr}</p>
 
                 {/* Timeline stops */}
-                <ol className="mt-6 space-y-4 border-t border-[#E2D3BE] pt-4">
+                <ol className="mt-6 space-y-4 border-t border-[#E2D3BE] dark:border-white/10 pt-4">
                   {plan.stops.map((stop, i) => (
                     <li key={stop.place.id} className="relative ps-7">
                       <span className="absolute start-0 top-1 grid h-5 w-5 place-items-center rounded-full bg-[#397C78] text-[11px] font-bold text-white">
@@ -539,7 +711,7 @@ function QuickPlanPage() {
                         <span className="route-dashed absolute start-[9px] top-7 bottom-[-14px]" />
                       )}
                       <div className="flex items-center justify-between">
-                        <p className="font-bold text-[#252A28]">{isRtl ? stop.place.nameAr : stop.place.nameEn}</p>
+                        <p className="font-bold text-[#252A28] dark:text-[#F5F1E8]">{isRtl ? stop.place.nameAr : stop.place.nameEn}</p>
                         <button
                           onClick={() => build()}
                           className="text-xs font-bold text-[#C96745] hover:underline"
@@ -547,10 +719,9 @@ function QuickPlanPage() {
                           {t("swapPlace")}
                         </button>
                       </div>
-                      <p className="text-xs text-[#6E716C] mt-0.5 font-medium">
+                      <p className="text-xs text-[#6E716C] dark:text-[#B5B8B2] mt-0.5 font-medium">
                         {getDistrict(stop.place.districtId).nameAr} · {stop.place.durationMin} دقيقة
                       </p>
-                      {/* Reason for selection (Section 15) */}
                       <p className="mt-1 text-[11px] text-[#71805B] font-semibold">
                         💡 اخترناه لأنه قريب وفي مسار الخطة ومناسب لميزانيتكم
                       </p>
@@ -560,7 +731,7 @@ function QuickPlanPage() {
               </div>
 
               {/* Card Footer Actions */}
-              <div className="mt-6 border-t border-[#E2D3BE] pt-4">
+              <div className="mt-6 border-t border-[#E2D3BE] dark:border-white/10 pt-4">
                 <div className="flex items-center justify-between text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] mb-4">
                   <span className="text-[#C96745] font-black">
                     {plan.pricePerPerson} {isRtl ? "ر.س / للشخص" : "SAR / person"}
@@ -586,7 +757,7 @@ function QuickPlanPage() {
                     className={`rounded-full border px-2.5 py-2 text-center text-[11px] font-bold transition-all ${
                       isSaved
                         ? "bg-[#397C78] text-white border-[#397C78]"
-                        : "border-[#E2D3BE] bg-[#FAF6F0] dark:bg-[#161B1A] text-[#252A28] dark:text-[#F5F1E8] hover:border-[#397C78]"
+                        : "border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] text-[#252A28] dark:text-[#F5F1E8] hover:border-[#397C78]"
                     }`}
                   >
                     <Star className={`inline h-3 w-3 me-1 ${isSaved ? "fill-white" : ""}`} />
