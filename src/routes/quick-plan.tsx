@@ -56,6 +56,13 @@ export const Route = createFileRoute("/quick-plan")({
   component: QuickPlanPage,
 });
 
+function stripEmoji(str: string): string {
+  if (!str) return "";
+  return str
+    .replace(/[\u{1F300}-\u{1F9FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, "")
+    .trim();
+}
+
 function OptionChip({
   active,
   emoji,
@@ -69,12 +76,15 @@ function OptionChip({
   subLabel?: string;
   onClick: () => void;
 }) {
+  const displayLabel = emoji ? stripEmoji(label) : label;
+  const displaySub = subLabel && emoji ? stripEmoji(subLabel) : subLabel;
+
   return (
     <button
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`group relative flex items-center gap-3 rounded-2xl border p-4 text-start transition-all duration-200 min-h-[56px] ${
+      className={`group relative flex items-center gap-2.5 rounded-2xl border px-3.5 py-3 text-start transition-all duration-200 min-h-[56px] ${
         active
           ? "border-[#C96745] bg-[#C96745] text-white shadow-lift ring-2 ring-[#C96745]/30 scale-[1.02]"
           : "border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#1A2221] text-[#252A28] dark:text-[#F5F1E8] hover:border-[#C96745] hover:scale-[1.01] active:scale-[0.98]"
@@ -82,7 +92,7 @@ function OptionChip({
     >
       {emoji && (
         <span
-          className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl text-lg transition-transform group-hover:scale-110 ${
+          className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl text-base transition-transform group-hover:scale-110 ${
             active ? "bg-white/20 text-white" : "bg-[#C96745]/15 text-[#C96745]"
           }`}
         >
@@ -90,15 +100,17 @@ function OptionChip({
         </span>
       )}
       <div className="flex-1 min-w-0">
-        <span className="block text-xs sm:text-sm font-extrabold leading-snug break-words">{label}</span>
-        {subLabel && (
-          <span className={`block text-[11px] font-medium mt-0.5 break-words ${active ? "text-white/80" : "text-[#6E716C] dark:text-[#B5B8B2]"}`}>
-            {subLabel}
+        <span className="block text-xs sm:text-sm font-extrabold leading-snug whitespace-nowrap overflow-hidden text-ellipsis">
+          {displayLabel}
+        </span>
+        {displaySub && (
+          <span className={`block text-[11px] font-medium mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis ${active ? "text-white/80" : "text-[#6E716C] dark:text-[#B5B8B2]"}`}>
+            {displaySub}
           </span>
         )}
       </div>
 
-      {active && <CheckCircle2 className="h-5 w-5 shrink-0 text-white" />}
+      {active && <CheckCircle2 className="h-5 w-5 shrink-0 text-white ms-auto" />}
     </button>
   );
 }
@@ -245,7 +257,7 @@ function QuickPlanPage() {
   /* Wizard Steps Input Screen */
   if (!plans) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-10">
+      <div className="mx-auto max-w-4xl px-4 py-10">
         {/* Step Header Badge */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -466,7 +478,7 @@ function QuickPlanPage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                 {[
                   { m: "food" as const, l: t("moodFood"), e: "🍽️" },
                   { m: "coffee" as const, l: t("moodCoffee"), e: "☕" },
