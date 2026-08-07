@@ -59,8 +59,8 @@ const hotspots: DiscoveryHotspot[] = [
     accentColor: "#E4A23B",
     accentBg: "rgba(228, 162, 59, 0.15)",
     image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=480&q=80",
-    position: { top: "58%", left: "8%" },
-    parallaxMultiplier: { x: 20, y: 16 },
+    position: { top: "48%", left: "16%" },
+    parallaxMultiplier: { x: 18, y: 14 },
   },
   {
     id: "balad",
@@ -526,13 +526,13 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
 
       {/* Bottom badge — Route indicator */}
       <div
-        className="absolute bottom-4 end-3 sm:bottom-6 sm:end-5 z-40 flex items-center gap-2 rounded-full bg-[#091C1A]/85 backdrop-blur-xl border border-white/15 px-3.5 py-1.5 shadow-xl animate-float-delayed"
+        className="absolute bottom-3 start-3 sm:bottom-4 sm:start-4 z-30 flex items-center gap-2 rounded-full bg-[#091C1A]/90 backdrop-blur-xl border border-white/20 px-3 py-1.5 shadow-xl animate-float-delayed pointer-events-none"
         style={{
-          transform: `translate(${mousePos.x * -12}px, ${mousePos.y * -8}px)`,
+          transform: `translate(${mousePos.x * -10}px, ${mousePos.y * -6}px)`,
         }}
       >
         <MapPin className="h-3 w-3 text-[#5EAAA5] shrink-0" />
-        <span className="text-[10px] font-extrabold text-white/85 tracking-wide">
+        <span className="text-[10px] font-extrabold text-white/90 tracking-wide">
           {isRtl ? "5 محطات · 4.5 ساعة" : "5 Stops · 4.5 Hours"}
         </span>
       </div>
