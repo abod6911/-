@@ -14,7 +14,7 @@ export function MobileTabBar() {
   ] as const;
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E2D3BE] dark:border-white/10 glass-tabbar safe-area-bottom lg:hidden transition-all duration-300 html[data-keyboard-open='true']_&]:translate-y-full html[data-keyboard-open='true']_&]:opacity-0 html[data-keyboard-open='true']_&]:pointer-events-none">
+    <nav className="mobile-tab-bar fixed inset-x-0 bottom-0 z-40 border-t border-[#E2D3BE] dark:border-white/10 glass-tabbar safe-area-bottom lg:hidden">
       <ul className="mx-auto flex max-w-md items-end justify-between px-3 py-2">
         {items.map(({ to, label, icon: Icon, ...rest }) => {
           const center = "center" in rest && rest.center;

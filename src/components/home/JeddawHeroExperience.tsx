@@ -138,16 +138,37 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
     const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (isCoarse || isReducedMotion) return;
 
-    let animationFrameId: number;
+    let animationFrameId: number | null = null;
     let targetX = 0;
     let targetY = 0;
     let currentX = 0;
     let currentY = 0;
     let isIntersecting = true;
 
-    // IntersectionObserver to pause RAF when offscreen
+    const root = document.documentElement;
+
+    const updateParallax = () => {
+      const isInputActive = root.dataset.inputFocused === "true" || root.dataset.keyboardOpen === "true";
+      
+      if (isIntersecting && document.visibilityState === "visible" && !isInputActive) {
+        currentX += (targetX - currentX) * 0.035;
+        currentY += (targetY - currentY) * 0.035;
+        setMousePos({
+          x: Math.max(-1, Math.min(1, currentX)),
+          y: Math.max(-1, Math.min(1, currentY)),
+        });
+        animationFrameId = requestAnimationFrame(updateParallax);
+      } else {
+        animationFrameId = null; // Do NOT keep RAF running when offscreen or input focused!
+      }
+    };
+
+    // IntersectionObserver to start/stop RAF cleanly
     const observer = new IntersectionObserver(([entry]) => {
       isIntersecting = entry?.isIntersecting ?? true;
+      if (isIntersecting && animationFrameId === null) {
+        animationFrameId = requestAnimationFrame(updateParallax);
+      }
     }, { threshold: 0.1 });
 
     if (containerRef.current) {
@@ -161,18 +182,10 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
       const centerY = rect.top + rect.height / 2;
       targetX = (e.clientX - centerX) / (rect.width / 2);
       targetY = (e.clientY - centerY) / (rect.height / 2);
-    };
 
-    const updateParallax = () => {
-      if (isIntersecting && document.visibilityState === "visible" && document.documentElement.dataset.keyboardOpen !== "true") {
-        currentX += (targetX - currentX) * 0.035;
-        currentY += (targetY - currentY) * 0.035;
-        setMousePos({
-          x: Math.max(-1, Math.min(1, currentX)),
-          y: Math.max(-1, Math.min(1, currentY)),
-        });
+      if (animationFrameId === null) {
+        animationFrameId = requestAnimationFrame(updateParallax);
       }
-      animationFrameId = requestAnimationFrame(updateParallax);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -180,16 +193,19 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
       observer.disconnect();
     };
   }, []);
 
-  // Auto-cycle hotspots when idle
+  // Auto-cycle hotspots when idle (Desktop fine-pointer only)
   useEffect(() => {
-    if (activeHotspot) return;
+    const isCoarse = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+    if (activeHotspot || isCoarse) return;
+
     let idx = 0;
     const interval = setInterval(() => {
+      if (document.documentElement.dataset.inputFocused === "true") return;
       idx = (idx + 1) % hotspots.length;
       setActiveHotspot(hotspots[idx]!.id);
       setTimeout(() => setActiveHotspot(null), 2800);

@@ -535,3 +535,31 @@ html[lang="ar"] label {
   }
 }
 
+/* ==========================================================================
+   Mobile Input Focus & Keyboard UI Behavior
+   ========================================================================== */
+.mobile-tab-bar,
+.ai-launcher {
+  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  will-change: opacity, transform;
+}
+
+html[data-input-focused="true"] .mobile-tab-bar,
+html[data-input-focused="true"] .ai-launcher,
+html[data-keyboard-open="true"] .mobile-tab-bar,
+html[data-keyboard-open="true"] .ai-launcher {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(120%) !important;
+}
+
+/* Mobile Visual Viewport Sheet Container */
+.mobile-visual-viewport-sheet {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: var(--vv-top, 0px) !important;
+  height: var(--vv-height, 100dvh) !important;
+  bottom: auto !important;
+}
+

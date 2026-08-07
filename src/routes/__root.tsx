@@ -85,7 +85,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "author", content: "جِدّاو | JEDDAW" },
       { property: "og:site_name", content: "جِدّاو | JEDDAW — مخطط طلعات جدة" },
       { property: "og:type", content: "website" },
@@ -126,7 +125,8 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-import { useVisualViewport } from "@/hooks/useVisualViewport";
+import { useMobileViewport } from "@/hooks/useMobileViewport";
+import { KeyboardDebugPanel } from "@/components/common/KeyboardDebugPanel";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -143,10 +143,11 @@ function RootComponent() {
 }
 
 function RootAppContent() {
-  useVisualViewport();
+  useMobileViewport();
 
   return (
     <div className="flex min-h-screen flex-col bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
+      <KeyboardDebugPanel />
       <JeddawSplashScreen />
       <SiteHeader />
       <main className="flex-1 pb-20 lg:pb-0">
