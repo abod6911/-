@@ -144,27 +144,56 @@ export function AiAssistant() {
 
   return (
     <>
-      {/* Floating Launcher Button - High-End Mobile-Optimized Capsule */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-[74px] sm:bottom-20 lg:bottom-6 end-3 sm:end-5 z-40 flex items-center gap-2 sm:gap-3 rounded-full bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] p-1 sm:p-1.5 pe-3 sm:pe-4 text-white shadow-2xl hover:scale-[1.04] active:scale-95 transition-all duration-300 ring-2 sm:ring-4 ring-[#C96745]/20 cursor-pointer group"
-        aria-label={isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}
-      >
-        <div className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white shadow-inner">
-          <Bot className="h-4.5 w-4.5 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:rotate-12" />
-          <span className="absolute top-0 end-0 h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-emerald-400 ring-2 ring-white animate-pulse" />
-        </div>
-        <div className="flex flex-col text-start">
-          <span className="text-[11px] sm:text-xs font-black tracking-wide text-white drop-shadow-sm leading-tight">
-            {isRtl ? "مساعد جِدّاو" : "JEDDAW AI"}
-          </span>
-          <span className="text-[9px] sm:text-[10px] font-semibold text-white/90 flex items-center gap-1">
-            <Sparkles className="h-2.5 w-2.5 text-amber-200" />
-            {isRtl ? "دليلك الذكي" : "Planner"}
+      {/* FLAGSHIP ULTRA-PREMIUM INTERACTIVE AI WIDGET LAUNCHER */}
+      <div className="fixed bottom-[74px] sm:bottom-20 lg:bottom-6 end-3 sm:end-6 z-40 flex items-center gap-2.5 group pointer-events-auto">
+        
+        {/* Hover/Interactive Micro-Tooltip Bubble (Desktop) */}
+        <div className="hidden md:flex items-center gap-2 rounded-2xl bg-[#091C1A]/95 text-white px-3.5 py-2 border border-white/20 shadow-2xl backdrop-blur-xl opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 pointer-events-none">
+          <Wand2 className="h-3.5 w-3.5 text-[#E4A23B] animate-spin" style={{ animationDuration: "6s" }} />
+          <span className="text-xs font-extrabold tracking-wide text-white/90">
+            {isRtl ? "اسأل الذكاء الاصطناعي..." : "Ask JEDDAW AI..."}
           </span>
         </div>
-      </button>
+
+        {/* Main Launcher Capsule Button */}
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="relative flex items-center gap-3 rounded-full bg-gradient-to-r from-[#091C1A]/95 via-[#122A27]/95 to-[#091C1A]/95 p-2 pe-4 text-white shadow-[0_12px_40px_-6px_rgba(201,103,69,0.5)] hover:shadow-[0_16px_50px_-4px_rgba(201,103,69,0.7)] hover:scale-[1.04] active:scale-95 border border-[#C96745]/50 hover:border-[#FF9D7A]/90 backdrop-blur-2xl transition-all duration-300 cursor-pointer overflow-hidden group"
+          aria-label={isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}
+        >
+          {/* Animated Ambient Glow Inner Track */}
+          <div className="absolute -inset-full bg-gradient-to-r from-transparent via-[#C96745]/25 to-transparent group-hover:animate-shimmer-line pointer-events-none" />
+
+          {/* AI Orb Icon Unit */}
+          <div className="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-gradient-to-br from-[#C96745] via-[#E4A23B] to-[#397C78] p-0.5 shadow-lg shrink-0">
+            <div className="flex h-full w-full items-center justify-center rounded-full bg-[#091C1A]/90 backdrop-blur-sm text-white transition-transform duration-300 group-hover:rotate-12">
+              <Bot className="h-5 w-5 text-[#FF9D7A]" />
+            </div>
+            {/* Live Pulsing Online Radar Dot */}
+            <span className="absolute top-0 end-0 flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-[#091C1A]" />
+            </span>
+          </div>
+
+          {/* Label Stack */}
+          <div className="flex flex-col text-start me-1">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs sm:text-sm font-black tracking-tight text-white drop-shadow-sm leading-none">
+                {isRtl ? "مساعد جِدّاو" : "JEDDAW AI"}
+              </span>
+              <span className="inline-flex items-center rounded-full bg-[#C96745]/25 px-1.5 py-0.5 text-[9px] font-black text-[#FF9D7A] border border-[#C96745]/40">
+                PRO
+              </span>
+            </div>
+            <span className="text-[10px] sm:text-[11px] font-bold text-white/75 flex items-center gap-1 mt-0.5">
+              <Sparkles className="h-3 w-3 text-[#E4A23B] animate-pulse" />
+              <span>{isRtl ? "دليلك الذكي للطلعات" : "Smart Outing Guide"}</span>
+            </span>
+          </div>
+        </button>
+      </div>
 
       {/* Modal Dialog - Glassmorphism Aesthetic */}
       {isOpen && (
