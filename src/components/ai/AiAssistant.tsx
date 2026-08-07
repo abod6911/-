@@ -72,34 +72,37 @@ export function AiAssistant() {
     setInput("");
     setIsTyping(true);
 
-    // 1. Content Moderation Check
-    const modResult = await checkContent(userText);
-    if (!modResult.allowed) {
-      setIsTyping(false);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          sender: "ai",
-          response: {
-            type: "clarification",
-            message: isRtl ? modResult.messageAr : modResult.messageEn,
-            plan: null,
-          },
-        },
-      ]);
-      return;
-    }
-
-    // 2. Intent Routing & Assistant Processor
     try {
+      // 1. Content Moderation Check
+      const modResult = await checkContent(userText);
+      if (!modResult.allowed) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: (Date.now() + 1).toString(),
+            sender: "ai",
+            response: {
+              type: "clarification",
+              message: isRtl ? modResult.messageAr : modResult.messageEn,
+              plan: null,
+            },
+          },
+        ]);
+        return;
+      }
+
+      // 2. Format history array for hybrid AI engine
+      const historyPayload = messages.map((m) => ({
+        sender: (m.sender === "user" ? "user" : "bot") as "user" | "bot",
+        text: m.text || m.response?.message || "",
+      }));
+
+      // 3. Intent Routing & Assistant Processor
       const response = await processMasterAssistantMessage({
         message: userText,
         currentPlan,
-        conversationHistory: messages,
+        conversationHistory: historyPayload,
       });
-
-      setIsTyping(false);
 
       if ((response.type === "plan" || response.type === "plan_update") && response.plan?.validated) {
         setCurrentPlan(response.plan);
@@ -114,7 +117,6 @@ export function AiAssistant() {
         },
       ]);
     } catch (e) {
-      setIsTyping(false);
       setMessages((prev) => [
         ...prev,
         {
@@ -123,12 +125,14 @@ export function AiAssistant() {
           response: {
             type: "error",
             message: isRtl
-              ? "عذراً، لم أستطع فهم الرسالة. هل تود البحث عن مكان أو إنشاء خطة طلعة؟"
-              : "Sorry, I didn't get that. Would you like to search places or build an outing plan?",
+              ? "تعذّر الاتصال بمساعد جِدّاو حالياً. تأكد من الاتصال أو حاول مرة أخرى."
+              : "Could not connect to JEDDAW AI right now. Check your connection or try again.",
             plan: null,
           },
         },
       ]);
+    } finally {
+      setIsTyping(false);
     }
   };
 

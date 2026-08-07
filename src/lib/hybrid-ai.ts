@@ -1,42 +1,25 @@
 /**
  * JEDDAW Platform — Master Hybrid AI Engine & Intent Router
  * File: src/lib/hybrid-ai.ts
+ *
+ * Bridges real conversational LLM (via ai-client.ts) with
+ * deterministic JEDDAW execution tools (plan builder, single-stop modifier, places DB).
  */
 
 import { getPlace, places, type Place } from "@/data/jeddah";
-import { normalizeInputMessage, DIALECT_MAPPINGS } from "@/lib/input-normalizer";
+import { normalizeInputMessage } from "@/lib/input-normalizer";
 import { buildPlanServerSide, modifySingleStopInPlan, type GeneratedPlan } from "@/lib/plan-builder";
-import { getCurrentPageContext } from "@/lib/context-resolver";
+import { sendAssistantMessage, type AiChatMessage, type AiStatusState } from "@/lib/ai-client";
 
 export type AssistantIntent =
+  | "chat"
   | "create_plan"
   | "modify_plan"
   | "search_places"
   | "ask_place_details"
   | "compare_places"
-  | "compare_areas"
-  | "save_plan"
-  | "share_plan"
-  | "open_route"
-  | "greeting"
-  | "help"
-  | "feedback"
   | "clarification"
-  | "unrelated"
   | "unknown";
-
-export interface IntentDecision {
-  intent: AssistantIntent;
-  confidence: number;
-  language: "ar" | "en";
-  normalizedMessage: string;
-  planSignals: string[];
-  modificationSignals: string[];
-  missingFields: string[];
-  requiresCurrentPlan: boolean;
-  shouldExecuteTool: boolean;
-  clarifyingQuestion: string;
-}
 
 export type AssistantResponse =
   | {
@@ -44,12 +27,14 @@ export type AssistantResponse =
       message: string;
       suggestedReplies?: string[];
       plan: null;
+      aiStatus?: AiStatusState;
     }
   | {
       type: "clarification";
       message: string;
       suggestedReplies?: string[];
       plan: null;
+      aiStatus?: AiStatusState;
     }
   | {
       type: "place_results";
@@ -57,12 +42,14 @@ export type AssistantResponse =
       places: Place[];
       suggestedReplies?: string[];
       plan: null;
+      aiStatus?: AiStatusState;
     }
   | {
       type: "plan";
       message: string;
       suggestedReplies?: string[];
       plan: GeneratedPlan;
+      aiStatus?: AiStatusState;
     }
   | {
       type: "plan_update";
@@ -70,161 +57,14 @@ export type AssistantResponse =
       changedStops: string[];
       suggestedReplies?: string[];
       plan: GeneratedPlan;
+      aiStatus?: AiStatusState;
     }
   | {
       type: "error";
       message: string;
       plan: null;
+      aiStatus?: AiStatusState;
     };
-
-const SUPABASE_URL = (import.meta as any).env?.VITE_SUPABASE_URL || "https://your-supabase-project.supabase.co";
-const SUPABASE_ANON_KEY = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || "";
-
-const PLAN_SIGNALS_REGEX =
-  /(سويلي خطة|اعمل لي خطة|رتب لي طلعة|وين أروح اليوم|بدي طلعة|اقترح لي برنامج|خطة عائلية|طلعة مع الشباب|مطعم وبعده كافيه|عندي \d+ ساعات|ميزانيتي|الليلة وين نروح|خطة طلعة|plan an outing|build me a plan|where should I go tonight|create an itinerary|make me a plan)/i;
-
-const GREETING_REGEX =
-  /^(هلا|مرحبا|مرحباً|أهلا|أهلاً|سلام|السلام عليكم|صباح الخير|مساء الخير|hi|hello|hey|greetings|good morning|good evening)$/i;
-
-const SEARCH_PLACES_REGEX =
-  /(مطعم|مطاعم|كافيه|كافيهات|قهوة|فندق|فنادق|شاطئ|شواطئ|ألعاب|كارتينج|منتجع|منتجعات|بروستد|أسماك|مشاوي|أماكن|مكان|استكشاف|search|cafes|places|explore)/i;
-
-const MODIFY_COMMANDS_REGEX =
-  /(خلها أرخص|خلّها أرخص|قرّب الأماكن|بدّل المطعم|بدل المطعم|أضف كافيه|احذف النشاط|اجعلها داخلية|مناسبة للأطفال|أرخص|غير المطعم|make it cheaper|closer places)/i;
-
-export function classifyAssistantIntent(
-  rawPrompt: string,
-  hasCurrentPlan: boolean = false
-): IntentDecision {
-  const norm = normalizeInputMessage(rawPrompt);
-  const words = norm.normalizedMessage.split(/\s+/).filter(Boolean);
-  const isEn = norm.detectedLanguage === "en";
-
-  const planSignals: string[] = [];
-  const pMatch = rawPrompt.match(PLAN_SIGNALS_REGEX);
-  if (pMatch) planSignals.push(pMatch[0]);
-
-  const modSignals: string[] = [];
-  const mMatch = rawPrompt.match(MODIFY_COMMANDS_REGEX);
-  if (mMatch) modSignals.push(mMatch[0]);
-
-  // 1. Search places intent
-  if (SEARCH_PLACES_REGEX.test(norm.normalizedMessage) && planSignals.length === 0) {
-    return {
-      intent: "search_places",
-      confidence: 0.92,
-      language: isEn ? "en" : "ar",
-      normalizedMessage: norm.normalizedMessage,
-      planSignals: [],
-      modificationSignals: [],
-      missingFields: [],
-      requiresCurrentPlan: false,
-      shouldExecuteTool: true,
-      clarifyingQuestion: isEn
-        ? "Here are top recommended cafes and spots in Jeddah for you:"
-        : "إليك أفضل الكافيهات والأماكن المميزة الموصى بها في جدة:",
-    };
-  }
-
-  // 2. Ambiguous / Short (< 3 words) without explicit plan signals
-  if (words.length < 3 && planSignals.length === 0) {
-    if (GREETING_REGEX.test(norm.normalizedMessage)) {
-      return {
-        intent: "greeting",
-        confidence: 0.95,
-        language: isEn ? "en" : "ar",
-        normalizedMessage: norm.normalizedMessage,
-        planSignals: [],
-        modificationSignals: [],
-        missingFields: [],
-        requiresCurrentPlan: false,
-        shouldExecuteTool: false,
-        clarifyingQuestion: isEn
-          ? "Hello! 🌸 How can I help you in Jeddah today? (e.g. Restaurants, Cafes, or Outing Plan)"
-          : "أهلاً وسهلاً بك! 🌸 كيف أقدر أساعدك اليوم في جدة؟ (مثلاً: مطاعم، كافيهات، أو خطة طلعة متكاملة)",
-      };
-    }
-
-    if (hasCurrentPlan && modSignals.length > 0) {
-      return {
-        intent: "modify_plan",
-        confidence: 0.9,
-        language: isEn ? "en" : "ar",
-        normalizedMessage: norm.normalizedMessage,
-        planSignals: [],
-        modificationSignals: modSignals,
-        missingFields: [],
-        requiresCurrentPlan: true,
-        shouldExecuteTool: true,
-        clarifyingQuestion: "",
-      };
-    }
-
-    // Ambiguous word like "كيس"
-    return {
-      intent: "unknown",
-      confidence: 0.2,
-      language: isEn ? "en" : "ar",
-      normalizedMessage: norm.normalizedMessage,
-      planSignals: [],
-      modificationSignals: [],
-      missingFields: ["intent_clarification"],
-      requiresCurrentPlan: false,
-      shouldExecuteTool: false,
-      clarifyingQuestion: isEn
-        ? `I'm not sure what you mean by "${rawPrompt}". Would you like to create an outing plan, search for a place, or edit an existing plan?`
-        : `ما فهمت قصدك تماماً من كلمة «${rawPrompt}». هل تريد إنشاء خطة طلعة، البحث عن مكان، أو تعديل خطة موجودة؟`,
-    };
-  }
-
-  // 3. Explicit Plan Creation Request
-  if (planSignals.length > 0) {
-    return {
-      intent: "create_plan",
-      confidence: 0.95,
-      language: isEn ? "en" : "ar",
-      normalizedMessage: norm.normalizedMessage,
-      planSignals,
-      modificationSignals: [],
-      missingFields: [],
-      requiresCurrentPlan: false,
-      shouldExecuteTool: true,
-      clarifyingQuestion: "",
-    };
-  }
-
-  // 4. Modification Request with Active Plan
-  if (hasCurrentPlan && modSignals.length > 0) {
-    return {
-      intent: "modify_plan",
-      confidence: 0.88,
-      language: isEn ? "en" : "ar",
-      normalizedMessage: norm.normalizedMessage,
-      planSignals: [],
-      modificationSignals: modSignals,
-      missingFields: [],
-      requiresCurrentPlan: true,
-      shouldExecuteTool: true,
-      clarifyingQuestion: "",
-    };
-  }
-
-  // Default Clarification
-  return {
-    intent: "unknown",
-    confidence: 0.4,
-    language: isEn ? "en" : "ar",
-    normalizedMessage: norm.normalizedMessage,
-    planSignals: [],
-    modificationSignals: [],
-    missingFields: ["intent"],
-    requiresCurrentPlan: false,
-    shouldExecuteTool: false,
-    clarifyingQuestion: isEn
-      ? "Would you like to build a full outing plan or search for specific spots in Jeddah?"
-      : "هل تود أن أرتب لك خطة طلعة متكاملة، أم تبحث عن أماكن ومطاعم معينة في جدة؟",
-  };
-}
 
 export async function processMasterAssistantMessage({
   message,
@@ -233,148 +73,193 @@ export async function processMasterAssistantMessage({
 }: {
   message: string;
   currentPlan?: GeneratedPlan | null;
-  conversationHistory?: any[];
+  conversationHistory?: Array<{ sender: "user" | "bot"; text: string }>;
 }): Promise<AssistantResponse> {
-  const hasPlan = Boolean(currentPlan && currentPlan.validated);
-  const decision = classifyAssistantIntent(message, hasPlan);
+  const norm = normalizeInputMessage(message);
+  const isEn = norm.detectedLanguage === "en";
 
-  console.log({
-    originalMessage: message,
-    normalizedMessage: decision.normalizedMessage,
-    detectedIntent: decision.intent,
-    confidence: decision.confidence,
-    planSignals: decision.planSignals,
-    shouldBuildPlan: decision.intent === "create_plan",
-    hasCurrentPlan: hasPlan,
-    actionExecuted: decision.shouldExecuteTool ? decision.intent : "ask_clarification",
+  // 1. Format clean conversation history for AI client
+  const formattedHistory: AiChatMessage[] = conversationHistory
+    .slice(-6)
+    .filter((m) => m && m.text)
+    .map((m) => ({
+      role: m.sender === "user" ? "user" : "assistant",
+      content: m.text,
+    }));
+
+  // 2. Build compact candidate places list (max 15 places)
+  const candidatePlaces = places.slice(0, 15).map((p) => ({
+    id: p.id,
+    nameAr: p.nameAr,
+    nameEn: p.nameEn,
+    kind: p.kind,
+    area: p.districtId,
+    budget: p.pricePerPerson,
+    moods: p.moods,
+    kidsFriendly: p.kidsFriendly,
+    indoor: p.indoor,
+  }));
+
+  // 3. Compact current plan summary
+  const currentPlanSummary = currentPlan && currentPlan.validated
+    ? `Title: ${currentPlan.titleAr}, Stops: ${currentPlan.stops.map((s) => s.place.nameAr).join(" -> ")}, Cost: ${currentPlan.estimatedCostMin} SAR`
+    : "";
+
+  // 4. Call Real Server-Side AI Backend
+  const aiResult = await sendAssistantMessage({
+    prompt: message,
+    conversationHistory: formattedHistory,
+    candidatePlaces,
+    currentPlanSummary,
   });
 
-  const isEn = decision.language === "en";
-
-  // Handle Search Places Intent Directly
-  if (decision.intent === "search_places") {
-    const q = decision.normalizedMessage;
-    let matchedPlaces: Place[] = [];
-
-    if (q.includes("كافيه") || q.includes("قهوة") || q.includes("حلى")) {
-      matchedPlaces = places.filter((p) => p.kind === "cafe");
-    } else if (q.includes("مطعم") || q.includes("أكل") || q.includes("عشا") || q.includes("غدا")) {
-      matchedPlaces = places.filter((p) => p.kind === "food");
-    } else if (q.includes("شاطئ") || q.includes("بحر") || q.includes("منتجع")) {
-      matchedPlaces = places.filter((p) => p.kind === "resort" || p.moods.includes("sea"));
-    } else {
-      matchedPlaces = places.slice(0, 4);
-    }
-
-    if (matchedPlaces.length === 0) matchedPlaces = places.slice(0, 3);
-
+  // Handle Timeout
+  if (!aiResult.ok && aiResult.errorMessage === "TIMEOUT") {
     return {
-      type: "place_results",
-      message: decision.clarifyingQuestion,
-      places: matchedPlaces,
-      suggestedReplies: isEn
-        ? ["Create an outing plan 🗓️", "Explore North Corniche 🌊", "Search fine dining 🍽️"]
-        : ["إنشاء خطة طلعة 🗓️", "استكشاف الكورنيش الشمالي 🌊", "مطاعم فاخرة 🍽️"],
+      type: "error",
+      message: isEn
+        ? "The response is taking longer than expected. Please try again."
+        : "تأخر الرد أكثر من المتوقع. جرّب مرة ثانية.",
       plan: null,
+      aiStatus: "offline",
     };
   }
 
-  // Handle Partial Single-Stop Modification WITH active plan
-  if (decision.intent === "modify_plan" && hasPlan && currentPlan) {
-    const isCheaper = message.includes("أرخص") || message.includes("cheaper");
-    const isIndoor = message.includes("داخلية") || message.includes("indoor");
+  // 5. IF AI Call Succeeded -> Route LLM Intent to JEDDAW Execution Tools
+  if (aiResult.ok && aiResult.message) {
+    const intent = aiResult.intent || "chat";
 
-    const modResult = modifySingleStopInPlan(
-      currentPlan,
-      "food",
-      isCheaper ? "cheaper" : isIndoor ? "indoor" : "swap"
-    );
+    // Intent A: Search Places
+    if (intent === "search_places") {
+      const searchKinds = aiResult.search?.kinds || [];
+      const searchQuery = (aiResult.search?.query || message).toLowerCase();
 
-    return {
-      type: "plan_update",
-      message: isEn ? modResult.changeSummaryEn : modResult.changeSummaryAr,
-      changedStops: ["stop-2"],
-      suggestedReplies: isEn
-        ? ["Make it cheaper 💰", "Closer places 📍", "Add cafe ☕"]
-        : ["خلّها أرخص 💰", "قرّب الأماكن 📍", "أضف كافيه ☕"],
-      plan: modResult.newPlan,
-    };
-  }
+      let matched = places.filter((p) => {
+        if (searchKinds.length > 0 && searchKinds.includes(p.kind)) return true;
+        if (p.nameAr.includes(searchQuery) || p.nameEn.toLowerCase().includes(searchQuery)) return true;
+        return false;
+      });
 
-  // Strict Gate: Can ONLY build plan if create_plan WITH planSignals
-  const canBuildPlan = decision.intent === "create_plan" && decision.confidence >= 0.78 && decision.planSignals.length > 0;
+      if (matched.length === 0) matched = places.slice(0, 4);
 
-  if (!canBuildPlan) {
-    if (decision.intent === "greeting") {
       return {
-        type: "message",
-        message: decision.clarifyingQuestion,
-        suggestedReplies: isEn
-          ? ["Create a plan 🗓️", "Search cafes ☕", "Explore Jeddah 🌊"]
-          : ["إنشاء خطة 🗓️", "البحث عن كافيهات ☕", "استكشاف جدة 🌊"],
+        type: "place_results",
+        message: aiResult.message,
+        places: matched.slice(0, 6),
+        suggestedReplies: aiResult.suggestedReplies || [
+          isEn ? "Create plan 🗓️" : "سويلي خطة 🗓️",
+          isEn ? "Search cafes ☕" : "كافيهات رايقة ☕",
+        ],
         plan: null,
+        aiStatus: "configured",
       };
     }
 
+    // Intent B: Create Plan -> Execute Deterministic JEDDAW Plan Builder
+    if (intent === "create_plan") {
+      const prefs = aiResult.extractedPreferences || {};
+      const newPlan = buildPlanServerSide({
+        groupType: prefs.groupType,
+        budgetScope: prefs.budgetMax ? (prefs.budgetMax <= 60 ? "economy" : prefs.budgetMax >= 150 ? "premium" : "balanced") : undefined,
+        area: prefs.area,
+        moods: prefs.moods,
+      });
+
+      return {
+        type: "plan",
+        message: aiResult.message,
+        suggestedReplies: aiResult.suggestedReplies || [
+          isEn ? "Make it cheaper 💰" : "خلّها أرخص 💰",
+          isEn ? "Swap restaurant 🍽️" : "بدّل المطعم 🍽️",
+        ],
+        plan: newPlan,
+        aiStatus: "configured",
+      };
+    }
+
+    // Intent C: Modify Active Plan -> Execute JEDDAW Single Stop Modifier
+    if (intent === "modify_plan" && currentPlan && currentPlan.validated) {
+      const mod = aiResult.modification || {};
+      const action = mod.action || "swap";
+      const targetKind = mod.targetKind || "food";
+
+      const modResult = modifySingleStopInPlan(currentPlan, targetKind as any, action as any);
+
+      return {
+        type: "plan_update",
+        message: aiResult.message || (isEn ? modResult.changeSummaryEn : modResult.changeSummaryAr),
+        changedStops: ["stop-2"],
+        suggestedReplies: aiResult.suggestedReplies || [
+          isEn ? "Make it cheaper 💰" : "خلّها أرخص 💰",
+          isEn ? "Add cafe ☕" : "أضف كافيه ☕",
+        ],
+        plan: modResult.newPlan,
+        aiStatus: "configured",
+      };
+    }
+
+    // Intent D: Conversational Chat / Greeting / Clarification
     return {
-      type: "clarification",
-      message: decision.clarifyingQuestion,
-      suggestedReplies: isEn
-        ? ["Create a plan 🗓️", "Search cafes ☕", "Explore Jeddah 🌊"]
-        : ["إنشاء خطة جديدة 🗓️", "البحث عن كافيهات وأماكن ☕", "استكشاف جدة 🌊"],
+      type: intent === "clarification" ? "clarification" : "message",
+      message: aiResult.message,
+      suggestedReplies: aiResult.suggestedReplies || [
+        isEn ? "Create plan 🗓️" : "سويلي خطة 🗓️",
+        isEn ? "Explore places 🌊" : "استكشف أماكن جدة 🌊",
+      ],
       plan: null,
+      aiStatus: "configured",
     };
   }
 
-  // Edge Function call for plan generation
-  if (SUPABASE_ANON_KEY && !SUPABASE_URL.includes("your-supabase-project")) {
-    try {
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/jeddaw-ai-assistant`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({
-          prompt: message,
-          conversationHistory: conversationHistory.slice(-6),
-          intentDecision: decision,
-        }),
-      });
+  // 6. Local Fallback Execution (When Edge Function is Unconfigured or Offline)
+  // Transparently inform the user without claiming fake LLM verification
+  const isUnconfigured = aiResult.statusState === "unconfigured";
 
-      if (res.ok) {
-        const data = await res.json();
-        if (data.plan && data.plan.stops) {
-          return {
-            type: "plan",
-            message: data.assistantMessage || (isEn ? "Here is your plan:" : "إليك خطة طلعتك:"),
-            suggestedReplies: isEn
-              ? ["Make it cheaper 💰", "Closer places 📍", "Swap restaurant 🍽️"]
-              : ["خلّها أرخص 💰", "قرّب الأماكن 📍", "بدّل المطعم 🍽️"],
-            plan: {
-              ...data.plan,
-              validated: true,
-            },
-          };
-        }
-      }
-    } catch (e) {
-      console.warn("[Hybrid AI Client] Edge Function call failed. Executing local plan builder.", e);
-    }
+  // Simple local intent classification for fallback
+  const isSearch = /(مطعم|مطاعم|كافيه|كافيهات|قهوة|أماكن|search|cafe)/i.test(message);
+  const isPlanReq = /(خطة|طلعة|سويلي|اعمل|ميزانيتي|plan|outing)/i.test(message);
+
+  if (isSearch) {
+    const matched = places.slice(0, 4);
+    return {
+      type: "place_results",
+      message: isEn
+        ? "Here are top spots listed in JEDDAW:"
+        : "إليك أبرز الأماكن المتاحة في جِدّاو:",
+      places: matched,
+      suggestedReplies: [isEn ? "Build plan 🗓️" : "سوّ لي خطة 🗓️"],
+      plan: null,
+      aiStatus: aiResult.statusState,
+    };
   }
 
-  // Local Deterministic Server-Side Plan Builder Fallback
-  const newPlan = buildPlanServerSide({});
+  if (isPlanReq) {
+    const fallbackPlan = buildPlanServerSide({});
+    return {
+      type: "plan",
+      message: isEn
+        ? "I built a plan using the places currently available in JEDDAW."
+        : "جهّزت لك خطة باستخدام أماكن جِدّاو المتاحة حالياً.",
+      suggestedReplies: [isEn ? "Make it cheaper" : "خلّها أرخص"],
+      plan: fallbackPlan,
+      aiStatus: aiResult.statusState,
+    };
+  }
+
   return {
-    type: "plan",
-    message: isEn
-      ? "Here is your custom itinerary built from JEDDAW verified places:"
-      : "إليك خطة الطلعة الموزونة والمحسوبة من أماكن جِدّاو المعتمدة:",
+    type: "message",
+    message: isUnconfigured
+      ? isEn
+        ? "JEDDAW AI service is not connected to a server key yet. I can still help you search places and build local plans!"
+        : "مساعد جِدّاو الذكي غير مربوط بخدمة الذكاء الاصطناعي بعد. لكن أقدر أساعدك في البحث عن أماكن وتجهيز خطط طلباتك محلياً!"
+      : isEn
+      ? "I couldn't reach the AI service right now. Would you like to search places or build a local plan?"
+      : "عذراً، لم أتمكن من الاتصال بخدمة الذكاء الاصطناعي حالياً. هل تريد البحث عن أماكن أو إنشاء خطة محلياً؟",
     suggestedReplies: [
-      isEn ? "Make it cheaper" : "خلّها أرخص",
-      isEn ? "Closer places" : "قرّب الأماكن",
-      isEn ? "Swap restaurant" : "بدّل المطعم",
+      isEn ? "Build plan 🗓️" : "إنشاء خطة 🗓️",
+      isEn ? "Explore places 🌊" : "استكشاف جدة 🌊",
     ],
-    plan: newPlan,
+    plan: null,
+    aiStatus: aiResult.statusState,
   };
 }

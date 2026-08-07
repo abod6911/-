@@ -91,12 +91,18 @@ export async function fetchModerationTerms(): Promise<ModerationTerm[]> {
   }
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+
     const res = await fetch(`${SUPABASE_URL}/rest/v1/moderation_terms?is_active=eq.true`, {
       headers: {
         apikey: SUPABASE_ANON_KEY,
         Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
       },
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (res.ok) {
       const data: ModerationTerm[] = await res.json();
@@ -105,7 +111,7 @@ export async function fetchModerationTerms(): Promise<ModerationTerm[]> {
       return data;
     }
   } catch (err) {
-    console.warn("[Moderation] Dynamic DB term fetch warning:", err);
+    console.warn("[Moderation] Dynamic DB term fetch skipped/timed out:", err);
   }
 
   return termsCache;

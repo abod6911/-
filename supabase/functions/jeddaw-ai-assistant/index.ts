@@ -1,9 +1,10 @@
 // ============================================================================
-// JEDDAW Platform — Supabase Edge Function: Hybrid AI Assistant
+// JEDDAW Platform — Supabase Edge Function: Real Conversational AI Assistant
 // File: supabase/functions/jeddaw-ai-assistant/index.ts
 //
-// Model: gemini-1.5-flash / gemini-2.0-flash-lite
-// Secret: GEMINI_API_KEY (stored safely in Supabase Edge Function Secrets)
+// Provider Support: Gemini / OpenAI (configured via server secrets)
+// Secrets: GEMINI_API_KEY or OPENAI_API_KEY (stored safely in Supabase Edge Secrets)
+// Environment: AI_PROVIDER (default: "gemini"), AI_MODEL (default: "gemini-1.5-flash")
 // ============================================================================
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
@@ -11,332 +12,128 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
 
-// ============================================================================
-// Saudi & Regional Dialect Lexicon Dictionary
-// ============================================================================
-const DIALECT_DICTIONARY: Record<string, { mood?: string; budgetScope?: string; groupType?: string; indoor?: boolean; kind?: string }> = {
-  "رايق": { mood: "calm" },
-  "روقان": { mood: "calm" },
-  "هدوء": { mood: "calm" },
-  "كشخة": { budgetScope: "premium" },
-  "فخم": { budgetScope: "premium" },
-  "دلع": { budgetScope: "premium" },
-  "vip": { budgetScope: "premium" },
-  "رخيص": { budgetScope: "economy" },
-  "على قد اليد": { budgetScope: "economy" },
-  "اقتصادي": { budgetScope: "economy" },
-  "عيال": { groupType: "family" },
-  "بزارين": { groupType: "family" },
-  "أطفال": { groupType: "family" },
-  "شباب": { groupType: "friends" },
-  "شلة": { groupType: "friends" },
-  "بحر": { mood: "sea" },
-  "غروب": { mood: "sea" },
-  "مكيف": { indoor: true },
-  "داخل": { indoor: true },
-  "وناسة": { mood: "adventure" },
-  "حماس": { mood: "games" },
-  "لعب": { mood: "games" },
-  "تمشية": { kind: "outdoor" },
-  "قهوة": { kind: "cafe", mood: "coffee" },
-  "كافيه": { kind: "cafe", mood: "coffee" },
-  "حلى": { kind: "cafe", mood: "coffee" },
-  "عشا": { kind: "food", mood: "food" },
-  "غدا": { kind: "food", mood: "food" },
-  "أكل": { kind: "food", mood: "food" },
-};
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
 
-// Hardcoded verified Places database snapshot for Edge Function rule-based engine & fallback
-const DATABASE_PLACES = [
-  {
-    id: "r1",
-    nameAr: "مطعم البيك (فرع الزهراء وطريق الملك)",
-    nameEn: "Albaik (Al Zahra & King Road)",
-    kind: "food",
-    categoryAr: "مطاعم",
-    districtId: "zahra",
-    moods: ["food"],
-    pricePerPerson: 22,
-    durationMin: 40,
-    indoor: true,
-    groups: ["family", "friends", "solo", "kids"],
-    kidsFriendly: true,
-    reservation: false,
-    verified: true,
-    accessible: true,
-    opensAt: 10,
-    closesAt: 26,
-    rating: 4.9,
-    viewsCount: 28500,
-    image: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "r2",
-    nameAr: "مطعم خيال للمشاوي الشامية (الأندلس)",
-    nameEn: "Khayal Levantine Grill (Al Andalus)",
-    kind: "food",
-    categoryAr: "مطاعم",
-    districtId: "central",
-    moods: ["food", "calm"],
-    pricePerPerson: 95,
-    durationMin: 80,
-    indoor: true,
-    groups: ["family", "friends", "couple", "coworkers"],
-    kidsFriendly: true,
-    reservation: true,
-    verified: true,
-    accessible: true,
-    opensAt: 12,
-    closesAt: 25,
-    rating: 4.9,
-    viewsCount: 22400,
-    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "r3",
-    nameAr: "مطعم قدورة للأسماك البحرية (الحمراء)",
-    nameEn: "Gaddoura Seafood (Al Hamra)",
-    kind: "food",
-    categoryAr: "مطاعم",
-    districtId: "hamra",
-    moods: ["food", "sea"],
-    pricePerPerson: 130,
-    durationMin: 90,
-    indoor: true,
-    groups: ["family", "friends", "couple", "tourist"],
-    kidsFriendly: true,
-    reservation: true,
-    verified: true,
-    accessible: true,
-    opensAt: 13,
-    closesAt: 25,
-    rating: 4.8,
-    viewsCount: 19800,
-    image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "c1",
-    nameAr: "كافيه برو 92 للقهوة المختصة (الخالدية)",
-    nameEn: "Brew 92 Specialty Coffee (Al Khalidiya)",
-    kind: "cafe",
-    categoryAr: "كافيهات",
-    districtId: "central",
-    moods: ["coffee", "calm"],
-    pricePerPerson: 40,
-    durationMin: 60,
-    indoor: true,
-    groups: ["solo", "friends", "couple", "coworkers"],
-    kidsFriendly: true,
-    reservation: false,
-    verified: true,
-    accessible: true,
-    opensAt: 6,
-    closesAt: 25,
-    rating: 4.9,
-    viewsCount: 24100,
-    image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "c2",
-    nameAr: "مقهى ومحمصة ميدد التراثي (جدة التاريخية)",
-    nameEn: "Medd Coffee & Roastery (Historic Balad)",
-    kind: "cafe",
-    categoryAr: "كافيهات",
-    districtId: "balad",
-    moods: ["coffee", "culture", "calm"],
-    pricePerPerson: 35,
-    durationMin: 60,
-    indoor: true,
-    groups: ["solo", "friends", "couple", "tourist"],
-    kidsFriendly: true,
-    reservation: false,
-    verified: true,
-    accessible: false,
-    opensAt: 7,
-    closesAt: 24,
-    rating: 4.9,
-    viewsCount: 18900,
-    image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "c3",
-    nameAr: "كافيه أفرست أوفردوز البحر (الكورنيش الشمالي)",
-    nameEn: "Overdose Coffee (North Corniche)",
-    kind: "cafe",
-    categoryAr: "كافيهات",
-    districtId: "corniche",
-    moods: ["coffee", "sea"],
-    pricePerPerson: 38,
-    durationMin: 50,
-    indoor: true,
-    groups: ["friends", "couple", "solo", "tourist"],
-    kidsFriendly: true,
-    reservation: false,
-    verified: true,
-    accessible: true,
-    opensAt: 6,
-    closesAt: 26,
-    rating: 4.8,
-    viewsCount: 21500,
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "p1",
-    nameAr: "حلبة إن-نايت كارتينج وأركيد (الروضة)",
-    nameEn: "In10so Karting & Arcade (Al Rawdah)",
-    kind: "activity",
-    categoryAr: "ألعاب ومغامرات",
-    districtId: "rawdah",
-    moods: ["games", "adventure"],
-    pricePerPerson: 120,
-    durationMin: 90,
-    indoor: true,
-    groups: ["friends", "coworkers", "family", "kids"],
-    kidsFriendly: true,
-    reservation: false,
-    verified: true,
-    accessible: true,
-    opensAt: 16,
-    closesAt: 25,
-    rating: 4.8,
-    viewsCount: 23100,
-    image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "p2",
-    nameAr: "مركز الغوص السعودي - بحر أبحر",
-    nameEn: "Red Sea Diving Center (Obhur)",
-    kind: "outdoor",
-    categoryAr: "بحر ومغامرة",
-    districtId: "obhur",
-    moods: ["sea", "adventure"],
-    pricePerPerson: 280,
-    durationMin: 150,
-    indoor: false,
-    groups: ["friends", "couple", "tourist", "solo"],
-    kidsFriendly: false,
-    reservation: true,
-    verified: true,
-    accessible: false,
-    opensAt: 8,
-    closesAt: 18,
-    rating: 4.9,
-    viewsCount: 27400,
-    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: "p3",
-    nameAr: "منطقة البلد التاريخية وبيت ناصيف",
-    nameEn: "Historic Al Balad & Nasseef House",
-    kind: "culture",
-    categoryAr: "ثقافة وتاريخ",
-    districtId: "balad",
-    moods: ["culture", "calm"],
-    pricePerPerson: 0,
-    durationMin: 120,
-    indoor: false,
-    groups: ["family", "friends", "couple", "tourist", "solo"],
-    kidsFriendly: true,
-    reservation: false,
-    verified: true,
-    accessible: false,
-    opensAt: 9,
-    closesAt: 24,
-    rating: 4.9,
-    viewsCount: 35200,
-    image: "https://images.unsplash.com/photo-1578895210405-907db48a7111?auto=format&fit=crop&w=800&q=80",
-  },
-];
+interface RequestBody {
+  prompt: string;
+  conversationHistory?: ChatMessage[];
+  candidatePlaces?: Array<{
+    id: string;
+    nameAr: string;
+    nameEn: string;
+    kind: string;
+    area: string;
+    budget: number;
+    moods: string[];
+    kidsFriendly: boolean;
+    indoor: boolean;
+  }>;
+  currentPlanSummary?: string;
+}
 
-serve(async (req) => {
+serve(async (req: Request) => {
+  // 1. Handle CORS Preflight Options
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  try {
-    const { prompt, conversationHistory = [], intentDecision = {} } = await req.json();
+  // 2. Health Check Endpoint (GET /?health=1)
+  const url = new URL(req.url);
+  if (req.method === "GET" || url.searchParams.get("health") === "1") {
+    const provider = Deno.env.get("AI_PROVIDER") || "gemini";
+    const model = Deno.env.get("AI_MODEL") || "gemini-1.5-flash";
+    const geminiKey = Deno.env.get("GEMINI_API_KEY");
+    const openaiKey = Deno.env.get("OPENAI_API_KEY");
+    const isConfigured = Boolean((provider === "openai" ? openaiKey : geminiKey) || geminiKey || openaiKey);
 
-    if (!prompt || typeof prompt !== "string") {
+    return new Response(
+      JSON.stringify({
+        ok: true,
+        providerConfigured: isConfigured,
+        provider,
+        model,
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
+  }
+
+  if (req.method !== "POST") {
+    return new Response(JSON.stringify({ error: { code: "METHOD_NOT_ALLOWED", message: "Only POST requests allowed" } }), {
+      status: 405,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
+  try {
+    const body: RequestBody = await req.json();
+    const { prompt, conversationHistory = [], candidatePlaces = [], currentPlanSummary = "" } = body;
+
+    if (!prompt || typeof prompt !== "string" || !prompt.trim()) {
       return new Response(
-        JSON.stringify({ error: "Missing prompt parameter" }),
+        JSON.stringify({ error: { code: "INVALID_PROMPT", message: "Prompt string is required." } }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const isEn = intentDecision.language === "en";
+    const provider = Deno.env.get("AI_PROVIDER") || "gemini";
+    const modelName = Deno.env.get("AI_MODEL") || (provider === "openai" ? "gpt-4o-mini" : "gemini-1.5-flash");
+    const geminiKey = Deno.env.get("GEMINI_API_KEY");
+    const openaiKey = Deno.env.get("OPENAI_API_KEY");
+    const apiKey = provider === "openai" ? openaiKey : (geminiKey || openaiKey);
 
-    // Server Protection Gate: Can ONLY build plan if create_plan OR modify_plan
-    const canBuildPlan =
-      (intentDecision.intent === "create_plan" && intentDecision.confidence >= 0.78 && intentDecision.shouldBuildPlan && intentDecision.planSignals?.length > 0) ||
-      (intentDecision.intent === "modify_plan");
-
-    if (!canBuildPlan) {
-      const clarificationResponse = {
-        type: "clarification",
-        message:
-          intentDecision.clarifyingQuestion ||
-          (isEn
-            ? `I'm not sure what you mean by "${prompt}". Would you like to create an outing plan, search for a place, or edit an existing plan?`
-            : `ما فهمت قصدك تماماً من كلمة «${prompt}». هل تريد إنشاء خطة طلعة، البحث عن مكان، أو تعديل خطة موجودة؟`),
-        suggestedReplies: isEn
-          ? ["Create a plan 🗓️", "Search cafes ☕", "Explore Jeddah 🌊"]
-          : ["إنشاء خطة جديدة 🗓️", "البحث عن كافيهات وأماكن ☕", "استكشاف جدة 🌊"],
-        plan: null,
-      };
-
-      return new Response(JSON.stringify(clarificationResponse), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    // If server AI secrets are missing, return unconfigured status cleanly
+    if (!apiKey) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "AI_NOT_CONFIGURED",
+            message: "JEDDAW AI server secret key is not configured in Supabase environment secrets.",
+          },
+          providerConfigured: false,
+        }),
+        {
+          status: 503,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
 
-    // 1. Dialect Pre-Processing & Intent Enrichment
-    const enrichedParams = parseDialectKeywords(prompt, {});
+    // 3. Call LLM Provider Adapter
+    let llmResponse: any = null;
 
-    // 2. Try Gemini API Request with Fallback Protection
-    const apiKey = Deno.env.get("GEMINI_API_KEY");
-    let geminiResponse: any = null;
-    let isFallback = false;
-
-    if (apiKey) {
-      try {
-        geminiResponse = await callGeminiFlashApi(apiKey, prompt, conversationHistory, enrichedParams);
-      } catch (err) {
-        console.warn("[Hybrid AI] Gemini API call failed or quota exceeded. Switching to Rule-Based Engine Fallback.", err);
-        isFallback = true;
-      }
+    if (provider === "openai") {
+      llmResponse = await callOpenAIAdapter(apiKey, modelName, prompt, conversationHistory, candidatePlaces, currentPlanSummary);
     } else {
-      isFallback = true;
+      llmResponse = await callGeminiAdapter(apiKey, modelName, prompt, conversationHistory, candidatePlaces, currentPlanSummary);
     }
 
-    // 3. If Gemini failed or no API Key, execute Deterministic Rule-Based Engine
-    let finalResult: any = null;
-    if (isFallback || !geminiResponse) {
-      finalResult = executeDeterministicFallback(prompt, enrichedParams);
-    } else {
-      finalResult = geminiResponse;
-    }
+    // 4. Validate & Sanitize Model JSON
+    const safeOutput = sanitizeAiOutput(llmResponse, prompt);
 
-    // 4. Validation Layer: Re-validate placeIds & prices against database
-    const validatedResult = validateAndSanitizeResult(finalResult);
-
-    return new Response(JSON.stringify(validatedResult), {
+    return new Response(JSON.stringify(safeOutput), {
+      status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err: any) {
-    console.error("[Hybrid AI Edge Error]:", err);
+    console.error("[JEDDAW AI Edge Function Error]:", err?.message || err);
 
-    const isEn = /[a-z]/i.test(req.url);
     return new Response(
       JSON.stringify({
-        type: "clarification",
-        message: isEn
-          ? "I could not understand your request clearly. Would you like to create a plan, search for places, or modify a plan?"
-          : "ما فهمت طلبك تماماً. هل تريد إنشاء خطة، البحث عن مكان، أو تعديل خطة موجودة؟",
-        plan: null,
+        error: {
+          code: "AI_PROVIDER_ERROR",
+          message: "Unable to complete AI response right now. Please try again.",
+        },
       }),
       {
+        status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
@@ -344,74 +141,106 @@ serve(async (req) => {
 });
 
 // ============================================================================
-// Helper Functions: Dialect Parser, Scoring, Fallback & Gemini Call
+// SYSTEM PROMPT BUILDER
 // ============================================================================
+function buildJeddawSystemPrompt(candidatePlaces: any[], currentPlanSummary: string): string {
+  const placesContext = candidatePlaces.length > 0
+    ? JSON.stringify(candidatePlaces.slice(0, 15))
+    : "No candidates pre-filtered.";
 
-function parseDialectKeywords(text: string, params: any) {
-  const lower = text.toLowerCase();
-  const res = { ...params };
-  const moods: string[] = res.moods || [];
+  return `You are JEDDAW AI (مساعد جِدّاو), an expert conversational outing and leisure assistant specialized exclusively in Jeddah, Saudi Arabia.
 
-  for (const [key, val] of Object.entries(DIALECT_DICTIONARY)) {
-    if (lower.includes(key)) {
-      if (val.mood && !moods.includes(val.mood)) moods.push(val.mood);
-      if (val.budgetScope && !res.budgetScope) res.budgetScope = val.budgetScope;
-      if (val.groupType && !res.groupType) res.groupType = val.groupType;
-      if (val.indoor !== undefined) res.indoorPreference = val.indoor;
-    }
-  }
+YOUR CORE IDENTITY & TONE:
+- Natural, warm, helpful, locally aware Jeddah expert.
+- ARABIC: Speak natural Arabic using polite Saudi / Jeddah dialect expressions (e.g. "هلا والله", "يا هلا", "عطني ميزانيتك", "ابشر", "طلعة روقان"). Avoid cold robotic formal MSA.
+- ENGLISH: Natural, conversational, friendly tone.
+- MULTILINGUAL: Match the user's language (Arabic, English, or mixed Arabizi/Bilingual).
 
-  res.moods = moods;
-  return res;
-}
+FACTUAL & DATA INTEGRITY CONSTRAINTS:
+- Never invent or hallucinate fake venue names, prices, or fake Google ratings.
+- Use supplied JEDDAW place candidates where possible.
+- If information is unverified, say so naturally without false claims.
 
-async function callGeminiFlashApi(apiKey: string, prompt: string, history: any[], params: any) {
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+INTENT DETERMINATION:
+Determine user intent from:
+1. "chat" -> Greeting ("هلا", "مرحبا"), general chat ("مين انت؟"), casual questions ("طفشان").
+2. "search_places" -> Searching for specific places/cafes ("ابي قهوة هادية شمال جدة").
+3. "create_plan" -> Wants a full multi-stop outing itinerary ("سويلي خطة 3 ساعات", "معي 150 ريال وش نسوي").
+4. "modify_plan" -> Wants to edit an active plan ("خلها ارخص", "بدل المطعم", "شي قريب من البحر").
+5. "place_details" -> Asking about specific venue details.
+6. "clarification" -> Unclear prompt needing friendly options.
 
-  // Limit conversation history to last 6 messages max for token optimization
-  const recentHistory = history.slice(-6).map((m: any) => ({
-    role: m.sender === "user" ? "user" : "model",
-    parts: [{ text: m.text }],
-  }));
+AVAILABLE JEDDAW CANDIDATE PLACES:
+${placesContext}
 
-  const systemInstruction = `
-You are JEDDAW's Hybrid AI Assistant for Jeddah Outing Planner.
-Target Language: Detect Arabic or English.
-Strict Rule: Recommend ONLY valid place IDs from Jeddah database. NEVER invent fake places or prices.
-Return a structured JSON with:
+ACTIVE PLAN SUMMARY (IF ANY):
+${currentPlanSummary || "None active"}
+
+STRICT JSON OUTPUT FORMAT ONLY:
+Return ONLY valid JSON matching this schema:
 {
-  "assistantMessage": "Friendly concise Arabic/English response",
-  "missingFields": ["Any missing key preference like budget if not clear"],
-  "plan": {
-    "titleAr": "Plan Title",
-    "titleEn": "Plan Title",
-    "totalDurationMinutes": 180,
-    "estimatedCostMin": 50,
-    "estimatedCostMax": 150,
-    "stops": [
-      {
-        "placeId": "r1",
-        "arrivalTime": "18:00",
-        "visitDurationMinutes": 40,
-        "travelFromPreviousMinutes": 15,
-        "reasonAr": "سبب اختيار المكان",
-        "reasonEn": "Reason for spot selection"
-      }
-    ]
-  }
+  "intent": "chat" | "search_places" | "create_plan" | "modify_plan" | "place_details" | "clarification",
+  "language": "ar" | "en",
+  "message": "Friendly response string here",
+  "extractedPreferences": {
+    "budgetMax": 150,
+    "groupType": "couple",
+    "moods": ["chill"],
+    "area": "corniche",
+    "kidsFriendly": true,
+    "indoorPreference": true
+  },
+  "search": {
+    "query": "search term",
+    "kinds": ["cafe", "food"],
+    "area": "north"
+  },
+  "modification": {
+    "action": "cheaper" | "closer" | "swap" | "indoor",
+    "targetKind": "food" | "cafe" | "activity"
+  },
+  "suggestedReplies": ["Suggested quick reply 1", "Suggested quick reply 2"]
+}`;
 }
-`;
+
+// ============================================================================
+// GEMINI ADAPTER
+// ============================================================================
+async function callGeminiAdapter(
+  apiKey: string,
+  modelName: string,
+  prompt: string,
+  history: ChatMessage[],
+  candidatePlaces: any[],
+  currentPlanSummary: string
+) {
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+
+  const systemInstruction = buildJeddawSystemPrompt(candidatePlaces, currentPlanSummary);
+
+  const formattedHistory = history.slice(-6).map((m) => ({
+    role: m.role === "user" ? "user" : "model",
+    parts: [{ text: m.content }],
+  }));
 
   const payload = {
     contents: [
-      ...recentHistory,
       {
         role: "user",
-        parts: [{ text: `${systemInstruction}\n\nUser Prompt: ${prompt}` }],
+        parts: [{ text: systemInstruction }],
+      },
+      {
+        role: "model",
+        parts: [{ text: `{"intent":"chat","language":"ar","message":"أهلاً بك! أنا مساعد جِدّاو، كلي آذان صاغية. كيف أقدر أساعدك؟"}` }],
+      },
+      ...formattedHistory,
+      {
+        role: "user",
+        parts: [{ text: prompt }],
       },
     ],
     generationConfig: {
-      temperature: 0.2, // Low temperature to prevent hallucination
+      temperature: 0.3,
       responseMimeType: "application/json",
     },
   };
@@ -423,126 +252,100 @@ Return a structured JSON with:
   });
 
   if (!res.ok) {
-    throw new Error(`Gemini API returned status ${res.status}`);
+    const errText = await res.text();
+    console.error("[Gemini API Call Failed]:", res.status, errText);
+    throw new Error(`Gemini HTTP error ${res.status}`);
   }
 
   const data = await res.json();
   const textOutput = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!textOutput) throw new Error("Empty output from Gemini");
+  if (!textOutput) throw new Error("Empty response body from Gemini model");
 
   return JSON.parse(textOutput);
 }
 
-// 100-Point Scoring Engine & Deterministic Rule-Based Fallback
-function executeDeterministicFallback(prompt: string, params: any) {
-  const lower = prompt.toLowerCase();
-  const isEn = /[a-z]/i.test(prompt) && !/[\u0600-\u06FF]/.test(prompt);
+// ============================================================================
+// OPENAI ADAPTER
+// ============================================================================
+async function callOpenAIAdapter(
+  apiKey: string,
+  modelName: string,
+  prompt: string,
+  history: ChatMessage[],
+  candidatePlaces: any[],
+  currentPlanSummary: string
+) {
+  const endpoint = "https://api.openai.com/v1/chat/completions";
+  const systemInstruction = buildJeddawSystemPrompt(candidatePlaces, currentPlanSummary);
 
-  // Score places deterministically
-  const scoredPlaces = DATABASE_PLACES.map((place) => {
-    let score = 50; // base score
+  const formattedHistory = history.slice(-6).map((m) => ({
+    role: m.role === "user" ? "user" : "assistant",
+    content: m.content,
+  }));
 
-    // Mood Match (25 pts)
-    if (params.moods && params.moods.some((m: string) => place.moods.includes(m as any))) score += 25;
-    // Budget Fit (20 pts)
-    if (params.budgetScope === "economy" && place.pricePerPerson <= 40) score += 20;
-    if (params.budgetScope === "premium" && place.pricePerPerson >= 100) score += 20;
-    // Group Suitability (15 pts)
-    if (params.groupType && place.groups.includes(params.groupType as any)) score += 15;
-    // Rating (10 pts)
-    score += Math.round(place.rating * 2);
-    // Data Freshness & Verification (10 pts)
-    if (place.verified) score += 10;
-
-    // Small deterministic jitter for variety among close scores
-    score += (place.nameAr.length % 5);
-
-    return { place, score };
-  }).sort((a, b) => b.score - a.score);
-
-  // Pick top 3 distinct places (1 activity/culture, 1 food, 1 cafe)
-  const selectedFood = scoredPlaces.find((p) => p.place.kind === "food")?.place || DATABASE_PLACES[0];
-  const selectedCafe = scoredPlaces.find((p) => p.place.kind === "cafe")?.place || DATABASE_PLACES[3];
-  const selectedActivity = scoredPlaces.find((p) => p.place.kind === "activity" || p.place.kind === "culture" || p.place.kind === "outdoor")?.place || DATABASE_PLACES[6];
-
-  const totalMin = selectedFood.pricePerPerson + selectedCafe.pricePerPerson + selectedActivity.pricePerPerson;
-  const totalDuration = selectedFood.durationMin + selectedCafe.durationMin + selectedActivity.durationMin + 30; // + travel
-
-  return {
-    isFallback: true,
-    assistantMessage: isEn
-      ? "Here is an optimized itinerary created directly from JEDDAW's verified database based on your preferences!"
-      : "إليك خطة طلعة مميزة ومحسوبة مباشرة من قاعدة بيانات جِدّاو المعتمدة حسب تفضيلاتك!",
-    extractedPreferences: params,
-    missingFields: [],
-    plan: {
-      titleAr: "طلعة جدة الموزونة 🌊",
-      titleEn: "Custom Jeddah Outing 🌊",
-      totalDurationMinutes: totalDuration,
-      estimatedCostMin: totalMin,
-      estimatedCostMax: Math.round(totalMin * 1.3),
-      stops: [
-        {
-          placeId: selectedActivity.id,
-          arrivalTime: "17:00",
-          visitDurationMinutes: selectedActivity.durationMin,
-          travelFromPreviousMinutes: 0,
-          reasonAr: `بداية حماسية وممتعة في ${selectedActivity.nameAr}`,
-          reasonEn: `Fun activity start at ${selectedActivity.nameEn}`,
-        },
-        {
-          placeId: selectedFood.id,
-          arrivalTime: "19:00",
-          visitDurationMinutes: selectedFood.durationMin,
-          travelFromPreviousMinutes: 15,
-          reasonAr: `وجبة عشاء طازجة وممتازة في ${selectedFood.nameAr}`,
-          reasonEn: `Fresh dinner experience at ${selectedFood.nameEn}`,
-        },
-        {
-          placeId: selectedCafe.id,
-          arrivalTime: "20:45",
-          visitDurationMinutes: selectedCafe.durationMin,
-          travelFromPreviousMinutes: 15,
-          reasonAr: `تحلية وروقان مع القهوة المختصة في ${selectedCafe.nameAr}`,
-          reasonEn: `Specialty coffee & chill at ${selectedCafe.nameEn}`,
-        },
-      ],
-    },
+  const payload = {
+    model: modelName,
+    response_format: { type: "json_object" },
+    temperature: 0.3,
+    messages: [
+      { role: "system", content: systemInstruction },
+      ...formattedHistory,
+      { role: "user", content: prompt },
+    ],
   };
-}
 
-// Zod-like Deterministic Sanitize & Validation Layer
-function validateAndSanitizeResult(result: any) {
-  if (!result || !result.plan || !Array.isArray(result.plan.stops)) {
-    return executeDeterministicFallback("fallback", {});
-  }
-
-  // Filter out any placeId not present in DATABASE_PLACES
-  const validStops = result.plan.stops.filter((stop: any) =>
-    DATABASE_PLACES.some((dbPlace) => dbPlace.id === stop.placeId)
-  );
-
-  if (validStops.length === 0) {
-    return executeDeterministicFallback("fallback", {});
-  }
-
-  // Re-calculate price and duration strictly from DB values
-  let calcMinCost = 0;
-  let calcDuration = 0;
-
-  validStops.forEach((stop: any) => {
-    const dbPlace = DATABASE_PLACES.find((p) => p.id === stop.placeId);
-    if (dbPlace) {
-      stop.visitDurationMinutes = dbPlace.durationMin;
-      calcMinCost += dbPlace.pricePerPerson;
-      calcDuration += dbPlace.durationMin + (stop.travelFromPreviousMinutes || 15);
-    }
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(payload),
   });
 
-  result.plan.stops = validStops;
-  result.plan.estimatedCostMin = calcMinCost;
-  result.plan.estimatedCostMax = Math.round(calcMinCost * 1.3);
-  result.plan.totalDurationMinutes = calcDuration;
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error("[OpenAI API Call Failed]:", res.status, errText);
+    throw new Error(`OpenAI HTTP error ${res.status}`);
+  }
 
-  return result;
+  const data = await res.json();
+  const textOutput = data?.choices?.[0]?.message?.content;
+  if (!textOutput) throw new Error("Empty response body from OpenAI model");
+
+  return JSON.parse(textOutput);
+}
+
+// ============================================================================
+// SANITIZE & FALLBACK UTILITY
+// ============================================================================
+function sanitizeAiOutput(raw: any, userPrompt: string) {
+  if (!raw || typeof raw !== "object") {
+    return {
+      intent: "chat",
+      language: "ar",
+      message: "أهلاً بك! كيف أقدر أساعدك اليوم في جدة؟ (كافيهات، مطاعم، أو خطة طلعة)",
+      suggestedReplies: ["سويلي خطة 🗓️", "كافيهات رايقة ☕", "مطاعم جدة 🍽️"],
+    };
+  }
+
+  const intent = ["chat", "search_places", "create_plan", "modify_plan", "place_details", "clarification"].includes(raw.intent)
+    ? raw.intent
+    : "chat";
+
+  const isEn = raw.language === "en" || (/[a-z]/i.test(userPrompt) && !/[\u0600-\u06FF]/.test(userPrompt));
+
+  return {
+    intent,
+    language: isEn ? "en" : "ar",
+    message: raw.message || (isEn ? "How can I help you explore Jeddah today?" : "أهلاً بك! كيف أقدر أساعدك في طلعة جدة اليوم؟"),
+    extractedPreferences: raw.extractedPreferences || {},
+    search: raw.search || {},
+    modification: raw.modification || {},
+    suggestedReplies: Array.isArray(raw.suggestedReplies) && raw.suggestedReplies.length > 0
+      ? raw.suggestedReplies.slice(0, 4)
+      : isEn
+        ? ["Create an outing plan 🗓️", "Search cafes ☕", "Explore Jeddah 🌊"]
+        : ["إنشاء خطة طلعة 🗓️", "البحث عن كافيهات ☕", "استكشاف جدة 🌊"],
+  };
 }
