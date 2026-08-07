@@ -80,6 +80,7 @@ export function JeddawSplashScreen() {
                 src={logoImg}
                 alt="شعار جِدّاو — JEDDAW"
                 className="h-full w-full object-contain drop-shadow-sm"
+                style={{ imageRendering: "crisp-edges" }}
                 onError={() => setImgFailed(true)}
               />
             )}

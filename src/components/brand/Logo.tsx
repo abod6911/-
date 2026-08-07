@@ -14,6 +14,7 @@ export function Logo({ className = "" }: { className?: string }) {
             src={logoImg}
             alt="شعار جِدّاو — JEDDAW Outing Planner"
             className="h-full w-full object-contain"
+            style={{ imageRendering: "crisp-edges" }}
             onError={() => setImgFailed(true)}
           />
         )}
