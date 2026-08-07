@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Compass, MapPin, Sparkles, Utensils, Coffee, Activity, Waves } from "lucide-react";
+import { Compass, MapPin, Sparkles, Utensils, Coffee, Zap, Waves, Star, Clock, Navigation } from "lucide-react";
 
 /**
  * SPLINE 3D SCENE CONFIGURATION
@@ -12,14 +12,12 @@ export type HeroExperienceState = "idle" | "generating" | "success";
 
 interface JeddawHeroExperienceProps {
   state?: HeroExperienceState;
-  onCtaHover?: (isHovered: boolean) => void;
 }
 
-export function JeddawHeroExperience({ state = "idle", onCtaHover }: JeddawHeroExperienceProps) {
+export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperienceProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [splineError, setSplineError] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   // Smooth pointer depth parallax
   useEffect(() => {
@@ -71,163 +69,217 @@ export function JeddawHeroExperience({ state = "idle", onCtaHover }: JeddawHeroE
     );
   }
 
-  // Open Spatial Composition: "THE JEDDAW ROUTE" (NO BOXES, NO CONTAINERS)
+  // RICH, LAYERED 3D OUTING SCENE (NO OUTER CONTAINER BOX)
   return (
     <div
       ref={containerRef}
-      className="relative h-full w-full flex items-center justify-center p-2 sm:p-6 select-none pointer-events-none overflow-visible"
+      className="relative h-full w-full flex items-center justify-center p-2 sm:p-4 select-none pointer-events-none overflow-visible"
     >
-      {/* Red Sea Atmospheric Ambient Glows */}
+      {/* Layer 0: Multi-Tone Atmospheric Background Glow Orbs */}
       <div
-        className={`absolute h-[420px] w-[420px] rounded-full bg-gradient-to-tr from-[#C96745]/20 via-[#397C78]/25 to-transparent blur-3xl transition-all duration-700 ${
-          state === "generating" ? "scale-125 opacity-90" : "scale-100 opacity-60"
-        }`}
+        className="absolute h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-[#C96745]/25 via-[#E4A23B]/20 to-[#397C78]/25 blur-3xl transition-transform duration-1000 ease-out"
         style={{
-          transform: `translate(${mousePos.x * -20}px, ${mousePos.y * -20}px)`,
+          transform: `translate(${mousePos.x * -25}px, ${mousePos.y * -25}px)`,
         }}
       />
+      <div className="absolute top-10 end-10 h-64 w-64 rounded-full bg-[#5EAAA5]/20 blur-2xl pointer-events-none" />
 
-      {/* Abstract Red Sea Coastline & Animated Route Path SVG */}
+      {/* Layer 1: Abstract Red Sea Coastline & Layered Curved SVG Routes */}
       <svg
-        className="absolute inset-0 h-full w-full z-0 pointer-events-none overflow-visible opacity-75"
-        viewBox="0 0 600 500"
+        className="absolute inset-0 h-full w-full z-0 pointer-events-none overflow-visible"
+        viewBox="0 0 650 520"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Subtle Abstract Coastline Wave Shape */}
+        {/* Subtle Coastline Contour Lines */}
         <path
-          d="M 50 450 Q 180 320, 240 240 T 550 50"
+          d="M 40 480 Q 200 350, 310 260 T 610 60"
           stroke="#397C78"
           strokeWidth="1.5"
-          strokeDasharray="4 8"
-          className="opacity-30"
+          strokeDasharray="6 12"
+          className="opacity-25"
         />
-
-        {/* Primary Glowing Outing Route */}
         <path
-          d="M 90 350 C 160 210, 280 340, 360 180 C 420 100, 480 140, 520 80"
-          stroke="url(#jeddawRouteGradient)"
-          strokeWidth={state === "generating" || isHovered ? "4" : "3"}
-          strokeDasharray={state === "generating" ? "12 6" : "none"}
-          className="transition-all duration-500 drop-shadow-[0_0_12px_rgba(201,103,69,0.4)]"
+          d="M 20 440 Q 180 310, 290 220 T 590 20"
+          stroke="#C96745"
+          strokeWidth="1"
+          strokeDasharray="3 9"
+          className="opacity-20"
         />
 
+        {/* Primary Glowing Outing Path Connection */}
+        <path
+          d="M 110 370 C 180 230, 290 350, 370 190 C 440 110, 520 150, 560 70"
+          stroke="url(#jeddawRichRouteGrad)"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          className="animate-route-draw drop-shadow-[0_0_16px_rgba(201,103,69,0.5)]"
+        />
+
+        {/* Dynamic Route Gradient Definition */}
         <defs>
-          <linearGradient id="jeddawRouteGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+          <linearGradient id="jeddawRichRouteGrad" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#C96745" />
-            <stop offset="40%" stopColor="#E4A23B" />
-            <stop offset="75%" stopColor="#5EAAA5" />
+            <stop offset="35%" stopColor="#E4A23B" />
+            <stop offset="70%" stopColor="#5EAAA5" />
             <stop offset="100%" stopColor="#397C78" />
           </linearGradient>
         </defs>
       </svg>
 
-      {/* DESTINATION NODE 1: DINING / RESTAURANT (عشاء) */}
-      <div
-        className="absolute top-[62%] start-[8%] sm:start-[12%] z-10 flex items-center gap-2.5 rounded-full bg-[#051413]/90 border border-white/20 px-3.5 py-2 shadow-2xl backdrop-blur-xl transition-all duration-700 animate-float"
-        style={{
-          transform: `translate(${mousePos.x * 14}px, ${mousePos.y * 14}px)`,
-        }}
-      >
-        <div className="relative h-8 w-8 rounded-full overflow-hidden border border-white/30 shrink-0">
-          <img
-            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=120&q=80"
-            alt="مطعم"
-            className="h-full w-full object-cover"
-          />
-        </div>
-        <div className="flex items-center gap-1.5 pe-1">
-          <Utensils className="h-3.5 w-3.5 text-[#FF9D7A]" />
-          <span className="text-xs font-black text-white whitespace-nowrap">عشاء</span>
-        </div>
-      </div>
-
-      {/* DESTINATION NODE 2: SPECIALTY COFFEE (قهوة) */}
-      <div
-        className="absolute top-[28%] start-[32%] sm:start-[36%] z-10 flex items-center gap-2.5 rounded-full bg-[#051413]/90 border border-white/20 px-3.5 py-2 shadow-2xl backdrop-blur-xl transition-all duration-700 animate-float-delayed"
-        style={{
-          transform: `translate(${mousePos.x * -18}px, ${mousePos.y * -12}px)`,
-        }}
-      >
-        <div className="relative h-8 w-8 rounded-full overflow-hidden border border-white/30 shrink-0">
-          <img
-            src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=120&q=80"
-            alt="قهوة"
-            className="h-full w-full object-cover"
-          />
-        </div>
-        <div className="flex items-center gap-1.5 pe-1">
-          <Coffee className="h-3.5 w-3.5 text-[#E4A23B]" />
-          <span className="text-xs font-black text-white whitespace-nowrap">قهوة</span>
-        </div>
-      </div>
-
-      {/* CENTRAL JEDDAW LOCATION PIN (خطتك 📍) */}
+      {/* Layer 2: SIGNATURE CENTRAL ANCHOR ELEMENT (Branded Route Hub & Pin) */}
       <div
         className="relative z-20 flex flex-col items-center justify-center text-center transition-transform duration-500 ease-out my-auto"
         style={{
-          transform: `translate(${mousePos.x * 6}px, ${mousePos.y * 6}px)`,
+          transform: `translate(${mousePos.x * 8}px, ${mousePos.y * 8}px)`,
         }}
       >
-        {/* Pulsing Outer Ring */}
-        <div className="absolute h-24 w-24 rounded-full bg-[#C96745]/20 animate-ping opacity-30" />
-        
-        {/* Custom SVG Location Pin */}
-        <div className="relative grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-[#C96745] via-[#E4A23B] to-[#397C78] text-white shadow-2xl border border-white/40 ring-4 ring-[#C96745]/30">
-          <MapPin className="h-8 w-8 text-white drop-shadow-md animate-bounce-gentle" />
-          <span className="absolute -bottom-1 grid h-4 w-4 place-items-center rounded-full bg-white text-[#C96745]">
-            <Sparkles className="h-2.5 w-2.5" />
+        {/* Pulsing Outer Rings */}
+        <div className="absolute h-36 w-36 rounded-full border border-[#C96745]/30 animate-ping opacity-25" />
+        <div className="absolute h-28 w-28 rounded-full bg-gradient-to-r from-[#C96745]/20 to-[#397C78]/20 blur-lg" />
+
+        {/* Central Branded Marker Hub */}
+        <div className="relative grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-[#C96745] via-[#E4A23B] to-[#397C78] text-white shadow-2xl border-2 border-white/40 ring-8 ring-[#C96745]/20">
+          <MapPin className="h-10 w-10 text-white drop-shadow-lg animate-bounce-gentle" />
+          <span className="absolute -bottom-1 grid h-5 w-5 place-items-center rounded-full bg-white text-[#C96745] shadow-md">
+            <Sparkles className="h-3 w-3" />
           </span>
         </div>
 
-        {/* Pin Label */}
-        <span className="mt-2.5 text-xs font-black text-white tracking-widest bg-black/60 px-3.5 py-1 rounded-full border border-white/20 backdrop-blur-md shadow-lg">
-          خطتك 📍
-        </span>
+        {/* Central Hub Label Pill */}
+        <div className="mt-3 flex items-center gap-2 rounded-full bg-[#051413]/90 px-4 py-1.5 border border-white/20 shadow-2xl backdrop-blur-xl">
+          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-xs font-black text-white tracking-widest">خطتك الموزونة 📍</span>
+        </div>
       </div>
 
-      {/* DESTINATION NODE 3: ACTIVITY / ENTERTAINMENT (فعالية) */}
+      {/* Layer 3: DESTINATION MODULE 1 (DINING / عشاء فاخر - Bottom Left) */}
       <div
-        className="absolute top-[48%] end-[16%] sm:end-[20%] z-10 flex items-center gap-2.5 rounded-full bg-[#051413]/90 border border-white/20 px-3.5 py-2 shadow-2xl backdrop-blur-xl transition-all duration-700 animate-float"
+        className="absolute top-[65%] start-[4%] sm:start-[8%] z-30 flex items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float"
         style={{
-          transform: `translate(${mousePos.x * 16}px, ${mousePos.y * -16}px)`,
+          transform: `translate(${mousePos.x * 18}px, ${mousePos.y * 18}px)`,
         }}
       >
-        <div className="relative h-8 w-8 rounded-full overflow-hidden border border-white/30 shrink-0">
+        <div className="relative h-12 w-12 rounded-xl overflow-hidden border border-white/30 shrink-0 shadow-md">
           <img
-            src="https://images.unsplash.com/photo-1511882150382-421056c89033?auto=format&fit=crop&w=120&q=80"
+            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=160&q=80"
+            alt="عشاء"
+            className="h-full w-full object-cover"
+          />
+          <span className="absolute bottom-0 end-0 bg-black/60 text-[9px] px-1 text-white font-bold">17:30</span>
+        </div>
+        <div className="flex flex-col text-start">
+          <div className="flex items-center gap-1.5">
+            <span className="grid h-5 w-5 place-items-center rounded-md bg-[#C96745]/20 text-[#FF9D7A]">
+              <Utensils className="h-3 w-3" />
+            </span>
+            <span className="text-xs font-black text-white">عشاء فاخر</span>
+          </div>
+          <span className="text-[10px] font-bold text-[#FF9D7A] mt-0.5">الكورنيش · مأكولات بحرية</span>
+        </div>
+      </div>
+
+      {/* Layer 3: DESTINATION MODULE 2 (COFFEE / قهوة مختصة - Top Left) */}
+      <div
+        className="absolute top-[20%] start-[22%] sm:start-[26%] z-30 flex items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float-delayed"
+        style={{
+          transform: `translate(${mousePos.x * -22}px, ${mousePos.y * -14}px)`,
+        }}
+      >
+        <div className="relative h-12 w-12 rounded-xl overflow-hidden border border-white/30 shrink-0 shadow-md">
+          <img
+            src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=160&q=80"
+            alt="قهوة"
+            className="h-full w-full object-cover"
+          />
+          <span className="absolute bottom-0 end-0 bg-black/60 text-[9px] px-1 text-white font-bold">19:45</span>
+        </div>
+        <div className="flex flex-col text-start">
+          <div className="flex items-center gap-1.5">
+            <span className="grid h-5 w-5 place-items-center rounded-md bg-[#E4A23B]/20 text-[#E4A23B]">
+              <Coffee className="h-3 w-3" />
+            </span>
+            <span className="text-xs font-black text-white">قهوة مختصة</span>
+          </div>
+          <span className="text-[10px] font-bold text-[#E4A23B] mt-0.5">حي الروضة · روقان</span>
+        </div>
+      </div>
+
+      {/* Layer 3: DESTINATION MODULE 3 (ACTIVITY / فعالية وحركة - Mid Right) */}
+      <div
+        className="absolute top-[52%] end-[6%] sm:end-[10%] z-30 flex items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float"
+        style={{
+          transform: `translate(${mousePos.x * 20}px, ${mousePos.y * -20}px)`,
+        }}
+      >
+        <div className="relative h-12 w-12 rounded-xl overflow-hidden border border-white/30 shrink-0 shadow-md">
+          <img
+            src="https://images.unsplash.com/photo-1511882150382-421056c89033?auto=format&fit=crop&w=160&q=80"
             alt="فعالية"
             className="h-full w-full object-cover"
           />
+          <span className="absolute bottom-0 end-0 bg-black/60 text-[9px] px-1 text-white font-bold">21:15</span>
         </div>
-        <div className="flex items-center gap-1.5 pe-1">
-          <Activity className="h-3.5 w-3.5 text-[#5EAAA5]" />
-          <span className="text-xs font-black text-white whitespace-nowrap">فعالية</span>
+        <div className="flex flex-col text-start">
+          <div className="flex items-center gap-1.5">
+            <span className="grid h-5 w-5 place-items-center rounded-md bg-[#5EAAA5]/20 text-[#5EAAA5]">
+              <Zap className="h-3 w-3" />
+            </span>
+            <span className="text-xs font-black text-white">فعالية وحركة</span>
+          </div>
+          <span className="text-[10px] font-bold text-[#5EAAA5] mt-0.5">كارتينج سينما · حماس</span>
         </div>
       </div>
 
-      {/* DESTINATION NODE 4: SUNSET SEA / CORNICHE (غروب) */}
+      {/* Layer 3: DESTINATION MODULE 4 (SUNSET SEA / غروب البحر - Top Right) */}
       <div
-        className="hidden sm:flex absolute top-[16%] end-[8%] z-10 items-center gap-2.5 rounded-full bg-[#051413]/90 border border-white/20 px-3.5 py-2 shadow-2xl backdrop-blur-xl transition-all duration-700 animate-float-delayed"
+        className="hidden sm:flex absolute top-[14%] end-[16%] sm:end-[20%] z-30 items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float-delayed"
         style={{
-          transform: `translate(${mousePos.x * -14}px, ${mousePos.y * 14}px)`,
+          transform: `translate(${mousePos.x * -16}px, ${mousePos.y * 16}px)`,
         }}
       >
-        <div className="relative h-8 w-8 rounded-full overflow-hidden border border-white/30 shrink-0">
+        <div className="relative h-12 w-12 rounded-xl overflow-hidden border border-white/30 shrink-0 shadow-md">
           <img
-            src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=120&q=80"
+            src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=160&q=80"
             alt="غروب"
             className="h-full w-full object-cover"
           />
+          <span className="absolute bottom-0 end-0 bg-black/60 text-[9px] px-1 text-white font-bold">17:00</span>
         </div>
-        <div className="flex items-center gap-1.5 pe-1">
-          <Waves className="h-3.5 w-3.5 text-[#397C78]" />
-          <span className="text-xs font-black text-white whitespace-nowrap">غروب</span>
+        <div className="flex flex-col text-start">
+          <div className="flex items-center gap-1.5">
+            <span className="grid h-5 w-5 place-items-center rounded-md bg-[#397C78]/20 text-[#5EAAA5]">
+              <Waves className="h-3 w-3" />
+            </span>
+            <span className="text-xs font-black text-white">غروب البحر</span>
+          </div>
+          <span className="text-[10px] font-bold text-[#5EAAA5] mt-0.5">أبحر الشمالية · استجمام</span>
         </div>
+      </div>
+
+      {/* Layer 4: FLOATING EDITORIAL MICRO-BADGES */}
+      <div
+        className="absolute top-6 start-4 sm:top-10 sm:start-8 z-40 flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 px-3.5 py-1.5 text-[11px] font-black text-white shadow-xl transition-transform duration-700 animate-float"
+        style={{
+          transform: `translate(${mousePos.x * 12}px, ${mousePos.y * 12}px)`,
+        }}
+      >
+        <Star className="h-3.5 w-3.5 text-[#E4A23B] fill-[#E4A23B]" />
+        <span>اختيار ذكي وسريع</span>
+      </div>
+
+      <div
+        className="absolute bottom-6 end-4 sm:bottom-10 sm:end-8 z-40 flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 px-3.5 py-1.5 text-[11px] font-black text-white shadow-xl transition-transform duration-700 animate-float-delayed"
+        style={{
+          transform: `translate(${mousePos.x * -14}px, ${mousePos.y * -14}px)`,
+        }}
+      >
+        <Clock className="h-3.5 w-3.5 text-[#5EAAA5]" />
+        <span>4.5h مسار متسلسل</span>
       </div>
     </div>
   );
 }
 
-// Export compatibility alias
+// Export compatibility aliases
 export { JeddawHeroExperience as JeddawHeroVisual };
