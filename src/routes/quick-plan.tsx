@@ -284,7 +284,9 @@ function QuickPlanPage() {
                   </legend>
                 </div>
                 <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-                  حدد مكانك الحالي أو اختر الحي المناسب لتصفية المسافات وتنظيم مشوار الطلعة
+                  {isRtl
+                    ? "حدد مكانك الحالي أو اختر الحي المناسب لتصفية المسافات وتنظيم مشوار الطلعة"
+                    : "Select your location in Jeddah to filter distance and optimize your route"}
                 </p>
               </div>
 
@@ -294,7 +296,7 @@ function QuickPlanPage() {
                   active={locationMode === "any"}
                   emoji="🌊"
                   label={t("locationAny")}
-                  subLabel="جدة كاملة بدون تقييد"
+                  subLabel={isRtl ? "جدة كاملة بدون تقييد" : "All Jeddah with no limits"}
                   onClick={() => {
                     setLocationMode("any");
                     setDistrictId("");
@@ -304,16 +306,16 @@ function QuickPlanPage() {
                 <OptionChip
                   active={locationMode === "preset"}
                   emoji="🏙️"
-                  label="اختيار حي محدد"
-                  subLabel="قائمة الأحياء الرئيسية"
+                  label={isRtl ? "اختيار حي محدد" : "Select District"}
+                  subLabel={isRtl ? "قائمة الأحياء الرئيسية" : "Main neighborhoods"}
                   onClick={() => setLocationMode("preset")}
                 />
 
                 <OptionChip
                   active={locationMode === "manual"}
                   emoji="✏️"
-                  label="تحديد يدوي خاص"
-                  subLabel="حي، شارع، أو معلم خاص"
+                  label={isRtl ? "تحديد يدوي خاص" : "Manual Custom Location"}
+                  subLabel={isRtl ? "حي، شارع، أو معلم خاص" : "Custom street or landmark"}
                   onClick={() => setLocationMode("manual")}
                 />
               </div>
@@ -322,7 +324,7 @@ function QuickPlanPage() {
               {locationMode === "preset" && (
                 <div className="animate-fade-in space-y-3 pt-2">
                   <span className="text-xs font-extrabold text-[#6E716C] dark:text-[#B5B8B2] block">
-                    اختر الحي الأقرب لكم:
+                    {isRtl ? "اختر الحي الأقرب لكم:" : "Select your nearest district:"}
                   </span>
                   <div className="grid gap-2.5 grid-cols-2 sm:grid-cols-3">
                     {districts.map((d) => (
@@ -348,20 +350,28 @@ function QuickPlanPage() {
               {locationMode === "manual" && (
                 <div className="animate-fade-in space-y-3 pt-2">
                   <label className="text-xs font-extrabold text-[#6E716C] dark:text-[#B5B8B2] block">
-                    أدخل اسم الحي، الشارع، أو نقطة الانطلاق يدويًا:
+                    {isRtl
+                      ? "أدخل اسم الحي، الشارع، أو نقطة الانطلاق يدويًا:"
+                      : "Enter district, street, or landmark manually:"}
                   </label>
                   <div className="relative">
                     <input
                       type="text"
                       value={manualLocation}
                       onChange={(e) => setManualLocation(e.target.value)}
-                      placeholder="مثال: حي الشاطئ، كورنيش النورس، شارع التحلية..."
+                      placeholder={
+                        isRtl
+                          ? "مثال: حي الشاطئ، كورنيش النورس، شارع التحلية..."
+                          : "e.g. Al Shati, North Corniche, Tahlia Street..."
+                      }
                       className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#1A2221] p-4 pe-12 text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 focus:border-[#C96745] focus:outline-none focus:ring-2 focus:ring-[#C96745]/30 min-h-[54px]"
                     />
                     <Edit3 className="absolute end-4 top-4 h-5 w-5 text-[#C96745]" />
                   </div>
                   <p className="text-[11px] text-[#71805B] font-semibold">
-                    💡 سيقوم ذكاء جِدّاو بتخصيص خطة الطلعة حول موقعك المدخل بكل دقة!
+                    {isRtl
+                      ? "💡 سيقوم ذكاء جِدّاو بتخصيص خطة الطلعة حول موقعك المدخل بكل دقة!"
+                      : "💡 JEDDAW AI will customize your outing around your input location!"}
                   </p>
                 </div>
               )}
@@ -377,7 +387,9 @@ function QuickPlanPage() {
                   <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step1Title")}</legend>
                 </div>
                 <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-                  اختر طبيعة المجموعة لترشيح الأماكن المتواكبة مع الخصوصية والأجواء
+                  {isRtl
+                    ? "اختر طبيعة المجموعة لترشيح الأماكن المتواكبة مع الخصوصية والأجواء"
+                    : "Choose your group type to recommend matching privacy & vibe"}
                 </p>
               </div>
 
@@ -413,7 +425,9 @@ function QuickPlanPage() {
                   <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step2Title")}</legend>
                 </div>
                 <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-                  كم ساعة متاحة معكم للطلعة لتحديد عدد المحطات والمسافات؟
+                  {isRtl
+                    ? "كم ساعة متاحة معكم للطلعة لتحديد عدد المحطات والمسافات؟"
+                    : "How many hours do you have for this outing?"}
                 </p>
               </div>
 
@@ -446,7 +460,9 @@ function QuickPlanPage() {
                   <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step3Title")}</legend>
                 </div>
                 <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-                  اختر المود والطابع الرئيسي المطلوبة طلعتكم عليه
+                  {isRtl
+                    ? "اختر المود والطابع الرئيسي المطلوبة طلعتكم عليه"
+                    : "Select the main vibe & mood for your outing"}
                 </p>
               </div>
 
@@ -484,7 +500,9 @@ function QuickPlanPage() {
                   <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step4Title")}</legend>
                 </div>
                 <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-                  حدد البيئة المناسبة لأجواء الطقس الحالية في جدة
+                  {isRtl
+                    ? "حدد البيئة المناسبة لأجواء الطقس الحالية في جدة"
+                    : "Select indoor or outdoor environment preference"}
                 </p>
               </div>
 
@@ -516,7 +534,9 @@ function QuickPlanPage() {
                   <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step5Title")}</legend>
                 </div>
                 <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-                  الميزانية التقديرية للشخص الواحد للطلعة كاملة
+                  {isRtl
+                    ? "الميزانية التقديرية للشخص الواحد للطلعة كاملة"
+                    : "Estimated budget per person for the complete outing"}
                 </p>
               </div>
 
@@ -551,7 +571,9 @@ function QuickPlanPage() {
                   <legend className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">{t("step6Title")}</legend>
                 </div>
                 <p className="text-xs sm:text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-                  حدد أي تفضيلات تشغيلية تحب نراعيها عند ابتكار الخطة
+                  {isRtl
+                    ? "حدد أي تفضيلات تشغيلية تحب نراعيها عند ابتكار الخطة"
+                    : "Select operational preferences to include in your plan"}
                 </p>
               </div>
 
