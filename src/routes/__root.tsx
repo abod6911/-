@@ -125,7 +125,7 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-import { MobileViewportProvider } from "@/components/common/MobileViewportProvider";
+import { useMobileViewport } from "@/hooks/useMobileViewport";
 import { KeyboardDebugPanel } from "@/components/common/KeyboardDebugPanel";
 
 function RootComponent() {
@@ -133,18 +133,18 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MobileViewportProvider>
-        <LanguageProvider>
-          <AuthProvider>
-            <RootAppContent />
-          </AuthProvider>
-        </LanguageProvider>
-      </MobileViewportProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <RootAppContent />
+        </AuthProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
 
 function RootAppContent() {
+  useMobileViewport();
+
   return (
     <div className="flex min-h-screen flex-col bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
       <KeyboardDebugPanel />

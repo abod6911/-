@@ -69,7 +69,7 @@ export function SiteHeader() {
   return (
     <>
       <header
-        className={`site-header sticky top-0 z-40 glass-header border-b border-[#E2D3BE]/60 dark:border-white/10 ${
+        className={`sticky top-0 z-40 transition-all duration-300 glass-header border-b border-[#E2D3BE]/60 dark:border-white/10 ${
           scrolled ? "shadow-lg py-2.5" : "py-3.5"
         }`}
       >
