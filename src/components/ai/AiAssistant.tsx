@@ -144,24 +144,24 @@ export function AiAssistant() {
 
   return (
     <>
-      {/* Floating Launcher Button - High-End Premium Capsule */}
+      {/* Floating Launcher Button - High-End Mobile-Optimized Capsule */}
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 end-5 z-40 flex items-center gap-3 rounded-full bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] p-1.5 pe-4 text-white shadow-2xl hover:scale-[1.05] hover:-translate-y-1 active:scale-95 transition-all duration-300 ring-4 ring-[#C96745]/20 lg:bottom-6 cursor-pointer group"
+        className="fixed bottom-[74px] sm:bottom-20 lg:bottom-6 end-3 sm:end-5 z-40 flex items-center gap-2 sm:gap-3 rounded-full bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] p-1 sm:p-1.5 pe-3 sm:pe-4 text-white shadow-2xl hover:scale-[1.04] active:scale-95 transition-all duration-300 ring-2 sm:ring-4 ring-[#C96745]/20 cursor-pointer group"
         aria-label={isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}
       >
-        <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white shadow-inner">
-          <Bot className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
-          <span className="absolute top-0 end-0 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-white animate-pulse" />
+        <div className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white shadow-inner">
+          <Bot className="h-4.5 w-4.5 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:rotate-12" />
+          <span className="absolute top-0 end-0 h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-emerald-400 ring-2 ring-white animate-pulse" />
         </div>
         <div className="flex flex-col text-start">
-          <span className="text-xs font-black tracking-wide text-white drop-shadow-sm">
-            {isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI"}
+          <span className="text-[11px] sm:text-xs font-black tracking-wide text-white drop-shadow-sm leading-tight">
+            {isRtl ? "مساعد جِدّاو" : "JEDDAW AI"}
           </span>
-          <span className="text-[10px] font-semibold text-white/90 flex items-center gap-1">
+          <span className="text-[9px] sm:text-[10px] font-semibold text-white/90 flex items-center gap-1">
             <Sparkles className="h-2.5 w-2.5 text-amber-200" />
-            {isRtl ? "دليلك للطلعات" : "Outing Planner"}
+            {isRtl ? "دليلك الذكي" : "Planner"}
           </span>
         </div>
       </button>

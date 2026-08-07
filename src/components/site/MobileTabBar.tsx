@@ -25,12 +25,12 @@ export function MobileTabBar() {
                 activeProps={{ className: center ? "" : "is-active text-[#C96745]" }}
                 className={
                   center
-                    ? "flex -translate-y-3 flex-col items-center justify-center gap-1 rounded-full bg-[#C96745] h-[56px] w-[56px] min-h-[56px] min-w-[56px] text-[11px] font-bold text-white shadow-lift animate-pulse-glow active:scale-95 transition-transform"
-                    : "flex flex-col items-center justify-center gap-1 px-2 py-1 min-h-[48px] min-w-[48px] text-[11px] font-semibold text-[#6E716C] active:scale-95 transition-transform relative group"
+                    ? "flex -translate-y-2.5 flex-col items-center justify-center gap-0.5 rounded-full bg-gradient-to-r from-[#C96745] to-[#B84E4E] h-[50px] w-[50px] text-[10px] font-black text-white shadow-lift active:scale-95 transition-transform shrink-0"
+                    : "flex flex-col items-center justify-center gap-0.5 px-1.5 py-1 text-[10px] font-bold text-[#6E716C] dark:text-[#B5B8B2] active:scale-95 transition-transform relative group"
                 }
               >
-                <Icon className="h-5 w-5 z-10" />
-                <span className="z-10">{label}</span>
+                <Icon className={center ? "h-4.5 w-4.5 z-10" : "h-4.5 w-4.5 z-10"} />
+                <span className="z-10 tracking-tight">{label}</span>
                 {!center && (
                   <span className="absolute bottom-0 left-1/2 w-1.5 h-1.5 bg-[#C96745] rounded-full -translate-x-1/2 opacity-0 transition-opacity [.is-active_&]:opacity-100" />
                 )}
