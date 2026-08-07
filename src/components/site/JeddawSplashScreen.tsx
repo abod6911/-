@@ -13,6 +13,7 @@ export function JeddawSplashScreen() {
   const [visible, setVisible] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
   const [phraseIdx, setPhraseIdx] = useState(0);
+  const [imgFailed, setImgFailed] = useState(false);
 
   // Smoothly cycle through refined microcopy over the 5-second duration
   useEffect(() => {
@@ -72,11 +73,16 @@ export function JeddawSplashScreen() {
         <div className="relative mb-7">
           <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] opacity-35 blur-xl animate-pulse" />
           <div className="relative grid h-20 w-20 sm:h-22 sm:w-22 place-items-center rounded-3xl bg-[#091C1A]/90 p-3.5 shadow-2xl border border-white/20 backdrop-blur-xl">
-            <img
-              src={logoImg}
-              alt="شعار جِدّاو — JEDDAW"
-              className="h-full w-full object-contain drop-shadow-sm"
-            />
+            {imgFailed ? (
+              <span className="text-3xl sm:text-4xl font-black text-[#C96745]">جـ</span>
+            ) : (
+              <img
+                src={logoImg}
+                alt="شعار جِدّاو — JEDDAW"
+                className="h-full w-full object-contain drop-shadow-sm"
+                onError={() => setImgFailed(true)}
+              />
+            )}
           </div>
         </div>
 

@@ -68,13 +68,4 @@ fs.writeFileSync(path.join(distDir, "index.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(distDir, "404.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(distDir, ".nojekyll"), "", "utf-8");
 
-// Sync compiled distribution assets and index.html to root for GitHub Pages root deployment
-const rootAssetsDir = path.join(rootDir, "assets");
-if (fs.existsSync(assetsDir)) {
-  fs.cpSync(assetsDir, rootAssetsDir, { recursive: true });
-}
-fs.writeFileSync(path.join(rootDir, "index.html"), indexHtmlContent, "utf-8");
-fs.writeFileSync(path.join(rootDir, "404.html"), indexHtmlContent, "utf-8");
-fs.writeFileSync(path.join(rootDir, ".nojekyll"), "", "utf-8");
-
-console.log("Successfully prepared static distribution for GitHub Pages in dist/ and root!");
+console.log("Successfully prepared static distribution for GitHub Pages in dist/");
