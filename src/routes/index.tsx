@@ -78,57 +78,56 @@ function Index() {
 
   return (
     <div>
-      {/* ===== LUXURY DISTINCTIVE ARABIC HERO SECTION ===== */}
-      <section className="relative min-h-[88vh] lg:min-h-[92vh] flex items-center overflow-hidden bg-[#051413] text-[#FAF6F0] pt-24 pb-20 lg:pt-28 lg:pb-24 shadow-2xl">
+      {/* ===== CINEMATIC & EMBEDDED FLAGSHIP JEDDAH HERO SECTION ===== */}
+      <section className="relative min-h-[85vh] lg:min-h-[90vh] flex items-center overflow-hidden bg-[#051413] text-[#FAF6F0] pt-24 pb-16 lg:pt-28 lg:pb-20 shadow-2xl">
         {/* Subtle Red Sea Atmospheric Background Image */}
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=90"
             alt="جدة الكورنيش والبحر الأحمر"
-            className="h-full w-full object-cover object-center opacity-20 scale-105 transition-transform duration-1000"
+            className="h-full w-full object-cover object-center opacity-15 scale-105 transition-transform duration-1000"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#051413]/95 via-[#0A1F1D]/80 to-[#051413]" />
         </div>
 
-        {/* Fine Architectural Topography Lines Background */}
-        <div className="absolute inset-0 z-0 opacity-15 pointer-events-none">
+        {/* Minimal Subtle Topography Line Accent */}
+        <div className="absolute inset-0 z-0 opacity-5 pointer-events-none">
           <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#FAF6F0" strokeWidth="0.5" strokeDasharray="3 3" />
+              <pattern id="grid-subtle" width="80" height="80" patternUnits="userSpaceOnUse">
+                <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#FAF6F0" strokeWidth="0.5" strokeDasharray="4 4" />
               </pattern>
             </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
+            <rect width="100%" height="100%" fill="url(#grid-subtle)" />
           </svg>
         </div>
 
-        {/* Ambient Subtle Glow Orbs */}
-        <div className="absolute -top-32 -start-32 h-[500px] w-[500px] rounded-full bg-[#C96745]/20 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 end-0 h-[550px] w-[550px] rounded-full bg-[#397C78]/25 blur-3xl pointer-events-none" />
+        {/* Soft Ambient Light Glows */}
+        <div className="absolute -top-32 -start-32 h-[500px] w-[500px] rounded-full bg-[#C96745]/15 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 end-0 h-[550px] w-[550px] rounded-full bg-[#397C78]/20 blur-3xl pointer-events-none" />
 
-        {/* Hero Content Grid Container */}
+        {/* Hero 2-Zone Container */}
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
-            {/* LEFT ZONE: Eyebrow, Stacked Headline, Subtitle, CTAs, Feature Strip */}
+            {/* LEFT ZONE: Compact Eyebrow, Stacked Headline, Subtitle, CTAs */}
             <div className="lg:col-span-7 flex flex-col items-start text-start">
               
-              {/* Live Weather Widget & Eyebrow Badge */}
-              <div className="flex flex-wrap items-center gap-3 mb-6">
-                <JeddahWeatherWidget />
-                <div className="animate-fade-in-up inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-extrabold text-[#FAF6F0] backdrop-blur-xl border border-white/15 shadow-sm">
+              {/* Compact Weather & Eyebrow Chip */}
+              <div className="flex flex-wrap items-center gap-2.5 mb-6 animate-fade-in-up">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-extrabold text-[#FAF6F0] backdrop-blur border border-white/15 shadow-xs">
+                  ☀️ 34°C · {isRtl ? "جدة الآن" : "Jeddah Now"}
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-extrabold text-[#FAF6F0] backdrop-blur border border-white/15 shadow-xs">
                   <Sparkles className="h-3.5 w-3.5 text-[#E4A23B]" />
                   <span>{isRtl ? "جدة تبدأ من هنا." : "Jeddah starts here."}</span>
-                </div>
+                </span>
               </div>
 
-              {/* Main Headline Stack with Distinctive Rhythm */}
-              <div className="animate-fade-in-up delay-1 space-y-1">
-                <span className="block text-[#FAF6F0]/80 font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight">
-                  {isRtl ? "محتار" : "Not sure"}
-                </span>
-                <span className="block text-[#FAF6F0] font-black text-4xl sm:text-5xl lg:text-6xl tracking-tight">
-                  {isRtl ? "وين تروح اليوم؟" : "where to go today?"}
+              {/* Main Headline Stack — Prominent & Clean */}
+              <div className="animate-fade-in-up delay-1 space-y-1 max-w-2xl">
+                <span className="block text-[#FAF6F0]/90 font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight leading-tight">
+                  {isRtl ? "محتار وين تروح اليوم؟" : "Wondering where to go today?"}
                 </span>
                 <div className="pt-2">
                   <span className="relative inline-block bg-gradient-to-r from-[#FF9D7A] via-[#FAF6F0] to-[#5EAAA5] bg-clip-text text-transparent font-black text-4xl sm:text-6xl lg:text-7xl drop-shadow-md">
@@ -138,18 +137,18 @@ function Index() {
                 </div>
               </div>
 
-              {/* Supporting Text */}
-              <p className="animate-fade-in-up delay-2 mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-[#FAF6F0]/80 font-semibold">
+              {/* Supporting Copy */}
+              <p className="animate-fade-in-up delay-2 mt-6 max-w-lg text-base sm:text-lg leading-relaxed text-[#FAF6F0]/80 font-semibold">
                 {isRtl
                   ? "وقتِك، مودك، وميزانيتك… وعلينا نرتب لك طلعة تناسبك في جدة."
                   : "Your time, mood, and budget… We’ll arrange an outing that perfectly suits you in Jeddah."}
               </p>
 
-              {/* CTA Action Buttons */}
+              {/* CTAs Row */}
               <div className="animate-fade-in-up delay-3 mt-8 flex flex-wrap items-center gap-4 w-full sm:w-auto">
                 <Link
                   to="/quick-plan"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-[#C96745] to-[#B84E4E] px-8 py-4 text-base font-black text-white shadow-lift hover:scale-[1.02] hover:shadow-2xl border border-white/20 transition-all min-h-[54px] cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-[#C96745] to-[#B84E4E] px-9 py-4 text-base font-black text-white shadow-lift hover:scale-[1.02] hover:shadow-2xl border border-white/20 transition-all min-h-[54px] cursor-pointer"
                 >
                   <Sparkles className="h-5 w-5 text-white" />
                   <span>{isRtl ? "سوِّ لي خطة ✨" : "Plan My Outing ✨"}</span>
@@ -165,57 +164,62 @@ function Index() {
                 </Link>
               </div>
 
-              {/* Trust & Feature Strip */}
-              <div className="animate-fade-in-up delay-4 mt-8 flex flex-wrap items-center gap-2 text-xs font-bold text-[#FAF6F0]/80 pt-4 border-t border-white/10 w-full">
-                <span className="text-[#FAF6F0]/50 me-1">{isRtl ? "تغطية شاملة:" : "Includes:"}</span>
-                <span className="rounded-full bg-white/10 px-3 py-1 border border-white/15">🍽️ مطاعم</span>
-                <span className="text-white/30">•</span>
-                <span className="rounded-full bg-white/10 px-3 py-1 border border-white/15">☕ كافيهات</span>
-                <span className="text-white/30">•</span>
-                <span className="rounded-full bg-white/10 px-3 py-1 border border-white/15">🌊 بحر</span>
-                <span className="text-white/30">•</span>
-                <span className="rounded-full bg-white/10 px-3 py-1 border border-white/15">🎯 فعاليات</span>
-                <span className="text-white/30">•</span>
-                <span className="rounded-full bg-white/10 px-3 py-1 border border-white/15">👨‍👩‍👧‍👦 عائلات</span>
-                <span className="text-white/30">•</span>
-                <span className="rounded-full bg-white/10 px-3 py-1 border border-white/15">🥳 أصدقاء</span>
-              </div>
-
-              {/* Instant Search Bar */}
-              <div className="animate-fade-in-up delay-4 mt-6 w-full max-w-xl">
-                <form onSubmit={handleHeroSearch} className="rounded-2xl bg-white/10 backdrop-blur-2xl border border-white/20 p-2 flex items-center gap-2 shadow-2xl">
-                  <div className="relative flex-1">
-                    <Search className="absolute start-3.5 top-3 h-4.5 w-4.5 text-white/60" />
-                    <input
-                      type="text"
-                      placeholder={
-                        isRtl
-                          ? "ابحث عن مكان في جدة (مطعم، كافيه، الكورنيش)..."
-                          : "Search Jeddah places (restaurants, cafes, corniche)..."
-                      }
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full rounded-xl bg-white/10 ps-10 pe-3 py-2.5 text-xs sm:text-sm font-semibold text-[#FAF6F0] placeholder-white/50 border border-white/15 focus:outline-none focus:bg-white/20 focus:border-white/30 transition-all"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="rounded-xl bg-[#397C78] px-4.5 py-2.5 text-xs font-black text-white hover:bg-[#2d6360] transition-colors"
-                  >
-                    {isRtl ? "بحث" : "Search"}
-                  </button>
-                </form>
-              </div>
-
             </div>
 
-            {/* RIGHT ZONE: Visual Outing Canvas (JeddawHeroVisual) */}
-            <div className="lg:col-span-5 relative h-[400px] sm:h-[480px] lg:h-[540px] w-full flex items-center justify-center">
+            {/* RIGHT ZONE: Signature Floating 3D Experience Canvas (No Container Box) */}
+            <div className="lg:col-span-5 relative h-[380px] sm:h-[460px] lg:h-[500px] w-full flex items-center justify-center">
               <JeddawHeroVisual />
             </div>
 
           </div>
         </div>
+      </section>
+
+      {/* ===== BELOW THE FOLD: SEARCH & DISCOVERY BAR ===== */}
+      <section className="relative z-30 -mt-8 mx-auto max-w-5xl px-4 space-y-6">
+        {/* Instant Search Bar */}
+        <div className="rounded-3xl bg-white dark:bg-[#1A2221] p-4 sm:p-5 border border-[#E2D3BE] dark:border-white/10 shadow-2xl backdrop-blur-xl">
+          <form onSubmit={handleHeroSearch} className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="relative flex-1 w-full">
+              <Search className="absolute start-4 top-3.5 h-5 w-5 text-[#6E716C] dark:text-[#B5B8B2]" />
+              <input
+                type="text"
+                placeholder={
+                  isRtl
+                    ? "ابحث عن مكان في جدة (مطعم شامي، كافيه هادي، رد سي مول)..."
+                    : "Search Jeddah places (Red Sea Mall, Rosewood, Cafe)..."
+                }
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] ps-12 pe-4 py-3 text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 focus:border-[#C96745] focus:outline-none min-h-[48px]"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full sm:w-auto rounded-2xl bg-[#397C78] px-7 py-3 text-sm font-black text-white hover:bg-[#2d6360] transition-colors min-h-[48px]"
+            >
+              {isRtl ? "بحث فوري" : "Search"}
+            </button>
+          </form>
+
+          {/* Trust Feature Pills below search */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs font-bold text-[#6E716C] dark:text-[#B5B8B2]">
+            <span className="me-1">{isRtl ? "تغطية شاملة:" : "Includes:"}</span>
+            <span className="rounded-full bg-[#FAF6F0] dark:bg-white/10 px-3 py-1 border border-[#E2D3BE] dark:border-white/10">🍽️ مطاعم</span>
+            <span>•</span>
+            <span className="rounded-full bg-[#FAF6F0] dark:bg-white/10 px-3 py-1 border border-[#E2D3BE] dark:border-white/10">☕ كافيهات</span>
+            <span>•</span>
+            <span className="rounded-full bg-[#FAF6F0] dark:bg-white/10 px-3 py-1 border border-[#E2D3BE] dark:border-white/10">🌊 بحر</span>
+            <span>•</span>
+            <span className="rounded-full bg-[#FAF6F0] dark:bg-white/10 px-3 py-1 border border-[#E2D3BE] dark:border-white/10">🎯 فعاليات</span>
+            <span>•</span>
+            <span className="rounded-full bg-[#FAF6F0] dark:bg-white/10 px-3 py-1 border border-[#E2D3BE] dark:border-white/10">👨‍👩‍👧‍👦 عائلات</span>
+            <span>•</span>
+            <span className="rounded-full bg-[#FAF6F0] dark:bg-white/10 px-3 py-1 border border-[#E2D3BE] dark:border-white/10">🥳 أصدقاء</span>
+          </div>
+        </div>
+
+        <FlashOffersBanner />
       </section>
 
       {/* ===== Floating Core Value Proposition Banner ===== */}
