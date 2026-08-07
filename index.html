@@ -24,7 +24,17 @@
     </script>
   </head>
   <body class="bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
-    <div id="root"></div>
+    <div id="root">
+      <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #FAF6F0; color: #252A28; font-family: system-ui, sans-serif; direction: rtl; text-align: center; padding: 20px;">
+        <div style="width: 64px; height: 64px; border-radius: 20px; background-color: #C96745; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(201, 103, 69, 0.35); margin-bottom: 14px;">
+          <span style="font-size: 30px; font-weight: 900; color: #ffffff;">جـ</span>
+        </div>
+        <h1 style="font-size: 20px; font-weight: 900; margin: 0 0 4px 0; color: #252A28;">جِدّاو | JEDDAW</h1>
+        <p style="font-size: 13px; font-weight: 700; color: #6E716C; margin: 0 0 20px 0;">جدة تبدأ من هنا 🌊</p>
+        <div style="width: 28px; height: 28px; border: 3px solid #E2D3BE; border-top-color: #C96745; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+      </div>
+    </div>
     <script type="module" src="/src/client.tsx"></script>
   </body>
 </html>
