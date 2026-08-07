@@ -17,6 +17,7 @@ import { MobileTabBar } from "@/components/site/MobileTabBar";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { AiAssistant } from "@/components/ai/AiAssistant";
+import { JeddawSplashScreen } from "@/components/site/JeddawSplashScreen";
 
 function NotFoundComponent() {
   const { t } = useLanguage();
@@ -133,6 +134,7 @@ function RootComponent() {
       <LanguageProvider>
         <AuthProvider>
           <div className="flex min-h-screen flex-col bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
+            <JeddawSplashScreen />
             <SiteHeader />
             <main className="flex-1 pb-20 lg:pb-0">
               <Outlet />
