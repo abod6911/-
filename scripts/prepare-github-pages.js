@@ -4,7 +4,6 @@ import path from "node:path";
 const rootDir = process.cwd();
 const outputPublicDir = path.join(rootDir, ".output", "public");
 const distDir = path.join(rootDir, "dist");
-const publicAssetsDir = path.join(rootDir, "public", "assets");
 
 // Reset dist directory
 if (fs.existsSync(distDir)) {
@@ -17,7 +16,7 @@ if (fs.existsSync(outputPublicDir)) {
   fs.cpSync(outputPublicDir, distDir, { recursive: true });
 }
 
-// Find compiled styles and index JS
+// Find compiled styles and index JS inside dist/assets
 const assetsDir = path.join(distDir, "assets");
 let cssFile = "";
 let jsFile = "";
@@ -55,31 +54,24 @@ const indexHtmlContent = `<!DOCTYPE html>
         } catch (e) {}
       })();
     </script>
-    ${cssFile ? `<link rel="stylesheet" href="/-/assets/${cssFile}" />` : ""}
-    ${jsFile ? `<link rel="modulepreload" href="/-/assets/${jsFile}" />` : ""}
+    ${cssFile ? `<link rel="stylesheet" href="./assets/${cssFile}" />` : ""}
+    ${jsFile ? `<link rel="modulepreload" href="./assets/${jsFile}" />` : ""}
   </head>
   <body class="bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
     <div id="root"></div>
-    ${jsFile ? `<script type="module" src="/-/assets/${jsFile}"></script>` : ""}
+    ${jsFile ? `<script type="module" src="./assets/${jsFile}"></script>` : ""}
   </body>
 </html>
 `;
 
-// Write to dist
+// Write compiled index.html, 404.html, .nojekyll to dist
 fs.writeFileSync(path.join(distDir, "index.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(distDir, "404.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(distDir, ".nojekyll"), "", "utf-8");
 
-// Copy compiled assets to public/assets and sync root files for GitHub Pages root deployment
-if (fs.existsSync(assetsDir)) {
-  if (fs.existsSync(publicAssetsDir)) {
-    fs.rmSync(publicAssetsDir, { recursive: true, force: true });
-  }
-  fs.cpSync(assetsDir, publicAssetsDir, { recursive: true });
-}
-
+// Also sync root index.html, 404.html, .nojekyll so root branch deployments work 100%
 fs.writeFileSync(path.join(rootDir, "index.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, "404.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, ".nojekyll"), "", "utf-8");
 
-console.log("Successfully prepared static distribution for GitHub Pages in dist/ and public/assets!");
+console.log("Successfully prepared static distribution for GitHub Pages in dist/!");
