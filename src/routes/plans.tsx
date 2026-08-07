@@ -59,10 +59,10 @@ function PlansPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
                 <div className="absolute top-3 start-3 end-3 flex items-center justify-between z-10">
                   <span className="rounded-full bg-[#C96745] px-3 py-1 text-xs font-extrabold text-white shadow-md">
-                    {plan.tagAr}
+                    {isRtl ? plan.tagAr : (plan.tagEn || plan.tagAr)}
                   </span>
                   <span className="rounded-full bg-black/50 backdrop-blur px-3 py-1 text-xs font-bold text-[#E4A23B] shadow-md">
-                    ⭐ {budgetLevels[plan.budget].ar}
+                    ⭐ {isRtl ? budgetLevels[plan.budget].ar : budgetLevels[plan.budget].en}
                   </span>
                 </div>
               </div>
@@ -72,7 +72,9 @@ function PlansPage() {
                   <h2 className="text-2xl font-extrabold text-[#252A28] dark:text-[#F5F1E8]">
                     {isRtl ? plan.titleAr : plan.titleEn}
                   </h2>
-                  <p className="mt-2 text-sm text-[#6E716C] dark:text-[#B5B8B2] leading-relaxed font-medium">{plan.descAr}</p>
+                  <p className="mt-2 text-sm text-[#6E716C] dark:text-[#B5B8B2] leading-relaxed font-medium">
+                    {isRtl ? plan.descAr : (plan.descEn || plan.descAr)}
+                  </p>
 
                   {/* Stop Timeline with Place Images */}
                   <ol className="mt-6 space-y-3 border-t border-[#E2D3BE] dark:border-white/10 pt-4">

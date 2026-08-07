@@ -1018,9 +1018,11 @@ export interface ReadyPlan {
   titleAr: string;
   titleEn: string;
   tagAr: string;
+  tagEn?: string;
   budget: BudgetLevel;
   stops: string[]; // place ids
   descAr: string;
+  descEn?: string;
   image: string;
 }
 
@@ -1030,9 +1032,11 @@ export const readyPlans: ReadyPlan[] = [
     titleAr: "خطة البحر والروقان 🌊",
     titleEn: "Sea & Sunset Chill",
     tagAr: "غروب ورستوران بحري",
+    tagEn: "Sunset & Seafood Dining",
     budget: "balanced",
     stops: ["p2", "r3", "c3"],
     descAr: "تبدأ بغوص أو كارتينج ممتع، ثم عشاء بحري طازج في قدورة، وتختمها بقهوة مختصة بروف الكورنيش مع الغروب.",
+    descEn: "Start with scuba diving or karting, followed by fresh seafood at Gaddoura, and finish with specialty coffee at North Corniche at sunset.",
     image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80",
   },
   {
@@ -1040,9 +1044,11 @@ export const readyPlans: ReadyPlan[] = [
     titleAr: "خطة عائلية في جدة التاريخية 🏛️",
     titleEn: "Balad Heritage Family Day",
     tagAr: "تراث وعشاء حجازي",
+    tagEn: "Heritage & Hijazi Dining",
     budget: "economy",
     stops: ["p3", "r4", "c2"],
     descAr: "تمشية بين رواشين البلد ومتحف ناصيف التاريخي، ثم مندي السدة الشهير، وتختم بقهوة ميدد التراثية بالبلد.",
+    descEn: "Stroll through Historic Al Balad and Nasseef House, enjoy famous Al Saddah Mandi, and end at Medd Heritage Coffee.",
     image: "https://images.unsplash.com/photo-1578895210405-907db48a7111?auto=format&fit=crop&w=800&q=80",
   },
   {
@@ -1050,9 +1056,11 @@ export const readyPlans: ReadyPlan[] = [
     titleAr: "خطة ليلة فاخرة 5 نجوم 💎",
     titleEn: "5-Star Luxury Jeddah Night",
     tagAr: "فخامة وأصالة",
+    tagEn: "5-Star Luxury Stay",
     budget: "premium",
     stops: ["h1", "r6", "c1"],
     descAr: "إقامة استثنائية في روزوود الكورنيش، ثم عشاء أرميني فاخر في مطعم لوسين، وقهوة مختصة رايقة ببرو 92.",
+    descEn: "Exceptional luxury stay at Rosewood Jeddah, Armenian fine dining at Lusin, and specialty roastery coffee at Brew 92.",
     image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80",
   },
   {
@@ -1060,9 +1068,11 @@ export const readyPlans: ReadyPlan[] = [
     titleAr: "خطة شلة الشباب والحماس 🏎️",
     titleEn: "Youth Thrill & Eats",
     tagAr: "حماس وأكل سريع",
+    tagEn: "Youth Thrill & Broasted",
     budget: "economy",
     stops: ["p1", "r1", "c3"],
     descAr: "تنافس كارتينج حماسي بإن-نايت، ثم بروستد البيك الشهير بالزهراء، وتختم بقهوة أفرست البحر الباردة.",
+    descEn: "Thrill karting session at In10so, followed by famous Al Baik broasted, and chill iced coffee at Everest.",
     image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80",
   },
   {
@@ -1070,9 +1080,11 @@ export const readyPlans: ReadyPlan[] = [
     titleAr: "خطة استجمام الشواطئ والمنتجعات 🏖️",
     titleEn: "Red Sea Resort Getaway",
     tagAr: "منتجع واستجمام",
+    tagEn: "Resort & Red Sea Beach",
     budget: "premium",
     stops: ["s1", "r3", "c3"],
     descAr: "يوم استجمام فلل إنديجو أبحر الشاطئية، عشاء سمك طازج في قدورة، وجلسة روقان مقابل غروب البحر الأحمر.",
+    descEn: "Relaxing day at Indigo Obhur beach villas, fresh seafood dinner at Gaddoura, and sunset sea views.",
     image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80",
   },
 ];
