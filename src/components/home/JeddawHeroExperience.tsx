@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Compass, MapPin, Sparkles, Utensils, Coffee, Zap, Waves, Star, Clock, Navigation } from "lucide-react";
+import { Compass, MapPin, Sparkles, Utensils, Coffee, Zap, Waves, Star, Clock } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 /**
@@ -21,7 +21,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [splineError, setSplineError] = useState(false);
 
-  // Smooth pointer depth parallax
+  // Damped pointer parallax for depth
   useEffect(() => {
     let animationFrameId: number;
     let targetX = 0;
@@ -39,8 +39,8 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
     };
 
     const updateParallax = () => {
-      currentX += (targetX - currentX) * 0.05;
-      currentY += (targetY - currentY) * 0.05;
+      currentX += (targetX - currentX) * 0.04;
+      currentY += (targetY - currentY) * 0.04;
       setMousePos({
         x: Math.max(-1, Math.min(1, currentX)),
         y: Math.max(-1, Math.min(1, currentY)),
@@ -71,38 +71,43 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
     );
   }
 
-  // RICH, LAYERED 3D OUTING SCENE (NO OUTER CONTAINER BOX)
+  // ART-DIRECTED FLAGSHIP SPATIAL ROUTE ENVIRONMENT
   return (
     <div
       ref={containerRef}
       className="relative h-full w-full flex items-center justify-center p-2 sm:p-4 select-none pointer-events-none overflow-visible"
     >
-      {/* Layer 0: Multi-Tone Atmospheric Background Glow Orbs */}
+      {/* LAYER 0: Ambient Atmospheric Glow Spotlights */}
       <div
-        className="absolute h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-[#C96745]/25 via-[#E4A23B]/20 to-[#397C78]/25 blur-3xl transition-transform duration-1000 ease-out"
+        className="absolute h-[520px] w-[520px] rounded-full bg-radial from-[#C96745]/25 via-[#E4A23B]/15 to-transparent blur-3xl transition-transform duration-1000 ease-out"
         style={{
           transform: `translate(${mousePos.x * -25}px, ${mousePos.y * -25}px)`,
         }}
       />
-      <div className="absolute top-10 end-10 h-64 w-64 rounded-full bg-[#5EAAA5]/20 blur-2xl pointer-events-none" />
+      <div
+        className="absolute bottom-10 start-10 h-72 w-72 rounded-full bg-[#397C78]/25 blur-3xl pointer-events-none"
+        style={{
+          transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20}px)`,
+        }}
+      />
 
-      {/* Layer 1: Abstract Red Sea Coastline & Layered Curved SVG Routes */}
+      {/* LAYER 1: Abstract Red Sea Coastline & Layered Curved SVG Routes */}
       <svg
         className="absolute inset-0 h-full w-full z-0 pointer-events-none overflow-visible"
-        viewBox="0 0 650 520"
+        viewBox="0 0 680 540"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         {/* Subtle Coastline Contour Lines */}
         <path
-          d="M 40 480 Q 200 350, 310 260 T 610 60"
+          d="M 50 500 Q 220 360, 330 270 T 640 70"
           stroke="#397C78"
           strokeWidth="1.5"
           strokeDasharray="6 12"
           className="opacity-25"
         />
         <path
-          d="M 20 440 Q 180 310, 290 220 T 590 20"
+          d="M 30 460 Q 200 320, 310 230 T 620 30"
           stroke="#C96745"
           strokeWidth="1"
           strokeDasharray="3 9"
@@ -111,16 +116,15 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
 
         {/* Primary Glowing Outing Path Connection */}
         <path
-          d="M 110 370 C 180 230, 290 350, 370 190 C 440 110, 520 150, 560 70"
-          stroke="url(#jeddawRichRouteGrad)"
+          d="M 120 380 C 190 240, 300 360, 380 200 C 450 120, 540 160, 580 80"
+          stroke="url(#jeddawArtRouteGrad)"
           strokeWidth="3.5"
           strokeLinecap="round"
-          className="animate-route-draw drop-shadow-[0_0_16px_rgba(201,103,69,0.5)]"
+          className="animate-route-draw drop-shadow-[0_0_20px_rgba(201,103,69,0.55)]"
         />
 
-        {/* Dynamic Route Gradient Definition */}
         <defs>
-          <linearGradient id="jeddawRichRouteGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+          <linearGradient id="jeddawArtRouteGrad" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#C96745" />
             <stop offset="35%" stopColor="#E4A23B" />
             <stop offset="70%" stopColor="#5EAAA5" />
@@ -129,27 +133,28 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         </defs>
       </svg>
 
-      {/* Layer 2: SIGNATURE CENTRAL ANCHOR ELEMENT (Branded Route Hub & Pin) */}
+      {/* LAYER 2: CENTRAL BRAND ANCHOR HUB (📍 JEDDAW OUTING PIN) */}
       <div
         className="relative z-20 flex flex-col items-center justify-center text-center transition-transform duration-500 ease-out my-auto"
         style={{
           transform: `translate(${mousePos.x * 8}px, ${mousePos.y * 8}px)`,
         }}
       >
-        {/* Pulsing Outer Rings */}
-        <div className="absolute h-36 w-36 rounded-full border border-[#C96745]/30 animate-ping opacity-25" />
-        <div className="absolute h-28 w-28 rounded-full bg-gradient-to-r from-[#C96745]/20 to-[#397C78]/20 blur-lg" />
+        {/* Layered Pulsing Rings */}
+        <div className="absolute h-40 w-40 rounded-full border border-[#C96745]/30 animate-ping opacity-20" />
+        <div className="absolute h-32 w-32 rounded-full border border-white/20 animate-pulse opacity-40" />
+        <div className="absolute h-28 w-28 rounded-full bg-gradient-to-r from-[#C96745]/30 to-[#397C78]/30 blur-xl" />
 
         {/* Central Branded Marker Hub */}
-        <div className="relative grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-[#C96745] via-[#E4A23B] to-[#397C78] text-white shadow-2xl border-2 border-white/40 ring-8 ring-[#C96745]/20">
+        <div className="relative grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-[#C96745] via-[#E4A23B] to-[#397C78] text-white shadow-2xl border-2 border-white/40 ring-8 ring-[#C96745]/20 backdrop-blur-2xl">
           <MapPin className="h-10 w-10 text-white drop-shadow-lg animate-bounce-gentle" />
           <span className="absolute -bottom-1 grid h-5 w-5 place-items-center rounded-full bg-white text-[#C96745] shadow-md">
             <Sparkles className="h-3 w-3" />
           </span>
         </div>
 
-        {/* Central Hub Label Pill */}
-        <div className="mt-3 flex items-center gap-2 rounded-full bg-[#051413]/90 px-4 py-1.5 border border-white/20 shadow-2xl backdrop-blur-xl">
+        {/* Branded Hub Label Capsule */}
+        <div className="mt-3.5 flex items-center gap-2 rounded-full bg-[#051413]/95 px-4.5 py-1.5 border border-white/25 shadow-2xl backdrop-blur-2xl">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-xs font-black text-white tracking-wider">
             {isRtl ? "خطتك الموزونة 📍" : "Your Curated Route 📍"}
@@ -157,9 +162,9 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         </div>
       </div>
 
-      {/* Layer 3: DESTINATION MODULE 1 (DINING / عشاء فاخر - Bottom Left) */}
+      {/* LAYER 3: DESTINATION MODULE 1 (DINING / عشاء فاخر - Bottom Left) */}
       <div
-        className="absolute top-[65%] start-[4%] sm:start-[8%] z-30 flex items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float"
+        className="absolute top-[64%] start-[4%] sm:start-[8%] z-30 flex items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float"
         style={{
           transform: `translate(${mousePos.x * 18}px, ${mousePos.y * 18}px)`,
         }}
@@ -170,7 +175,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
             alt="عشاء"
             className="h-full w-full object-cover"
           />
-          <span className="absolute bottom-0 end-0 bg-black/60 text-[9px] px-1 text-white font-bold">17:30</span>
+          <span className="absolute bottom-0 end-0 bg-black/70 text-[9px] px-1 text-white font-bold">17:30</span>
         </div>
         <div className="flex flex-col text-start">
           <div className="flex items-center gap-1.5">
@@ -187,9 +192,9 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         </div>
       </div>
 
-      {/* Layer 3: DESTINATION MODULE 2 (COFFEE / قهوة مختصة - Top Left) */}
+      {/* LAYER 3: DESTINATION MODULE 2 (COFFEE / قهوة مختصة - Top Left) */}
       <div
-        className="absolute top-[20%] start-[22%] sm:start-[26%] z-30 flex items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float-delayed"
+        className="absolute top-[18%] start-[20%] sm:start-[24%] z-30 flex items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float-delayed"
         style={{
           transform: `translate(${mousePos.x * -22}px, ${mousePos.y * -14}px)`,
         }}
@@ -200,7 +205,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
             alt="قهوة"
             className="h-full w-full object-cover"
           />
-          <span className="absolute bottom-0 end-0 bg-black/60 text-[9px] px-1 text-white font-bold">19:45</span>
+          <span className="absolute bottom-0 end-0 bg-black/70 text-[9px] px-1 text-white font-bold">19:45</span>
         </div>
         <div className="flex flex-col text-start">
           <div className="flex items-center gap-1.5">
@@ -217,9 +222,9 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         </div>
       </div>
 
-      {/* Layer 3: DESTINATION MODULE 3 (ACTIVITY / فعالية وحركة - Mid Right) */}
+      {/* LAYER 3: DESTINATION MODULE 3 (ACTIVITY / فعالية وحركة - Mid Right) */}
       <div
-        className="absolute top-[52%] end-[6%] sm:end-[10%] z-30 flex items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float"
+        className="absolute top-[50%] end-[5%] sm:end-[9%] z-30 flex items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float"
         style={{
           transform: `translate(${mousePos.x * 20}px, ${mousePos.y * -20}px)`,
         }}
@@ -230,7 +235,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
             alt="فعالية"
             className="h-full w-full object-cover"
           />
-          <span className="absolute bottom-0 end-0 bg-black/60 text-[9px] px-1 text-white font-bold">21:15</span>
+          <span className="absolute bottom-0 end-0 bg-black/70 text-[9px] px-1 text-white font-bold">21:15</span>
         </div>
         <div className="flex flex-col text-start">
           <div className="flex items-center gap-1.5">
@@ -247,9 +252,9 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         </div>
       </div>
 
-      {/* Layer 3: DESTINATION MODULE 4 (SUNSET SEA / غروب البحر - Top Right) */}
+      {/* LAYER 3: DESTINATION MODULE 4 (SUNSET SEA / غروب البحر - Top Right) */}
       <div
-        className="hidden sm:flex absolute top-[14%] end-[16%] sm:end-[20%] z-30 items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float-delayed"
+        className="hidden sm:flex absolute top-[12%] end-[14%] sm:end-[18%] z-30 items-center gap-3.5 rounded-2xl bg-[#091C1A]/95 border border-white/25 p-2.5 pe-4 shadow-2xl backdrop-blur-2xl transition-all duration-700 animate-float-delayed"
         style={{
           transform: `translate(${mousePos.x * -16}px, ${mousePos.y * 16}px)`,
         }}
@@ -260,7 +265,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
             alt="غروب"
             className="h-full w-full object-cover"
           />
-          <span className="absolute bottom-0 end-0 bg-black/60 text-[9px] px-1 text-white font-bold">17:00</span>
+          <span className="absolute bottom-0 end-0 bg-black/70 text-[9px] px-1 text-white font-bold">17:00</span>
         </div>
         <div className="flex flex-col text-start">
           <div className="flex items-center gap-1.5">
@@ -277,9 +282,9 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         </div>
       </div>
 
-      {/* Layer 4: FLOATING EDITORIAL MICRO-BADGES */}
+      {/* LAYER 4: EDITORIAL FLOATING CAPSULES */}
       <div
-        className="absolute top-6 start-4 sm:top-10 sm:start-8 z-40 flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 px-3.5 py-1.5 text-[11px] font-black text-white shadow-xl transition-transform duration-700 animate-float"
+        className="absolute top-6 start-4 sm:top-8 sm:start-6 z-40 flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-2xl border border-white/25 px-3.5 py-1.5 text-[11px] font-black text-white shadow-2xl transition-transform duration-700 animate-float"
         style={{
           transform: `translate(${mousePos.x * 12}px, ${mousePos.y * 12}px)`,
         }}
@@ -289,7 +294,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
       </div>
 
       <div
-        className="absolute bottom-6 end-4 sm:bottom-10 sm:end-8 z-40 flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 px-3.5 py-1.5 text-[11px] font-black text-white shadow-xl transition-transform duration-700 animate-float-delayed"
+        className="absolute bottom-6 end-4 sm:bottom-8 sm:end-6 z-40 flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-2xl border border-white/25 px-3.5 py-1.5 text-[11px] font-black text-white shadow-2xl transition-transform duration-700 animate-float-delayed"
         style={{
           transform: `translate(${mousePos.x * -14}px, ${mousePos.y * -14}px)`,
         }}
