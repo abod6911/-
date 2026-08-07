@@ -37,6 +37,8 @@ export interface GeneratedPlan {
   flavor: PlanFlavor;
   titleAr: string;
   subtitleAr: string;
+  titleEn: string;
+  subtitleEn: string;
   stops: PlanStop[];
   pricePerPerson: number;
   totalPrice: number;
@@ -134,10 +136,25 @@ function pick(pool: Place[], req: PlanRequest, cap: number, origin: string | nul
   return ranked.map((r) => r.p);
 }
 
-const flavorMeta: Record<PlanFlavor, { titleAr: string; subtitleAr: string }> = {
-  nearest: { titleAr: "الأقرب والأسرع", subtitleAr: "مسافات قصيرة وتنفيذ سريع بدون تعقيد." },
-  balanced: { titleAr: "الخطة الموزونة", subtitleAr: "أفضل توازن بين الجودة والسعر والتنوع." },
-  premium: { titleAr: "التجربة المميزة", subtitleAr: "إطلالات أحلى وتجارب أعلى مستوى." },
+const flavorMeta: Record<PlanFlavor, { titleAr: string; subtitleAr: string; titleEn: string; subtitleEn: string }> = {
+  nearest: {
+    titleAr: "الأقرب والأسرع",
+    subtitleAr: "مسافات قصيرة وتنفيذ سريع بدون تعقيد",
+    titleEn: "Fastest & Nearest",
+    subtitleEn: "Short distances & quick execution without hassle",
+  },
+  balanced: {
+    titleAr: "الخطة الموزونة",
+    subtitleAr: "أفضل توازن بين الجودة والسعر والتنوع",
+    titleEn: "Balanced Plan",
+    subtitleEn: "Optimal balance of quality, budget & variety",
+  },
+  premium: {
+    titleAr: "التجربة المميزة",
+    subtitleAr: "إطلالات أحلى وتجارب أعلى مستوى",
+    titleEn: "Special Experience",
+    subtitleEn: "Scenic views & top-tier experiences",
+  },
 };
 
 function buildPlan(req: PlanRequest, flavor: PlanFlavor): GeneratedPlan | null {

@@ -427,6 +427,85 @@ html[lang="ar"] label {
   animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* ==========================================================================
+   Living Jeddah Hero — Cinematic Animations
+   ========================================================================== */
+
+@keyframes coastline-drift {
+  0% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(12px) translateY(-8px); }
+  100% { transform: translateX(0) translateY(0); }
+}
+
+@keyframes horizon-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes hotspot-breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(201, 103, 69, 0.3); }
+  50% { transform: scale(1.04); box-shadow: 0 0 0 8px rgba(201, 103, 69, 0); }
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer-line {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(32px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes subtle-rotate {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(1.5deg); }
+}
+
+@utility animate-coastline-drift {
+  animation: coastline-drift 8s ease-in-out infinite;
+}
+
+@utility animate-horizon-glow {
+  animation: horizon-glow 4s ease-in-out infinite;
+}
+
+@utility animate-hotspot-breathe {
+  animation: hotspot-breathe 2.8s ease-in-out infinite;
+}
+
+@utility animate-float-gentle {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+@utility animate-float-delayed {
+  animation: float-gentle 4s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+@utility animate-shimmer-line {
+  background-size: 200% 100%;
+  animation: shimmer-line 3s ease-in-out infinite;
+}
+
+@utility animate-reveal-up {
+  animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility animate-subtle-rotate {
+  animation: subtle-rotate 6s ease-in-out infinite;
+}
+
 /* Safe area for mobile tab bar */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .safe-area-bottom {

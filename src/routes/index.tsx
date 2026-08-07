@@ -239,25 +239,33 @@ function Index() {
             </span>
             <h2 className="text-2xl md:text-3xl font-black text-white leading-tight">
               {isRtl
-                ? "المواقع الثانية تعطيك أماكن. جِدّاو يرتّب لك الطلعة كاملة."
-                : "Other platforms list places. JEDDAW builds your complete outing."}
+                ? "المواقع الثانية تعطيك أماكن. جِدّاو يرتّب لك الطلعة كاملة"
+                : "Other platforms list places. JEDDAW builds your complete outing"}
             </h2>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Traditional Apps Side */}
             <div className="rounded-2xl bg-black/30 p-5 border border-white/10 text-start">
-              <span className="text-xs font-extrabold text-white/50 block mb-2">❌ التطبيقات العادية</span>
+              <span className="text-xs font-extrabold text-white/50 block mb-2">
+                {isRtl ? "❌ التطبيقات العادية" : "❌ Standard Apps"}
+              </span>
               <p className="text-sm font-bold text-white/70 leading-relaxed">
-                تعطيك قائمة خيارات طويلة، فتضيع بين التقييمات والانستقرام وتظل محتار وين تروح أول.
+                {isRtl
+                  ? "تعطيك قائمة خيارات طويلة، فتضيع بين التقييمات والانستقرام وتظل محتار وين تروح أول"
+                  : "Provides long unorganized lists, leaving you lost between reviews and social media without a clear route"}
               </p>
             </div>
 
             {/* JEDDAW Side */}
             <div className="rounded-2xl bg-[#C96745]/20 p-5 border border-[#C96745]/40 text-start">
-              <span className="text-xs font-extrabold text-[#FF9D7A] block mb-2">✨ جِدّاو الذكي</span>
+              <span className="text-xs font-extrabold text-[#FF9D7A] block mb-2">
+                {isRtl ? "✨ جِدّاو الذكي" : "✨ Smart JEDDAW"}
+              </span>
               <p className="text-sm font-black text-white leading-relaxed">
-                يعطيك خطة متسلسلة وموزونة: مطعم مناسب 🍽️ + قهوة روقان ☕ + فعالية حماسية 🏎️ مع مسار الخريطة والوقت.
+                {isRtl
+                  ? "يعطيك خطة متسلسلة وموزونة: مطعم مناسب 🍽️ + قهوة روقان ☕ + فعالية حماسية 🏎️ مع مسار الخريطة والوقت"
+                  : "Delivers a complete curated itinerary: dining 🍽️ + specialty coffee ☕ + action 🏎️ with maps and travel times"}
               </p>
             </div>
           </div>
@@ -430,7 +438,7 @@ function Index() {
         </div>
       </section>
 
-      {/* ===== SECTION 15: CURATED JEDDAH DISTRICTS SHOWCASE (UNIQUE IMAGES) ===== */}
+      {/* ===== SECTION 15: CURATED JEDDAH DISTRICTS SHOWCASE ===== */}
       <section className="bg-[#FAF6F0] dark:bg-[#161B1A] py-16 border-t border-b border-[#E2D3BE]/60 dark:border-white/10">
         <div className="mx-auto max-w-6xl px-4">
           <div className="text-center mb-10">
@@ -506,7 +514,7 @@ function Index() {
             ⚡ {isRtl ? "بساطة وسرعة" : "Simple & Instant"}
           </span>
           <h2 className="text-3xl font-black text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">
-            {isRtl ? "كيف جِدّاو يرتّبها؟" : "How JEDDAW Works?"}
+            {t("howItWorksTitle")}
           </h2>
           <p className="text-sm font-semibold text-[#6E716C] dark:text-[#B5B8B2] mt-1 max-w-md mx-auto">
             {isRtl
@@ -522,10 +530,10 @@ function Index() {
               1
             </span>
             <h3 className="text-lg font-black text-[#252A28] dark:text-[#F5F1E8] mb-2">
-              {isRtl ? "قل لنا جوّك" : "Tell Us Your Vibe"}
+              {t("howStep1Title")}
             </h3>
             <p className="text-xs font-semibold text-[#6E716C] dark:text-[#B5B8B2] leading-relaxed">
-              اختر نوع الطلعة (روقان، عشاء بحري، عائلات، أو حماس مع الشلة).
+              {t("howStep1Desc")}
             </p>
           </div>
 
@@ -535,10 +543,10 @@ function Index() {
               2
             </span>
             <h3 className="text-lg font-black text-[#252A28] dark:text-[#F5F1E8] mb-2">
-              {isRtl ? "حدد ميزانيتك ووقتك" : "Set Time & Budget"}
+              {t("howStep2Title")}
             </h3>
             <p className="text-xs font-semibold text-[#6E716C] dark:text-[#B5B8B2] leading-relaxed">
-              حدد الميزانية للشخص ووقت البداية والحي المفضل في جدة.
+              {t("howStep2Desc")}
             </p>
           </div>
 
@@ -548,10 +556,10 @@ function Index() {
               3
             </span>
             <h3 className="text-lg font-black text-[#252A28] dark:text-[#F5F1E8] mb-2">
-              {isRtl ? "خذ خطتك كاملة" : "Get Full Itinerary"}
+              {t("howStep3Title")}
             </h3>
             <p className="text-xs font-semibold text-[#6E716C] dark:text-[#B5B8B2] leading-relaxed">
-              احصل على مسار متسلسل ومجهز بالخرائط وحاسبة الفاتورة ومشاركة الواتساب.
+              {t("howStep3Desc")}
             </p>
           </div>
         </div>

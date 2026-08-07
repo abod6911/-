@@ -14,25 +14,28 @@ export function JeddawSplashScreen() {
   const [fadeOut, setFadeOut] = useState(false);
   const [phraseIdx, setPhraseIdx] = useState(0);
 
-  // Smoothly cycle through refined microcopy
+  // Smoothly cycle through refined microcopy over the 5-second duration
   useEffect(() => {
     const timer = setInterval(() => {
       setPhraseIdx((prev) => (prev + 1) % elegantPhrases.length);
-    }, 1900);
+    }, 1200);
     return () => clearInterval(timer);
   }, []);
 
-  // Smooth hydration exit transition
+  // Set total loading duration to exactly 5 seconds
   useEffect(() => {
     const fadeTimer = setTimeout(() => {
       setFadeOut(true);
-      const removeTimer = setTimeout(() => {
-        setVisible(false);
-      }, 700);
-      return () => clearTimeout(removeTimer);
-    }, 1100);
+    }, 4400);
 
-    return () => clearTimeout(fadeTimer);
+    const removeTimer = setTimeout(() => {
+      setVisible(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(removeTimer);
+    };
   }, []);
 
   if (!visible) return null;
