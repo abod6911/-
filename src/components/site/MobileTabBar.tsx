@@ -7,14 +7,14 @@ export function MobileTabBar() {
 
   const items = [
     { to: "/", label: t("home"), icon: Home },
-    { to: "/places", label: "استكشف", icon: Compass },
-    { to: "/quick-plan", label: "خطتك", icon: Sparkles, center: true },
-    { to: "/plans", label: "المحفوظات", icon: Bookmark },
+    { to: "/places", label: t("explore"), icon: Compass },
+    { to: "/quick-plan", label: t("yourPlan"), icon: Sparkles, center: true },
+    { to: "/plans", label: t("favorites"), icon: Bookmark },
     { to: "/account", label: t("account"), icon: User },
   ] as const;
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E2D3BE] glass-tabbar safe-area-bottom lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E2D3BE] dark:border-white/10 glass-tabbar safe-area-bottom lg:hidden transition-all duration-300 html[data-keyboard-open='true']_&]:translate-y-full html[data-keyboard-open='true']_&]:opacity-0 html[data-keyboard-open='true']_&]:pointer-events-none">
       <ul className="mx-auto flex max-w-md items-end justify-between px-3 py-2">
         {items.map(({ to, label, icon: Icon, ...rest }) => {
           const center = "center" in rest && rest.center;

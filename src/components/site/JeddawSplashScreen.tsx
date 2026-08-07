@@ -31,15 +31,15 @@ export function JeddawSplashScreen() {
     return () => clearInterval(timer);
   }, []);
 
-  // Set total loading duration to exactly 5 seconds
+  // Fast smooth startup transition without forced 5-second delay
   useEffect(() => {
     const fadeTimer = setTimeout(() => {
       setFadeOut(true);
-    }, 4400);
+    }, 600);
 
     const removeTimer = setTimeout(() => {
       setVisible(false);
-    }, 5000);
+    }, 900);
 
     return () => {
       clearTimeout(fadeTimer);

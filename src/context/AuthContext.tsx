@@ -9,7 +9,7 @@ export interface UserProfile {
   name: string;
   email: string;
   district?: string;
-  token?: string;
+  isGuest: boolean;
   createdAt?: string;
 }
 
@@ -30,7 +30,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Input Sanitization Security Guard
+// Input Sanitization Guard
 export function sanitizeInput(str: string): string {
   return str.replace(/[<>'"/]/g, "").trim();
 }
@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
     }
-    return { id: "guest", name: "زائر جدة", email: "guest@jeddaw.sa", district: "الكورنيش" };
+    return { id: "guest", name: "زائر جدة", email: "guest@jeddaw.sa", district: "الكورنيش", isGuest: true };
   });
 
   const [savedPlans, setSavedPlans] = useState<SavedPlan[]>(() => {
@@ -105,14 +105,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = (name: string, email: string, district?: string): boolean => {
     const cleanName = sanitizeInput(name);
     const cleanEmail = sanitizeInput(email);
-    const secToken = `sec_token_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
     setUser({
       id: `user_${Date.now()}`,
       name: cleanName || "عضو جِدّاو",
       email: cleanEmail,
       district: district || "جدة",
-      token: secToken,
+      isGuest: false,
       createdAt: new Date().toLocaleDateString("ar-SA"),
     });
 
@@ -133,7 +132,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    setUser({ id: "guest", name: "زائر جدة", email: "guest@jeddaw.sa", district: "الكورنيش" });
+    setUser({ id: "guest", name: "زائر جدة", email: "guest@jeddaw.sa", district: "الكورنيش", isGuest: true });
   };
 
   const savePlan = (plan: SavedPlan) => {

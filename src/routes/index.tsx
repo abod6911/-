@@ -76,7 +76,7 @@ function Index() {
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate({ to: "/places" });
+      navigate({ to: "/places", search: { q: searchQuery.trim() } });
     }
   };
 

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/offers")({
       { title: "عروض جدة اليوم | جِدّاو — JEDDAW" },
       {
         name: "description",
-        content: "عروض موثقة على المطاعم والمقاهي والأنشطة في جدة مع الأسعار والشروط وتاريخ الانتهاء من جِدّاو.",
+        content: "عروض ومختارات على المطاعم والمقاهي والأنشطة في جدة مع الأسعار والشروط من جِدّاو.",
       },
     ],
     links: [{ rel: "canonical", href: "/offers" }],
@@ -26,9 +26,9 @@ function OffersPage() {
       <div className="animate-fade-in-up flex items-center gap-3">
         <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745]/15 text-xl">🔥</span>
         <div>
-          <h1 className="text-3xl font-extrabold text-[#252A28] md:text-4xl">{t("allOffers")}</h1>
-          <p className="mt-1 text-sm text-[#6E716C] font-semibold">
-            {isRtl ? "خصومات وعروض مميزة محدّثة وموثقة حصرياً" : "Verified offers in Jeddah"}
+          <h1 className="text-3xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">{t("allOffers")}</h1>
+          <p className="mt-1 text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
+            {isRtl ? "عروض ومختارات مضافة إلى جِدّاو" : "Offers and picks listed on JEDDAW"}
           </p>
         </div>
       </div>
@@ -59,7 +59,7 @@ function OffersPage() {
                 )}
 
                 <span className="absolute top-3 start-3 rounded-full bg-black/60 backdrop-blur px-3 py-1 text-[11px] font-extrabold text-[#E4A23B] z-10">
-                  كود: {offer.code}
+                  {isRtl ? "كود:" : "Code:"} {offer.code}
                 </span>
               </div>
 
@@ -76,11 +76,11 @@ function OffersPage() {
                 <div className="mt-6 flex items-center justify-between border-t border-[#E2D3BE] dark:border-white/10 pt-4">
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-2xl font-black text-[#C96745]">{offer.discountPct}%</span>
-                    <span className="text-xs font-bold text-[#6E716C]">{isRtl ? "خصم حقيقي" : "OFF"}</span>
+                    <span className="text-xs font-bold text-[#6E716C] dark:text-[#B5B8B2]">{isRtl ? "خصم" : "OFF"}</span>
                   </div>
 
                   <span className="flex items-center gap-1 text-[#397C78] dark:text-[#5EAAA5] text-xs font-bold">
-                    <BadgeCheck className="h-4 w-4 text-[#71805B]" /> {isRtl ? "عرض موثق" : "Verified Offer"}
+                    <BadgeCheck className="h-4 w-4 text-[#71805B]" /> {isRtl ? "عرض متاح" : "Active Offer"}
                   </span>
                 </div>
               </div>

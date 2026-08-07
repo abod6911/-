@@ -126,6 +126,8 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+import { useVisualViewport } from "@/hooks/useVisualViewport";
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -133,18 +135,26 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <AuthProvider>
-          <div className="flex min-h-screen flex-col bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
-            <JeddawSplashScreen />
-            <SiteHeader />
-            <main className="flex-1 pb-20 lg:pb-0">
-              <Outlet />
-            </main>
-            <SiteFooter />
-            <MobileTabBar />
-            <AiAssistant />
-          </div>
+          <RootAppContent />
         </AuthProvider>
       </LanguageProvider>
     </QueryClientProvider>
+  );
+}
+
+function RootAppContent() {
+  useVisualViewport();
+
+  return (
+    <div className="flex min-h-screen flex-col bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
+      <JeddawSplashScreen />
+      <SiteHeader />
+      <main className="flex-1 pb-20 lg:pb-0">
+        <Outlet />
+      </main>
+      <SiteFooter />
+      <MobileTabBar />
+      <AiAssistant />
+    </div>
   );
 }

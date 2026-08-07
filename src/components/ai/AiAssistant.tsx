@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Bot, ChevronLeft, ChevronRight, Globe, Info, MapPin, Send, Sparkles, Wand2, X } from "lucide-react";
-import { getPlace, places, type Place } from "@/data/jeddah";
+import { Bot, ChevronLeft, Send, Sparkles, Wand2, X } from "lucide-react";
+import { getPlace, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 import { PlaceDetailModal } from "@/components/places/PlaceDetailModal";
 import { checkContent } from "@/lib/moderation";
@@ -9,6 +9,7 @@ import {
   type AssistantResponse,
 } from "@/lib/hybrid-ai";
 import { type GeneratedPlan } from "@/lib/plan-builder";
+import { useScrollLock } from "@/lib/scroll-lock";
 
 interface AiChatMessage {
   id: string;
@@ -18,28 +19,19 @@ interface AiChatMessage {
 }
 
 export function AiAssistant() {
-  const { t, isRtl } = useLanguage();
+  const { isRtl } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [currentPlan, setCurrentPlan] = useState<GeneratedPlan | null>(null);
 
-  // Lock body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
+  // Centralized robust scroll lock manager
+  useScrollLock(isOpen);
 
   const welcomeText = isRtl
     ? "أهلاً بك في جِدّاو! 🌊 أنا هنا لمساعدتك في ترتيب أحلى طلعة في جدة أو اكتشاف كافيهات ومطاعم مميزة ومجربة."
-    : "Welcome to JEDDAW! 🌊 I'm here to help you plan an amazing outing or discover top verified places in Jeddah.";
+    : "Welcome to JEDDAW! 🌊 I'm here to help you plan an amazing outing or discover top places in Jeddah.";
 
   const initialAiMsg: AiChatMessage = {
     id: "1",
@@ -142,7 +134,7 @@ export function AiAssistant() {
   return (
     <>
       {/* FLAGSHIP ULTRA-PREMIUM INTERACTIVE AI WIDGET LAUNCHER */}
-      <div className="fixed bottom-[74px] sm:bottom-20 lg:bottom-6 end-3 sm:end-6 z-40 flex items-center gap-2.5 group pointer-events-auto">
+      <div className="fixed bottom-[74px] sm:bottom-20 lg:bottom-6 end-3 sm:end-6 z-40 flex items-center gap-2.5 group pointer-events-auto transition-all duration-300 html[data-keyboard-open='true']_&]:translate-y-full html[data-keyboard-open='true']_&]:opacity-0 html[data-keyboard-open='true']_&]:pointer-events-none">
         
         {/* Hover/Interactive Micro-Tooltip Bubble (Desktop) */}
         <div className="hidden md:flex items-center gap-2 rounded-2xl bg-[#091C1A]/95 text-white px-3.5 py-2 border border-white/20 shadow-2xl backdrop-blur-xl opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 pointer-events-none">
@@ -157,7 +149,7 @@ export function AiAssistant() {
           type="button"
           onClick={() => setIsOpen(true)}
           className="relative flex items-center gap-3 rounded-full bg-gradient-to-r from-[#091C1A]/95 via-[#122A27]/95 to-[#091C1A]/95 p-2 pe-4 text-white shadow-[0_12px_40px_-6px_rgba(201,103,69,0.5)] hover:shadow-[0_16px_50px_-4px_rgba(201,103,69,0.7)] hover:scale-[1.04] active:scale-95 border border-[#C96745]/50 hover:border-[#FF9D7A]/90 backdrop-blur-2xl transition-all duration-300 cursor-pointer overflow-hidden group"
-          aria-label={isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}
+          aria-label={isRtl ? "مساعد جِدّاو" : "JEDDAW Assistant"}
         >
           {/* Animated Ambient Glow Inner Track */}
           <div className="absolute -inset-full bg-gradient-to-r from-transparent via-[#C96745]/25 to-transparent group-hover:animate-shimmer-line pointer-events-none" />
@@ -167,7 +159,6 @@ export function AiAssistant() {
             <div className="flex h-full w-full items-center justify-center rounded-full bg-[#091C1A]/90 backdrop-blur-sm text-white transition-transform duration-300 group-hover:rotate-12">
               <Bot className="h-5 w-5 text-[#FF9D7A]" />
             </div>
-            {/* Live Pulsing Online Radar Dot */}
             <span className="absolute top-0 end-0 flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-[#091C1A]" />
@@ -180,40 +171,34 @@ export function AiAssistant() {
               <span className="text-xs sm:text-sm font-black tracking-tight text-white drop-shadow-sm leading-none">
                 {isRtl ? "مساعد جِدّاو" : "JEDDAW AI"}
               </span>
-              <span className="inline-flex items-center rounded-full bg-[#C96745]/25 px-1.5 py-0.5 text-[9px] font-black text-[#FF9D7A] border border-[#C96745]/40">
-                PRO
-              </span>
             </div>
             <span className="text-[10px] sm:text-[11px] font-bold text-white/75 flex items-center gap-1 mt-0.5">
               <Sparkles className="h-3 w-3 text-[#E4A23B] animate-pulse" />
-              <span>{isRtl ? "دليلك الذكي للطلعات" : "Smart Outing Guide"}</span>
+              <span>{isRtl ? "اقتراحات ذكية لاكتشاف جدة" : "Smart suggestions"}</span>
             </span>
           </div>
         </button>
       </div>
 
-      {/* Modal Dialog - Mobile Dynamic Viewport Sheet */}
+      {/* Modal Dialog Sheet - Responsive Viewport flex container */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-md animate-fade-in">
-          <div className="surface-card flex h-[92dvh] sm:h-[86vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl border border-[#E2D3BE] dark:border-white/10 bg-gradient-to-b from-[#FAF6F0] via-white to-[#FAF6F0] dark:from-[#1C2422] dark:via-[#161B1A] dark:to-[#1C2422] shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 animate-fade-in">
+          <div className="surface-card flex h-[var(--visual-viewport-height,90vh)] sm:h-[86vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl border border-[#E2D3BE] dark:border-white/10 bg-[#FAF6F0] dark:bg-[#1C2422] shadow-2xl">
             
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-[#E2D3BE]/60 dark:border-white/10 bg-[#F4EBDD]/90 dark:bg-[#161B1A]/90 backdrop-blur-md px-5 py-4">
+            {/* Header - Fixed Non-scrolling */}
+            <div className="flex items-center justify-between border-b border-[#E2D3BE]/60 dark:border-white/10 bg-[#F4EBDD] dark:bg-[#161B1A] px-5 py-4 flex-none">
               <div className="flex items-center gap-3">
-                <div className="relative grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#C96745] to-[#E4A23B] text-white shadow-md ring-2 ring-[#C96745]/30">
-                  <Bot className="h-6 w-6" />
-                  <span className="absolute -bottom-0.5 -end-0.5 h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#161B1A]" />
+                <div className="relative grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-[#C96745] to-[#E4A23B] text-white shadow-md ring-2 ring-[#C96745]/30">
+                  <Bot className="h-5 w-5" />
+                  <span className="absolute -bottom-0.5 -end-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#161B1A]" />
                 </div>
                 <div>
-                  <h2 className="text-base font-black text-[#252A28] dark:text-[#F5F1E8] flex items-center gap-2">
-                    {isRtl ? "مساعد جِدّاو الذكي" : "JEDDAW AI Assistant"}
-                    <span className="text-[10px] bg-[#C96745]/15 text-[#C96745] font-black px-2 py-0.5 rounded-full border border-[#C96745]/30">
-                      LIVE
-                    </span>
+                  <h2 className="text-base font-black text-[#252A28] dark:text-[#F5F1E8]">
+                    {isRtl ? "مساعد جِدّاو" : "JEDDAW Assistant"}
                   </h2>
                   <p className="text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] flex items-center gap-1.5 mt-0.5">
                     <Sparkles className="h-3 w-3 text-[#E4A23B]" />
-                    {isRtl ? "تخطيط دقيق 100% بدون تخمين" : "Verified 100% zero guesswork"}
+                    {isRtl ? "اقتراحات ذكية لاكتشاف جدة" : "Smart suggestions for discovering Jeddah"}
                   </p>
                 </div>
               </div>
@@ -221,14 +206,14 @@ export function AiAssistant() {
                 type="button"
                 onClick={() => setIsOpen(false)}
                 className="rounded-full p-2 text-[#6E716C] dark:text-[#B5B8B2] hover:bg-black/10 dark:hover:bg-white/10 hover:scale-105 active:scale-95 transition-all cursor-pointer"
-                aria-label="Close"
+                aria-label={isRtl ? "إغلاق" : "Close"}
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            {/* Chat Body */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+            {/* Chat Body - Flex-1 Scrollable */}
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 sm:p-5 space-y-4">
               {messages.map((msg) => (
                 <div
                   key={msg.id}
@@ -329,7 +314,7 @@ export function AiAssistant() {
                     </div>
                   )}
 
-                  {/* Follow-up Suggested Action Chips - Premium Glass Pills */}
+                  {/* Follow-up Suggested Action Chips */}
                   {msg.sender === "ai" &&
                     msg.response?.suggestedReplies &&
                     msg.response.suggestedReplies.length > 0 && (
@@ -351,14 +336,14 @@ export function AiAssistant() {
               {isTyping && (
                 <div className="flex items-center gap-2.5 text-xs font-bold text-[#6E716C] dark:text-[#B5B8B2] bg-white dark:bg-[#253230] p-3.5 rounded-2xl w-fit border border-[#E2D3BE] dark:border-white/10 shadow-sm animate-pulse">
                   <Bot className="h-4 w-4 text-[#C96745] animate-spin" />
-                  <span>{isRtl ? "جاري التفكير وتحليل أفضل الأماكن..." : "Analyzing best options for you..."}</span>
+                  <span>{isRtl ? "جاري التفكير وتحليل أفضل الأماكن..." : "Analyzing best options..."}</span>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Bar */}
-            <div className="border-t border-[#E2D3BE]/60 dark:border-white/10 bg-white/80 dark:bg-[#161B1A]/80 backdrop-blur-md p-3 sm:p-4">
+            {/* Composer Input Bar - Fixed Bottom Non-scrolling */}
+            <div className="border-t border-[#E2D3BE]/60 dark:border-white/10 bg-white dark:bg-[#161B1A] p-3 sm:p-4 flex-none">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -368,6 +353,8 @@ export function AiAssistant() {
               >
                 <input
                   type="text"
+                  inputMode="search"
+                  enterKeyHint="send"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder={
@@ -375,12 +362,13 @@ export function AiAssistant() {
                       ? "اكتب طلبك (مثلاً: رتب لي طلعة، كافيهات بالروضة)..."
                       : "Type your request (e.g. plan an outing, cafes in Rawdah)..."
                   }
-                  className="flex-1 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#253230] px-4 py-3 text-base sm:text-xs text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/70 focus:outline-none focus:border-[#C96745] focus:ring-4 focus:ring-[#C96745]/15 transition-all"
+                  className="flex-1 rounded-full border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#253230] px-4 py-3 text-base sm:text-xs text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/70 focus:outline-none focus:border-[#C96745] transition-colors"
                 />
                 <button
                   type="submit"
                   disabled={!input.trim() || isTyping}
                   className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-[#C96745] to-[#E4A23B] text-white shadow-md hover:scale-105 active:scale-95 disabled:opacity-40 transition-all cursor-pointer shrink-0"
+                  aria-label={isRtl ? "إرسال" : "Send"}
                 >
                   <Send className="h-4 w-4" />
                 </button>

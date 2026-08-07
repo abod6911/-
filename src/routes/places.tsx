@@ -6,6 +6,11 @@ import { districts, places, type DistrictId, type Place, type PlaceKind } from "
 import { useLanguage } from "@/context/LanguageContext";
 
 export const Route = createFileRoute("/places")({
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      q: (search.q as string) || "",
+    };
+  },
   head: () => ({
     meta: [
       { title: "استكشف جدة على راحتك | جِدّاو — مطاعم، كافيهات، فنادق، ومنتجعات" },
@@ -40,7 +45,8 @@ const subCategoryChips = [
 
 function PlacesPage() {
   const { t, isRtl } = useLanguage();
-  const [query, setQuery] = useState("");
+  const searchParams = Route.useSearch();
+  const [query, setQuery] = useState(searchParams.q || "");
   const [mainCat, setMainCat] = useState<MainCategory>("all");
   const [subCat, setSubCat] = useState<string>("all");
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictId | "all">("all");

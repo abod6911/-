@@ -131,16 +131,31 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
     return () => clearTimeout(timer);
   }, []);
 
-  // Damped pointer parallax for depth
+  // Damped pointer parallax for depth (Desktop fine-pointer only)
   useEffect(() => {
+    // Disable RAF parallax on mobile coarse touchscreens or reduced motion
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    const isReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isCoarse || isReducedMotion) return;
+
     let animationFrameId: number;
     let targetX = 0;
     let targetY = 0;
     let currentX = 0;
     let currentY = 0;
+    let isIntersecting = true;
+
+    // IntersectionObserver to pause RAF when offscreen
+    const observer = new IntersectionObserver(([entry]) => {
+      isIntersecting = entry?.isIntersecting ?? true;
+    }, { threshold: 0.1 });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || !isIntersecting) return;
       const rect = containerRef.current.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
@@ -149,12 +164,14 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
     };
 
     const updateParallax = () => {
-      currentX += (targetX - currentX) * 0.035;
-      currentY += (targetY - currentY) * 0.035;
-      setMousePos({
-        x: Math.max(-1, Math.min(1, currentX)),
-        y: Math.max(-1, Math.min(1, currentY)),
-      });
+      if (isIntersecting && document.visibilityState === "visible" && document.documentElement.dataset.keyboardOpen !== "true") {
+        currentX += (targetX - currentX) * 0.035;
+        currentY += (targetY - currentY) * 0.035;
+        setMousePos({
+          x: Math.max(-1, Math.min(1, currentX)),
+          y: Math.max(-1, Math.min(1, currentY)),
+        });
+      }
       animationFrameId = requestAnimationFrame(updateParallax);
     };
 
@@ -164,6 +181,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
     };
   }, []);
 
@@ -533,7 +551,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
       >
         <MapPin className="h-3 w-3 text-[#5EAAA5] shrink-0" />
         <span className="text-[10px] font-extrabold text-white/90 tracking-wide">
-          {isRtl ? "5 محطات · 4.5 ساعة" : "5 Stops · 4.5 Hours"}
+          {isRtl ? "مسارات استكشاف جدة" : "Jeddah Outing Routes"}
         </span>
       </div>
 

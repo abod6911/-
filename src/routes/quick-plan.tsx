@@ -188,43 +188,30 @@ function QuickPlanPage() {
   ];
 
   const build = (customReq?: Partial<PlanRequest>) => {
-    setBuilding(true);
-    setLoadingTextIndex(0);
+    const selectedDistrict = locationMode === "preset" ? districtId || null : null;
+    const req: PlanRequest = {
+      districtId: selectedDistrict,
+      durationMin,
+      group,
+      groupSize,
+      moods: mood === "surprise" ? ["sea", "food"] : [mood],
+      environment: environment === "indoor" || prefs.indoorOnly ? "indoor" : environment === "outdoor" ? "outdoor" : "any",
+      budgetLevel: budgetTier === "economy" ? "economy" : budgetTier === "premium" ? "premium" : "balanced",
+      budgetPerPerson,
+      prefs: [
+        ...(prefs.noCrowd ? ["noCrowd"] : []),
+        ...(prefs.noLongDrive ? ["noLongDrive"] : []),
+        ...(prefs.easyParking ? ["easyParking"] : []),
+        ...(prefs.kidsFriendly ? ["kidsFriendly"] : []),
+        ...(prefs.wheelchair ? ["wheelchair"] : []),
+      ],
+      startHour: 17,
+      ...customReq,
+    };
 
-    const interval = setInterval(() => {
-      setLoadingTextIndex((prev) => {
-        if (prev < loadingMessages.length - 1) return prev + 1;
-        clearInterval(interval);
-        return prev;
-      });
-    }, 450);
-
-    setTimeout(() => {
-      const selectedDistrict = locationMode === "preset" ? districtId || null : null;
-      const req: PlanRequest = {
-        districtId: selectedDistrict,
-        durationMin,
-        group,
-        groupSize,
-        moods: mood === "surprise" ? ["sea", "food"] : [mood],
-        environment: environment === "indoor" || prefs.indoorOnly ? "indoor" : environment === "outdoor" ? "outdoor" : "any",
-        budgetLevel: budgetTier === "economy" ? "economy" : budgetTier === "premium" ? "premium" : "balanced",
-        budgetPerPerson,
-        prefs: [
-          ...(prefs.noCrowd ? ["noCrowd"] : []),
-          ...(prefs.noLongDrive ? ["noLongDrive"] : []),
-          ...(prefs.easyParking ? ["easyParking"] : []),
-          ...(prefs.kidsFriendly ? ["kidsFriendly"] : []),
-          ...(prefs.wheelchair ? ["wheelchair"] : []),
-        ],
-        startHour: 17,
-        ...customReq,
-      };
-
-      const res = generatePlans(req);
-      setPlans(res);
-      setBuilding(false);
-    }, 4200);
+    const res = generatePlans(req);
+    setPlans(res);
+    setBuilding(false);
   };
 
   /* Loading State Screen */

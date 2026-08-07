@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { CheckCircle2, Eye, EyeOff, Globe, Lock, Mail, MapPin, ShieldCheck, Sparkles, User, X } from "lucide-react";
+import React, { useState } from "react";
+import { Eye, EyeOff, Lock, Mail, MapPin, ShieldCheck, User, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { districts } from "@/data/jeddah";
+import { useScrollLock } from "@/lib/scroll-lock";
 
 export function AuthModal({ onClose }: { onClose: () => void }) {
   const { t, isRtl } = useLanguage();
   const { login, register } = useAuth();
 
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
+  // Centralized robust scroll lock manager
+  useScrollLock(true);
 
   const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState("");
@@ -67,25 +64,25 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="modal-overlay z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="modal-overlay z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="modal-content max-w-md w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 bg-[#FAF6F0] dark:bg-[#1C2422] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 rounded-3xl shadow-2xl relative animate-modal-in">
+      <div className="surface-card flex flex-col max-w-md w-full max-h-[var(--visual-viewport-height,90vh)] overflow-hidden p-5 sm:p-7 bg-[#FAF6F0] dark:bg-[#1C2422] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 rounded-3xl shadow-2xl relative animate-modal-in">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 end-4 grid h-9 w-9 place-items-center rounded-full bg-[#EADECB] dark:bg-[#253230] text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#C96745] hover:text-white transition-colors"
+          className="absolute top-4 end-4 grid h-8 w-8 place-items-center rounded-full bg-[#EADECB] dark:bg-[#253230] text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#C96745] hover:text-white transition-colors cursor-pointer shrink-0 z-10"
           aria-label={isRtl ? "إغلاق" : "Close"}
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
 
-        {/* Brand Header */}
-        <div className="text-center mb-6">
-          <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-[#C96745] text-2xl shadow-sm text-white">
+        {/* Header - Fixed Non-scrolling */}
+        <div className="text-center mb-4 flex-none pe-6">
+          <div className="mx-auto mb-2 grid h-10 w-10 place-items-center rounded-2xl bg-[#C96745] text-xl shadow-sm text-white">
             🔐
           </div>
-          <h2 className="text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">
+          <h2 className="text-xl font-black text-[#252A28] dark:text-[#F5F1E8]">
             {isSignUp
               ? isRtl
                 ? "إنشاء حساب في جِدّاو"
@@ -94,7 +91,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
               ? "تسجيل الدخول إلى جِدّاو"
               : "Sign In to JEDDAW"}
           </h2>
-          <p className="mt-1 text-xs font-semibold text-[#6E716C] dark:text-[#B5B8B2]">
+          <p className="mt-1 text-[11px] font-semibold text-[#6E716C] dark:text-[#B5B8B2]">
             {isRtl
               ? "حسابك يحفظ لك جميع خططك المحفوظة وطلعات الويكند"
               : "Your account saves all your weekend plans and favorites"}
@@ -102,14 +99,14 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Tab Switcher */}
-        <div className="grid grid-cols-2 gap-1 rounded-2xl bg-[#EADECB] dark:bg-[#253230] p-1 mb-5 text-xs font-extrabold">
+        <div className="grid grid-cols-2 gap-1 rounded-2xl bg-[#EADECB] dark:bg-[#253230] p-1 mb-4 text-xs font-extrabold flex-none">
           <button
             type="button"
             onClick={() => {
               setIsSignUp(false);
               setErrorMsg("");
             }}
-            className={`rounded-xl py-2.5 transition-all ${
+            className={`rounded-xl py-2 transition-all ${
               !isSignUp
                 ? "bg-white dark:bg-[#1C2422] text-[#C96745] shadow-sm"
                 : "text-[#6E716C] dark:text-[#B5B8B2] hover:text-[#252A28]"
@@ -123,7 +120,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
               setIsSignUp(true);
               setErrorMsg("");
             }}
-            className={`rounded-xl py-2.5 transition-all ${
+            className={`rounded-xl py-2 transition-all ${
               isSignUp
                 ? "bg-white dark:bg-[#1C2422] text-[#C96745] shadow-sm"
                 : "text-[#6E716C] dark:text-[#B5B8B2] hover:text-[#252A28]"
@@ -135,13 +132,13 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
 
         {/* Error Alert Box */}
         {errorMsg && (
-          <div className="mb-4 rounded-2xl bg-[#B84E4E]/15 border border-[#B84E4E]/30 p-3 text-xs font-bold text-[#B84E4E] text-center animate-fade-in">
+          <div className="mb-3 rounded-2xl bg-[#B84E4E]/15 border border-[#B84E4E]/30 p-2.5 text-xs font-bold text-[#B84E4E] text-center animate-fade-in flex-none">
             ⚠️ {errorMsg}
           </div>
         )}
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-3.5">
+        {/* Scrollable Form Body */}
+        <form onSubmit={handleSubmit} className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-3 pe-1">
           {isSignUp && (
             <div>
               <label className="block text-xs font-bold mb-1">
@@ -151,6 +148,8 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 <User className="absolute start-3.5 top-3 h-4 w-4 text-[#6E716C]" />
                 <input
                   type="text"
+                  inputMode="text"
+                  autoComplete="name"
                   required
                   placeholder={isRtl ? "محمد العتيبي" : "John Doe"}
                   value={name}
@@ -169,6 +168,8 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
               <Mail className="absolute start-3.5 top-3 h-4 w-4 text-[#6E716C]" />
               <input
                 type="email"
+                inputMode="email"
+                autoComplete="email"
                 required
                 placeholder="name@example.com"
                 value={email}
@@ -186,6 +187,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
               <Lock className="absolute start-3.5 top-3 h-4 w-4 text-[#6E716C]" />
               <input
                 type={showPassword ? "text" : "password"}
+                autoComplete={isSignUp ? "new-password" : "current-password"}
                 required
                 placeholder="••••••••"
                 value={password}
@@ -235,7 +237,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
 
           <button
             type="submit"
-            className="w-full rounded-full bg-[#C96745] py-3 text-xs font-extrabold text-white shadow-lift hover:bg-[#b55837] transition-all min-h-[46px] mt-2"
+            className="w-full rounded-full bg-[#C96745] py-3 text-xs font-extrabold text-white shadow-lift hover:bg-[#b55837] transition-all min-h-[46px] mt-2 shrink-0 cursor-pointer"
           >
             {isSignUp
               ? isRtl
@@ -247,8 +249,8 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
           </button>
         </form>
 
-        {/* Protection Footer Badge */}
-        <div className="mt-6 text-center flex items-center justify-center gap-1.5 text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] border-t border-[#E2D3BE]/60 dark:border-white/10 pt-4">
+        {/* Protection Footer Badge - Fixed Non-scrolling */}
+        <div className="mt-3 text-center flex items-center justify-center gap-1.5 text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] border-t border-[#E2D3BE]/60 dark:border-white/10 pt-3 flex-none">
           <ShieldCheck className="h-4 w-4" />
           <span>{isRtl ? "بياناتك محمية ومشفرة 100% بأمان SSL" : "100% SSL Encrypted & Protected"}</span>
         </div>

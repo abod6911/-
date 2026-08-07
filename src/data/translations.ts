@@ -20,6 +20,9 @@ export const translations = {
     trendingSubEn: "Most popular & viral spots in Jeddah this week",
     weeklyViewsLabel: "زيارة هذا الأسبوع",
     home: "الرئيسية",
+    explore: "استكشف",
+    yourPlan: "خطتك",
+    favorites: "المحفوظات",
     quickPlan: "سوّ لي خطة",
     readyPlans: "خطط جاهزة",
     places: "استكشف جدة",
@@ -319,6 +322,9 @@ export const translations = {
 
     // Header & Navigation
     home: "Home",
+    explore: "Explore",
+    yourPlan: "Your Plan",
+    favorites: "Saved",
     quickPlan: "Build My Plan",
     readyPlans: "Ready Plans",
     places: "Explore Jeddah",

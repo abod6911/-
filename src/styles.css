@@ -525,5 +525,13 @@ html[lang="ar"] label {
     font-size: 16px !important;
     touch-action: manipulation;
   }
+
+  /* Reduce overlay GPU blur cost on mobile screens */
+  .modal-overlay,
+  .backdrop-blur-md,
+  .backdrop-blur-xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }
 
