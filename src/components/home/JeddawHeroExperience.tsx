@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Compass, MapPin, Sparkles, Utensils, Coffee, Zap, Waves, Star, Clock, Navigation } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 /**
  * SPLINE 3D SCENE CONFIGURATION
@@ -15,6 +16,7 @@ interface JeddawHeroExperienceProps {
 }
 
 export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperienceProps) {
+  const { isRtl } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [splineError, setSplineError] = useState(false);
@@ -149,7 +151,9 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         {/* Central Hub Label Pill */}
         <div className="mt-3 flex items-center gap-2 rounded-full bg-[#051413]/90 px-4 py-1.5 border border-white/20 shadow-2xl backdrop-blur-xl">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-xs font-black text-white tracking-widest">خطتك الموزونة 📍</span>
+          <span className="text-xs font-black text-white tracking-wider">
+            {isRtl ? "خطتك الموزونة 📍" : "Your Curated Route 📍"}
+          </span>
         </div>
       </div>
 
@@ -173,9 +177,13 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
             <span className="grid h-5 w-5 place-items-center rounded-md bg-[#C96745]/20 text-[#FF9D7A]">
               <Utensils className="h-3 w-3" />
             </span>
-            <span className="text-xs font-black text-white">عشاء فاخر</span>
+            <span className="text-xs font-black text-white">
+              {isRtl ? "عشاء فاخر" : "Fine Dining"}
+            </span>
           </div>
-          <span className="text-[10px] font-bold text-[#FF9D7A] mt-0.5">الكورنيش · مأكولات بحرية</span>
+          <span className="text-[10px] font-bold text-[#FF9D7A] mt-0.5">
+            {isRtl ? "الكورنيش · مأكولات بحرية" : "Corniche · Seafood"}
+          </span>
         </div>
       </div>
 
@@ -199,9 +207,13 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
             <span className="grid h-5 w-5 place-items-center rounded-md bg-[#E4A23B]/20 text-[#E4A23B]">
               <Coffee className="h-3 w-3" />
             </span>
-            <span className="text-xs font-black text-white">قهوة مختصة</span>
+            <span className="text-xs font-black text-white">
+              {isRtl ? "قهوة مختصة" : "Specialty Coffee"}
+            </span>
           </div>
-          <span className="text-[10px] font-bold text-[#E4A23B] mt-0.5">حي الروضة · روقان</span>
+          <span className="text-[10px] font-bold text-[#E4A23B] mt-0.5">
+            {isRtl ? "حي الروضة · روقان" : "Al Rawdah · Relaxing"}
+          </span>
         </div>
       </div>
 
@@ -225,9 +237,13 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
             <span className="grid h-5 w-5 place-items-center rounded-md bg-[#5EAAA5]/20 text-[#5EAAA5]">
               <Zap className="h-3 w-3" />
             </span>
-            <span className="text-xs font-black text-white">فعالية وحركة</span>
+            <span className="text-xs font-black text-white">
+              {isRtl ? "فعالية وحركة" : "Activities & Action"}
+            </span>
           </div>
-          <span className="text-[10px] font-bold text-[#5EAAA5] mt-0.5">كارتينج سينما · حماس</span>
+          <span className="text-[10px] font-bold text-[#5EAAA5] mt-0.5">
+            {isRtl ? "كارتينج سينما · حماس" : "Karting & Cinema"}
+          </span>
         </div>
       </div>
 
@@ -251,9 +267,13 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
             <span className="grid h-5 w-5 place-items-center rounded-md bg-[#397C78]/20 text-[#5EAAA5]">
               <Waves className="h-3 w-3" />
             </span>
-            <span className="text-xs font-black text-white">غروب البحر</span>
+            <span className="text-xs font-black text-white">
+              {isRtl ? "غروب البحر" : "Red Sea Sunset"}
+            </span>
           </div>
-          <span className="text-[10px] font-bold text-[#5EAAA5] mt-0.5">أبحر الشمالية · استجمام</span>
+          <span className="text-[10px] font-bold text-[#5EAAA5] mt-0.5">
+            {isRtl ? "أبحر الشمالية · استجمام" : "North Obhur · Beach"}
+          </span>
         </div>
       </div>
 
@@ -265,7 +285,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         }}
       >
         <Star className="h-3.5 w-3.5 text-[#E4A23B] fill-[#E4A23B]" />
-        <span>اختيار ذكي وسريع</span>
+        <span>{isRtl ? "اختيار ذكي وسريع" : "Smart & Fast Pick"}</span>
       </div>
 
       <div
@@ -275,7 +295,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         }}
       >
         <Clock className="h-3.5 w-3.5 text-[#5EAAA5]" />
-        <span>4.5h مسار متسلسل</span>
+        <span>{isRtl ? "4.5h مسار متسلسل" : "4.5h Curated Itinerary"}</span>
       </div>
     </div>
   );
