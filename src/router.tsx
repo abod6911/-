@@ -9,7 +9,7 @@ export const getRouter = () => {
 
   const router = createRouter({
     routeTree,
-    history: isGithubPages ? createHashHistory() : undefined,
+    basepath: isGithubPages ? "/-" : undefined,
     context: { queryClient },
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
