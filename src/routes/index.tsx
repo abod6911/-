@@ -96,8 +96,8 @@ function Index() {
 
   return (
     <div>
-      {/* ===== CINEMATIC & EMBEDDED FLAGSHIP JEDDAH HERO SECTION ===== */}
-      <section className="relative min-h-[82vh] lg:min-h-[88vh] flex items-center overflow-hidden bg-[#051413] text-[#FAF6F0] pt-24 pb-16 lg:pt-28 lg:pb-20 shadow-2xl">
+      {/* ===== BRAND EXPERIENTIAL JEDDAH HERO SECTION ===== */}
+      <section className="relative min-h-[82vh] lg:min-h-[88vh] flex items-center overflow-hidden bg-[#051413] text-[#FAF6F0] pt-20 pb-14 lg:pt-24 lg:pb-18 shadow-2xl">
         {/* Subtle Red Sea Atmospheric Background Image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -124,17 +124,17 @@ function Index() {
         <div className="absolute -top-32 -start-32 h-[500px] w-[500px] rounded-full bg-[#C96745]/15 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 end-0 h-[550px] w-[550px] rounded-full bg-[#397C78]/20 blur-3xl pointer-events-none" />
 
-        {/* Hero 2-Zone Container */}
+        {/* Hero 2-Column Asymmetric Grid Container (Right: ~45%, Left: ~55%) */}
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
-            {/* LEFT ZONE: Compact Eyebrow, Stacked Headline, Subtitle, CTAs */}
-            <div className="lg:col-span-7 flex flex-col items-start text-start">
+            {/* RIGHT SIDE (Arabic Main Content ~45% / 5 cols) */}
+            <div className="lg:col-span-5 flex flex-col items-start text-start">
               
               {/* Compact Weather & Eyebrow Chip */}
-              <div className="flex flex-wrap items-center gap-2.5 mb-6 animate-fade-in-up">
+              <div className="flex flex-wrap items-center gap-2.5 mb-5 animate-fade-in-up">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-extrabold text-[#FAF6F0] backdrop-blur border border-white/15 shadow-xs">
-                  ☀️ 34°C · {isRtl ? "جدة الآن" : "Jeddah Now"}
+                  34° · {isRtl ? "جدة الآن" : "Jeddah Now"}
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-extrabold text-[#FAF6F0] backdrop-blur border border-white/15 shadow-xs">
                   <Sparkles className="h-3.5 w-3.5 text-[#E4A23B]" />
@@ -142,50 +142,55 @@ function Index() {
                 </span>
               </div>
 
-              {/* Main Headline Stack — Prominent & Clean */}
-              <div className="animate-fade-in-up delay-1 space-y-1 max-w-2xl">
-                <span className="block text-[#FAF6F0]/90 font-black text-3xl sm:text-5xl lg:text-6xl tracking-tight leading-tight">
-                  {isRtl ? "محتار وين تروح اليوم؟" : "Wondering where to go today?"}
-                </span>
-                <div className="pt-2 flex flex-col items-start">
-                  <span className="bg-gradient-to-r from-[#FF9D7A] via-[#FAF6F0] to-[#5EAAA5] bg-clip-text text-transparent font-black text-4xl sm:text-6xl lg:text-7xl drop-shadow-md pb-2">
-                    {isRtl ? "جِدّاو يرتّبها." : "JEDDAW plans it."}
+              {/* Main Headline Stack */}
+              <div className="animate-fade-in-up delay-1 space-y-1 max-w-xl">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.18] text-[#FAF6F0]">
+                  <span className="block text-[#FAF6F0]/90">
+                    {isRtl ? "جدة كثيرة…" : "Jeddah is endless…"}
                   </span>
-                  <div className="h-[4px] w-full max-w-[280px] sm:max-w-[420px] bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] rounded-full opacity-90 -mt-1" />
-                </div>
+                  <span className="inline-block bg-gradient-to-r from-[#FF9D7A] via-[#FAF6F0] to-[#5EAAA5] bg-clip-text text-transparent drop-shadow-md pt-1 pb-2">
+                    {isRtl ? "بس خطتك وحدة." : "One plan fits you."}
+                  </span>
+                </h1>
+                <div className="h-[3.5px] w-full max-w-[220px] sm:max-w-[320px] bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] rounded-full opacity-90" />
               </div>
 
               {/* Supporting Copy */}
-              <p className="animate-fade-in-up delay-2 mt-6 max-w-lg text-base sm:text-lg leading-relaxed text-[#FAF6F0]/80 font-semibold">
+              <p className="animate-fade-in-up delay-2 mt-5 max-w-md text-base sm:text-lg leading-relaxed text-[#FAF6F0]/85 font-semibold">
                 {isRtl
-                  ? "وقتِك، مودك، وميزانيتك… وعلينا نرتب لك طلعة تناسبك في جدة."
-                  : "Your time, mood, and budget… We’ll arrange an outing that perfectly suits you in Jeddah."}
+                  ? "قل لنا وقتك، مودك وميزانيتك، وجِدّاو يرتب لك طلعة كاملة."
+                  : "Tell us your time, mood, and budget, and JEDDAW builds your complete outing."}
               </p>
 
-              {/* CTAs Row */}
-              <div className="animate-fade-in-up delay-3 mt-8 flex flex-wrap items-center gap-4 w-full sm:w-auto">
+              {/* CTAs Group */}
+              <div className="animate-fade-in-up delay-3 mt-7 flex flex-wrap items-center gap-3.5 w-full sm:w-auto">
                 <Link
                   to="/quick-plan"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-[#C96745] to-[#B84E4E] px-9 py-4 text-base font-black text-white shadow-lift hover:scale-[1.02] hover:shadow-2xl border border-white/20 transition-all min-h-[54px] cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-[#C96745] to-[#B84E4E] px-8 py-4 text-base font-black text-white shadow-lift hover:scale-[1.02] hover:shadow-2xl border border-white/20 transition-all min-h-[54px] cursor-pointer group"
                 >
-                  <Sparkles className="h-5 w-5 text-white" />
-                  <span>{isRtl ? "سوِّ لي خطة ✨" : "Plan My Outing ✨"}</span>
-                  <ArrowLeft className={`h-5 w-5 ${isRtl ? "" : "rotate-180"}`} />
+                  <Sparkles className="h-5 w-5 text-white transition-transform duration-300 group-hover:rotate-12" />
+                  <span>{isRtl ? "سوِّ لي خطة" : "Plan My Outing"}</span>
+                  <ArrowLeft className={`h-5 w-5 transition-transform duration-300 group-hover:-translate-x-1 ${isRtl ? "" : "rotate-180"}`} />
                 </Link>
 
                 <Link
                   to="/places"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 px-7 py-4 text-sm font-bold text-[#FAF6F0] backdrop-blur-xl transition-all min-h-[54px] cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 px-6 py-4 text-sm font-bold text-[#FAF6F0] backdrop-blur-xl transition-all min-h-[54px] cursor-pointer"
                 >
                   <Navigation className="h-4.5 w-4.5" />
-                  <span>{isRtl ? "استكشف الأماكن" : "Explore Places"}</span>
+                  <span>{isRtl ? "استكشف جدة" : "Explore Jeddah"}</span>
                 </Link>
+              </div>
+
+              {/* Small Contextual Microcopy Underneath */}
+              <div className="animate-fade-in-up delay-4 mt-6 text-xs font-extrabold text-[#FAF6F0]/60 tracking-wide">
+                <span>{isRtl ? "مطاعم • كافيهات • فعاليات • بحر" : "Dining • Cafes • Activities • Sea"}</span>
               </div>
 
             </div>
 
-            {/* RIGHT ZONE: Signature Floating 3D Experience Canvas (No Container Box) */}
-            <div className="lg:col-span-5 relative h-[380px] sm:h-[460px] lg:h-[500px] w-full flex items-center justify-center">
+            {/* LEFT SIDE (Signature Route Spatial Visual ~55% / 7 cols) */}
+            <div className="lg:col-span-7 relative h-[380px] sm:h-[460px] lg:h-[520px] w-full flex items-center justify-center">
               <JeddawHeroVisual />
             </div>
 
