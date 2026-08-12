@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { ArrowUpDown, Compass, Filter, Flame, Hotel, MapPin, Search, Star, Utensils } from "lucide-react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { Filter, Search, X } from "lucide-react";
 import { PlaceCard } from "@/components/places/PlaceCard";
-import { districts, places, type DistrictId, type Place, type PlaceKind } from "@/data/jeddah";
+import { districts, places, type DistrictId, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 
 export const Route = createFileRoute("/places")({
@@ -44,13 +44,38 @@ const subCategoryChips = [
 ];
 
 function PlacesPage() {
-  const { t, isRtl } = useLanguage();
+  const { isRtl } = useLanguage();
   const searchParams = Route.useSearch();
-  const [query, setQuery] = useState(searchParams.q || "");
+
+  // Local immediate input state for 0ms visual typing feedback
+  const [inputValue, setInputValue] = useState(searchParams.q || "");
+
+  // Debounced search query state to decouple typing from dataset filtering
+  const [debouncedQuery, setDebouncedQuery] = useState(searchParams.q || "");
+
   const [mainCat, setMainCat] = useState<MainCategory>("all");
   const [subCat, setSubCat] = useState<string>("all");
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictId | "all">("all");
   const [sortBy, setSortBy] = useState<SortOption>("trending");
+
+  // Sync initial searchParams.q if provided via navigation
+  useEffect(() => {
+    if (searchParams.q) {
+      setInputValue(searchParams.q);
+      setDebouncedQuery(searchParams.q);
+    }
+  }, [searchParams.q]);
+
+  // 250ms Debounce Timer to isolate keystrokes from dataset recalculations
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(inputValue);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [inputValue]);
+
+  // Concurrent React Deferred Value for smooth background list updates
+  const deferredQuery = useDeferredValue(debouncedQuery);
 
   const filteredAndSorted = useMemo(() => {
     let list = places.filter((p) => {
@@ -68,9 +93,9 @@ function PlacesPage() {
       // District filter
       if (selectedDistrict !== "all" && p.districtId !== selectedDistrict) return false;
 
-      // Search query
-      if (query.trim()) {
-        const q = query.toLowerCase();
+      // Deferred Search Query filtering
+      if (deferredQuery.trim()) {
+        const q = deferredQuery.trim().toLowerCase();
         const nameMatch = p.nameAr.toLowerCase().includes(q) || p.nameEn.toLowerCase().includes(q);
         const descMatch = p.descAr.toLowerCase().includes(q) || p.descEn.toLowerCase().includes(q);
         const catMatch = p.categoryAr.toLowerCase().includes(q) || (p.subCategoryAr && p.subCategoryAr.toLowerCase().includes(q));
@@ -99,14 +124,14 @@ function PlacesPage() {
       }
       return 0;
     });
-  }, [query, mainCat, subCat, selectedDistrict, sortBy]);
+  }, [deferredQuery, mainCat, subCat, selectedDistrict, sortBy]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 md:py-10">
-      {/* Header Banner */}
+      {/* Header Banner & Flagship Search Input */}
       <div className="animate-fade-in-up rounded-3xl bg-gradient-to-r from-[#091C1A] via-[#122A27] to-[#1E423E] p-6 md:p-8 text-[#FAF6F0] shadow-2xl border border-white/15 relative overflow-hidden">
         <div className="absolute top-0 end-0 h-64 w-64 rounded-full bg-[#C96745]/20 blur-3xl pointer-events-none" />
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="relative z-10 space-y-4">
           <div className="flex items-start md:items-center gap-4">
             <div className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-[#C96745] to-[#E4A23B] text-white text-2xl shadow-lg shrink-0">
               🗺️
@@ -128,6 +153,40 @@ function PlacesPage() {
                   ? "دليلك التفاعلي لجميع مطاعم، كافيهات، فنادق، منتجعات وفعاليات جدة مع تفاصيل الموقع والخرائط"
                   : "Your interactive guide to restaurants, cafes, hotels, resorts & activities in Jeddah."}
               </p>
+            </div>
+          </div>
+
+          {/* FLAGSHIP ISOLATED ZERO-LAG SEARCH INPUT (100% Mobile Safe) */}
+          <div className="relative pt-2">
+            <div className="relative flex items-center">
+              <Search className="absolute start-4 h-5 w-5 text-[#C96745] pointer-events-none z-10" />
+              <input
+                type="text"
+                inputMode="search"
+                autoCapitalize="none"
+                autoCorrect="off"
+                placeholder={
+                  isRtl
+                    ? "ابحث باسم المكان، الحي، أو نوع الأكل (مثال: كافيه الروضة، الشاطئ، مشاوي)..."
+                    : "Search by place name, district, or food category..."
+                }
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className="w-full rounded-2xl border border-white/20 bg-white/10 dark:bg-black/30 backdrop-blur-xl ps-12 pe-10 py-3.5 text-base font-bold text-white placeholder:text-white/60 focus:border-[#C96745] focus:bg-black/40 focus:outline-none focus:ring-2 focus:ring-[#C96745]/50 shadow-inner transition-all min-h-[52px]"
+              />
+              {inputValue.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setInputValue("");
+                    setDebouncedQuery("");
+                  }}
+                  className="absolute end-3 grid h-7 w-7 place-items-center rounded-full bg-white/20 hover:bg-[#C96745] text-white transition-all cursor-pointer z-10"
+                  aria-label="مسح البحث"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -215,10 +274,12 @@ function PlacesPage() {
             </select>
 
             {/* Reset Filters Button */}
-            {(mainCat !== "all" || subCat !== "all" || selectedDistrict !== "all" || sortBy !== "trending") && (
+            {(mainCat !== "all" || subCat !== "all" || selectedDistrict !== "all" || sortBy !== "trending" || inputValue !== "") && (
               <button
                 type="button"
                 onClick={() => {
+                  setInputValue("");
+                  setDebouncedQuery("");
                   setMainCat("all");
                   setSubCat("all");
                   setSelectedDistrict("all");
@@ -226,7 +287,7 @@ function PlacesPage() {
                 }}
                 className="rounded-2xl bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 px-3.5 py-2.5 text-xs font-extrabold hover:bg-rose-500 hover:text-white transition-all active:scale-95 min-h-[44px] cursor-pointer"
               >
-                🔄 {isRtl ? "إعادة ضبط الفلاتر" : "Reset Filters"}
+                🔄 {isRtl ? "إعادة ضبط الفلاتر والبحث" : "Reset Filters & Search"}
               </button>
             )}
           </div>
@@ -250,11 +311,11 @@ function PlacesPage() {
           <div className="surface-card p-12 text-center border border-[#E2D3BE] dark:border-white/10">
             <span className="text-5xl block mb-3">🔍</span>
             <h2 className="text-xl font-bold text-[#252A28] dark:text-[#F5F1E8]">
-              {isRtl ? "ما لقينا أماكن تطابق الفلتر المحدد" : "No places match your filters"}
+              {isRtl ? "ما لقينا أماكن تطابق الفلتر المدخل" : "No places match your input query"}
             </h2>
             <p className="text-sm text-[#6E716C] dark:text-[#B5B8B2] mt-2">
               {isRtl
-                ? "جرّب تغيير التصنيف أو مسح كلمة البحث لتظهر باقي خيارات جدة"
+                ? "جرّب تغيير كلمة البحث أو اختيار تصنيف آخر لتظهر باقي خيارات جدة"
                 : "Try clearing search keywords or choosing another category."}
             </p>
           </div>

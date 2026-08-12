@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export interface MobileViewportState {
   inputFocused: boolean;
@@ -19,9 +19,9 @@ const isEditableElement = (el: Element | null): boolean => {
 };
 
 /**
- * Clean & Robust Mobile Viewport Manager.
- * Separates inputFocused (immediate on focusin) from keyboardOpen (baseline geometry reduction).
- * Writes geometry directly to CSS Custom Properties (--vv-height, --vv-top) using RAF.
+ * Ultra-Lean Mobile Viewport Manager.
+ * Prevents forced reflow and layout thrashing during input typing & virtual keyboard events.
+ * Caches DOM values to avoid redundant style invalidations on documentElement.
  */
 export function useMobileViewport(): MobileViewportState {
   useEffect(() => {
@@ -29,56 +29,60 @@ export function useMobileViewport(): MobileViewportState {
 
     let rafId: number | null = null;
     let focusoutTimeoutId: NodeJS.Timeout | null = null;
-    let staggeredTimers: NodeJS.Timeout[] = [];
 
     let baselineHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
     let isInputFocused = false;
+
+    let lastVvHeight = 0;
+    let lastVvTop = -1;
+    let lastKeyboardHeight = -1;
+    let lastInputFocusedState: boolean | null = null;
 
     const root = document.documentElement;
 
     const updateGeometry = () => {
       const vv = window.visualViewport;
-      const currentVvHeight = vv ? vv.height : window.innerHeight;
-      const currentVvTop = vv ? vv.offsetTop : 0;
-      const currentVvLeft = vv ? vv.offsetLeft : 0;
-      const currentVvWidth = vv ? vv.width : window.innerWidth;
+      const currentVvHeight = Math.round(vv ? vv.height : window.innerHeight);
+      const currentVvTop = Math.round(vv ? vv.offsetTop : 0);
+      const currentVvLeft = Math.round(vv ? vv.offsetLeft : 0);
+      const currentVvWidth = Math.round(vv ? vv.width : window.innerWidth);
 
-      // Update baseline when input is not focused
       if (!isInputFocused) {
         baselineHeight = Math.max(baselineHeight, currentVvHeight);
       }
 
-      // Height reduction relative to baseline
       const heightDifference = Math.max(0, baselineHeight - currentVvHeight);
-
-      // Keyboard is open if an input is focused AND height is reduced substantially (>100px or <85% baseline)
       const heightReduced = heightDifference > 100 || (baselineHeight > 0 && currentVvHeight / baselineHeight < 0.85);
       const isKeyboardOpen = isInputFocused && heightReduced;
 
-      // Write CSS custom properties directly to documentElement (0 React re-renders)
-      root.style.setProperty("--vv-height", `${currentVvHeight}px`);
-      root.style.setProperty("--vv-top", `${currentVvTop}px`);
-      root.style.setProperty("--vv-left", `${currentVvLeft}px`);
-      root.style.setProperty("--vv-width", `${currentVvWidth}px`);
-      root.style.setProperty("--keyboard-height", `${heightDifference}px`);
+      // Caching check to prevent redundant layout thrashing
+      if (Math.abs(currentVvHeight - lastVvHeight) >= 3) {
+        root.style.setProperty("--vv-height", `${currentVvHeight}px`);
+        lastVvHeight = currentVvHeight;
+      }
 
-      root.dataset.inputFocused = isInputFocused ? "true" : "false";
-      root.dataset.keyboardOpen = isKeyboardOpen ? "true" : "false";
+      if (Math.abs(currentVvTop - lastVvTop) >= 2) {
+        root.style.setProperty("--vv-top", `${currentVvTop}px`);
+        root.style.setProperty("--vv-left", `${currentVvLeft}px`);
+        root.style.setProperty("--vv-width", `${currentVvWidth}px`);
+        lastVvTop = currentVvTop;
+      }
+
+      if (Math.abs(heightDifference - lastKeyboardHeight) >= 3) {
+        root.style.setProperty("--keyboard-height", `${heightDifference}px`);
+        lastKeyboardHeight = heightDifference;
+      }
+
+      if (lastInputFocusedState !== isInputFocused) {
+        root.dataset.inputFocused = isInputFocused ? "true" : "false";
+        root.dataset.keyboardOpen = isKeyboardOpen ? "true" : "false";
+        lastInputFocusedState = isInputFocused;
+      }
     };
 
     const scheduleGeometryUpdate = () => {
       if (rafId !== null) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(updateGeometry);
-    };
-
-    // Staggered measurements for Safari delayed viewport animations
-    const scheduleStaggeredUpdates = () => {
-      staggeredTimers.forEach(clearTimeout);
-      staggeredTimers = [
-        setTimeout(scheduleGeometryUpdate, 50),
-        setTimeout(scheduleGeometryUpdate, 150),
-        setTimeout(scheduleGeometryUpdate, 300),
-      ];
     };
 
     const handleFocusIn = (e: FocusEvent) => {
@@ -89,23 +93,20 @@ export function useMobileViewport(): MobileViewportState {
           focusoutTimeoutId = null;
         }
 
-        isInputFocused = true;
-        root.dataset.inputFocused = "true"; // IMMEDIATE DOM attribute write
-
-        scheduleGeometryUpdate();
-        scheduleStaggeredUpdates();
+        if (!isInputFocused) {
+          isInputFocused = true;
+          scheduleGeometryUpdate();
+        }
       }
     };
 
     const handleFocusOut = () => {
       if (focusoutTimeoutId) clearTimeout(focusoutTimeoutId);
 
-      // Brief delay to check if focus moved to another editable element
       focusoutTimeoutId = setTimeout(() => {
         const active = document.activeElement;
         if (!isEditableElement(active)) {
           isInputFocused = false;
-          root.dataset.inputFocused = "false";
           scheduleGeometryUpdate();
         }
       }, 150);
@@ -127,7 +128,6 @@ export function useMobileViewport(): MobileViewportState {
     return () => {
       if (rafId !== null) cancelAnimationFrame(rafId);
       if (focusoutTimeoutId) clearTimeout(focusoutTimeoutId);
-      staggeredTimers.forEach(clearTimeout);
 
       if (vv) {
         vv.removeEventListener("resize", scheduleGeometryUpdate);
