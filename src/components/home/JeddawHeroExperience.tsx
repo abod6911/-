@@ -44,7 +44,7 @@ const hotspots: DiscoveryHotspot[] = [
     accentColor: "#5EAAA5",
     accentBg: "rgba(94, 170, 165, 0.15)",
     image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=480&q=80",
-    position: { top: "12%", left: "72%" },
+    position: { top: "10%", left: "74%" },
     parallaxMultiplier: { x: -18, y: 14 },
   },
   {
@@ -59,7 +59,7 @@ const hotspots: DiscoveryHotspot[] = [
     accentColor: "#E4A23B",
     accentBg: "rgba(228, 162, 59, 0.15)",
     image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=480&q=80",
-    position: { top: "48%", left: "16%" },
+    position: { top: "66%", left: "10%" },
     parallaxMultiplier: { x: 18, y: 14 },
   },
   {
@@ -74,7 +74,7 @@ const hotspots: DiscoveryHotspot[] = [
     accentColor: "#C96745",
     accentBg: "rgba(201, 103, 69, 0.15)",
     image: "https://images.unsplash.com/photo-1578895101408-1a36b834405b?auto=format&fit=crop&w=480&q=80",
-    position: { top: "24%", left: "18%" },
+    position: { top: "14%", left: "12%" },
     parallaxMultiplier: { x: -14, y: -18 },
   },
   {
@@ -89,7 +89,7 @@ const hotspots: DiscoveryHotspot[] = [
     accentColor: "#FF9D7A",
     accentBg: "rgba(255, 157, 122, 0.15)",
     image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=480&q=80",
-    position: { top: "68%", left: "65%" },
+    position: { top: "76%", left: "70%" },
     parallaxMultiplier: { x: 16, y: -14 },
   },
   {
@@ -104,7 +104,7 @@ const hotspots: DiscoveryHotspot[] = [
     accentColor: "#B84E4E",
     accentBg: "rgba(184, 78, 78, 0.15)",
     image: "https://images.unsplash.com/photo-1511882150382-421056c89033?auto=format&fit=crop&w=480&q=80",
-    position: { top: "42%", left: "82%" },
+    position: { top: "42%", left: "84%" },
     parallaxMultiplier: { x: -22, y: -10 },
   },
 ];
@@ -468,8 +468,8 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
                 />
               </div>
 
-              {/* Always Visible High-Contrast Label Pill */}
-              <div className="mt-1.5 whitespace-nowrap transition-all duration-300">
+              {/* Desktop Always Visible High-Contrast Label Pill (Hidden on small mobile to prevent spatial overlap) */}
+              <div className="mt-1.5 whitespace-nowrap transition-all duration-300 hidden sm:block">
                 <span
                   className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-extrabold text-white border backdrop-blur-xl shadow-2xl transition-all ${
                     isActive
@@ -585,6 +585,29 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
             style={{ backgroundColor: h.accentColor }}
           />
         ))}
+      </div>
+
+      {/* Dedicated Mobile Discovery Bar (0% Overlap, 100% Mobile Safe) */}
+      <div className="sm:hidden absolute bottom-2 inset-x-2 z-40 flex items-center justify-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        {hotspots.map((spot) => {
+          const isActive = activeHotspot === spot.id;
+          const Icon = spot.icon;
+          return (
+            <button
+              key={spot.id}
+              type="button"
+              onClick={() => handleHotspotEnter(spot.id)}
+              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[10px] font-black border transition-all shrink-0 active:scale-95 shadow-md ${
+                isActive
+                  ? "border-white bg-[#091C1A] text-white ring-2 ring-white/30 scale-105"
+                  : "border-white/20 bg-[#091C1A]/90 text-white/85"
+              }`}
+            >
+              <Icon className="h-3 w-3" style={{ color: spot.accentColor }} />
+              <span>{isRtl ? spot.labelAr : spot.labelEn}</span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
