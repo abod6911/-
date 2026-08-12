@@ -5,6 +5,7 @@ import {
   Briefcase,
   Building,
   CheckCircle2,
+  ChevronLeft,
   Clock,
   Compass,
   Flame,
