@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdvertiseRouteImport } from './routes/advertise'
+import { Route as DebugInputRouteImport } from './routes/debug-input'
 import { Route as OffersRouteImport } from './routes/offers'
 import { Route as PlacesRouteImport } from './routes/places'
 import { Route as PlansRouteImport } from './routes/plans'
@@ -30,6 +31,11 @@ const AccountRoute = AccountRouteImport.update({
 const AdvertiseRoute = AdvertiseRouteImport.update({
   id: '/advertise',
   path: '/advertise',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DebugInputRoute = DebugInputRouteImport.update({
+  id: '/debug-input',
+  path: '/debug-input',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OffersRoute = OffersRouteImport.update({
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/advertise': typeof AdvertiseRoute
+  '/debug-input': typeof DebugInputRoute
   '/offers': typeof OffersRoute
   '/places': typeof PlacesRoute
   '/plans': typeof PlansRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/advertise': typeof AdvertiseRoute
+  '/debug-input': typeof DebugInputRoute
   '/offers': typeof OffersRoute
   '/places': typeof PlacesRoute
   '/plans': typeof PlansRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/advertise': typeof AdvertiseRoute
+  '/debug-input': typeof DebugInputRoute
   '/offers': typeof OffersRoute
   '/places': typeof PlacesRoute
   '/plans': typeof PlansRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/advertise'
+    | '/debug-input'
     | '/offers'
     | '/places'
     | '/plans'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/advertise'
+    | '/debug-input'
     | '/offers'
     | '/places'
     | '/plans'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/advertise'
+    | '/debug-input'
     | '/offers'
     | '/places'
     | '/plans'
@@ -115,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
   AdvertiseRoute: typeof AdvertiseRoute
+  DebugInputRoute: typeof DebugInputRoute
   OffersRoute: typeof OffersRoute
   PlacesRoute: typeof PlacesRoute
   PlansRoute: typeof PlansRoute
@@ -142,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/advertise'
       fullPath: '/advertise'
       preLoaderRoute: typeof AdvertiseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/debug-input': {
+      id: '/debug-input'
+      path: '/debug-input'
+      fullPath: '/debug-input'
+      preLoaderRoute: typeof DebugInputRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/offers': {
@@ -179,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
   AdvertiseRoute: AdvertiseRoute,
+  DebugInputRoute: DebugInputRoute,
   OffersRoute: OffersRoute,
   PlacesRoute: PlacesRoute,
   PlansRoute: PlansRoute,

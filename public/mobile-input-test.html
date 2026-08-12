@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Input Test (Pure Static HTML)</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 24px;
+      max-width: 500px;
+      margin: 0 auto;
+      background: #faf6f0;
+      color: #252a28;
+    }
+    h2 { color: #c96745; margin-bottom: 8px; }
+    p { font-size: 14px; color: #6e716c; margin-bottom: 20px; }
+    .input-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: 1px solid #e2d3be;
+      border-radius: 12px;
+      box-sizing: border-box;
+      background: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <h2>🧪 Test 1: Pure Static HTML (No JS, No React, No Styles)</h2>
+  <p>اختبار حقول الإدخال الخام بدون رياكت وبدون جافاسكريبت وبدون أية مستمعين للأحداث. يرجى تجربة الكتابة على الهاتف:</p>
+
+  <div class="input-group">
+    <label>1. Text Input (Arabic / English)</label>
+    <input type="text" placeholder="اكتب هنا بالعربي أو بالإنجليزي...">
+  </div>
+
+  <div class="input-group">
+    <label>2. Email Input</label>
+    <input type="email" placeholder="name@example.com">
+  </div>
+
+  <div class="input-group">
+    <label>3. Password Input</label>
+    <input type="password" placeholder="••••••••">
+  </div>
+
+  <div class="input-group">
+    <label>4. Textarea</label>
+    <textarea rows="4" placeholder="اكتب نصاً طويلاً هنا..."></textarea>
+  </div>
+</body>
+</html>

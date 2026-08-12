@@ -143,11 +143,12 @@ function RootComponent() {
 }
 
 function RootAppContent() {
-  useMobileViewport();
+  // TEST 3 DIAGNOSTIC ISOLATION: useMobileViewport disabled completely to test runtime without global viewport listeners
+  // useMobileViewport();
 
   return (
     <div className="flex min-h-screen flex-col bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
-      <KeyboardDebugPanel />
+      {/* <KeyboardDebugPanel /> */}
       <JeddawSplashScreen />
       <SiteHeader />
       <main className="flex-1 pb-20 lg:pb-0">
