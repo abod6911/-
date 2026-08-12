@@ -93,19 +93,20 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     setErrorMsg("");
 
-    if (!email || !email.includes("@")) {
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !cleanEmail.includes("@")) {
       setErrorMsg(isRtl ? "الرجاء إدخال بريد إلكتروني صحيح." : "Please enter a valid email address.");
       return;
     }
 
     if (tab === "signup") {
-      const res = register(name || email.split("@")[0] || email, email, password, district);
+      const res = register(name.trim() || cleanEmail.split("@")[0] || cleanEmail, cleanEmail, password, district);
       if (!res.success) {
         setErrorMsg(res.message || (isRtl ? "فشل إنشاء الحساب." : "Registration failed."));
         return;
       }
     } else {
-      login(name || email.split("@")[0] || email, email, district);
+      login(name.trim() || cleanEmail.split("@")[0] || cleanEmail, cleanEmail, district);
     }
 
     onClose();
@@ -120,11 +121,11 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
         aria-hidden="true"
       />
 
-      {/* Modal / Sheet Container - 100% Mobile Safe with zero Radix locking */}
-      <div className="relative z-10 w-full max-w-lg rounded-t-3xl sm:rounded-3xl bg-[#FAF6F0] dark:bg-[#161B1A] border border-[#E2D3BE] dark:border-white/10 shadow-2xl p-5 sm:p-7 text-[#252A28] dark:text-[#F5F1E8] max-h-[90vh] flex flex-col overflow-hidden animate-modal-in">
+      {/* Modal Container - 100% Mobile & Keyboard Safe with GPU Acceleration */}
+      <div className="relative z-10 w-full max-w-lg rounded-t-3xl sm:rounded-3xl bg-[#FAF6F0] dark:bg-[#161B1A] border border-[#E2D3BE] dark:border-white/10 shadow-2xl p-5 sm:p-7 text-[#252A28] dark:text-[#F5F1E8] max-h-[85vh] sm:max-h-[90vh] flex flex-col overflow-hidden animate-modal-in transform-gpu">
         
-        {/* Top Handle Bar for Mobile Touch Visual */}
-        <div className="w-12 h-1.5 bg-[#E2D3BE] dark:bg-white/20 rounded-full mx-auto mb-3 sm:hidden" />
+        {/* Top Handle Bar for Mobile Drag Visual */}
+        <div className="w-12 h-1.5 bg-[#E2D3BE] dark:bg-white/20 rounded-full mx-auto mb-3 sm:hidden shrink-0" />
 
         {/* Close Button */}
         <button
@@ -137,7 +138,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
         </button>
 
         {/* Modal Header */}
-        <div className="text-center mb-4 pe-8">
+        <div className="text-center mb-4 pe-8 shrink-0">
           <div className="mx-auto mb-2 grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-[#C96745] to-[#E4A23B] text-white shadow-md">
             <Lock className="h-6 w-6" />
           </div>
@@ -152,7 +153,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Tab Selector */}
-        <div className="grid grid-cols-3 gap-1 rounded-2xl bg-[#EADECB] dark:bg-[#222826] p-1 mb-4 text-xs font-extrabold flex-none">
+        <div className="grid grid-cols-3 gap-1 rounded-2xl bg-[#EADECB] dark:bg-[#222826] p-1 mb-3 text-xs font-extrabold shrink-0">
           <button
             type="button"
             onClick={() => {
@@ -202,14 +203,14 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
 
         {/* Error Alert Box */}
         {errorMsg && (
-          <div className="mb-3 rounded-2xl bg-[#B84E4E]/15 border border-[#B84E4E]/30 p-2.5 text-xs font-bold text-[#B84E4E] text-center animate-fade-in flex-none">
+          <div className="mb-3 rounded-2xl bg-[#B84E4E]/15 border border-[#B84E4E]/30 p-2.5 text-xs font-bold text-[#B84E4E] text-center animate-fade-in shrink-0">
             ⚠️ {errorMsg}
           </div>
         )}
 
         {/* Tab 1: Instant 1-Tap Quick Profiles (ZERO TYPING NEEDED FOR MOBILE) */}
         {tab === "quick" && (
-          <div className="flex-1 overflow-y-auto space-y-2.5 pe-1 py-1">
+          <div className="flex-1 overflow-y-auto space-y-2.5 pe-1 py-1 [touch-action:pan-y] [overscroll-behavior:contain]">
             <div className="text-[11px] font-extrabold text-[#6E716C] dark:text-[#B5B8B2] mb-1">
               {isRtl ? "اختر بروفايلك السريع للدخول الفوري:" : "Select a profile for instant sign-in:"}
             </div>
@@ -246,16 +247,16 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
           </div>
         )}
 
-        {/* Tab 2 & 3: Standard Custom Form */}
+        {/* Tab 2 & 3: Standard Custom Form (Keyboard-Safe & Zoom-Proof) */}
         {(tab === "login" || tab === "signup") && (
-          <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto space-y-3.5 pe-1 py-1">
+          <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto space-y-3 pe-1 py-1 [touch-action:pan-y] [overscroll-behavior:contain]">
             {tab === "signup" && (
               <div>
                 <label className="block text-xs font-bold mb-1">
                   {isRtl ? "الاسم الكامل" : "Full Name"}
                 </label>
                 <div className="relative">
-                  <User className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C]" />
+                  <User className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C] pointer-events-none" />
                   <input
                     type="text"
                     inputMode="text"
@@ -264,7 +265,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                     placeholder={isRtl ? "محمد العتيبي" : "John Doe"}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base sm:text-xs font-semibold focus:outline-none focus:border-[#C96745]"
+                    className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base font-semibold focus:outline-none focus:border-[#C96745]"
                   />
                 </div>
               </div>
@@ -275,7 +276,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 {isRtl ? "البريد الإلكتروني" : "Email Address"}
               </label>
               <div className="relative">
-                <Mail className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C]" />
+                <Mail className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C] pointer-events-none" />
                 <input
                   type="email"
                   inputMode="email"
@@ -285,7 +286,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   dir="ltr"
-                  className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base sm:text-xs font-semibold focus:outline-none focus:border-[#C96745] text-start"
+                  className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base font-semibold focus:outline-none focus:border-[#C96745] text-start"
                 />
               </div>
             </div>
@@ -295,7 +296,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 {isRtl ? "كلمة المرور" : "Password"}
               </label>
               <div className="relative">
-                <Lock className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C]" />
+                <Lock className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C] pointer-events-none" />
                 <input
                   type="password"
                   autoComplete={tab === "signup" ? "new-password" : "current-password"}
@@ -303,7 +304,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base sm:text-xs font-semibold focus:outline-none focus:border-[#C96745]"
+                  className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base font-semibold focus:outline-none focus:border-[#C96745]"
                 />
               </div>
             </div>
@@ -314,11 +315,11 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                   {isRtl ? "منطقتك المفضلة في جدة" : "Preferred District"}
                 </label>
                 <div className="relative">
-                  <MapPin className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C]" />
+                  <MapPin className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C] pointer-events-none" />
                   <select
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
-                    className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base sm:text-xs font-semibold focus:outline-none focus:border-[#C96745]"
+                    className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base font-semibold focus:outline-none focus:border-[#C96745]"
                   >
                     {districts.map((d) => (
                       <option key={d.id} value={d.id}>
@@ -332,7 +333,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
 
             <button
               type="submit"
-              className="w-full rounded-full bg-[#C96745] py-3.5 text-xs font-extrabold text-white shadow-lift hover:bg-[#b55837] active:scale-95 transition-all min-h-[48px] mt-2 cursor-pointer"
+              className="w-full rounded-full bg-[#C96745] py-3.5 text-xs font-extrabold text-white shadow-lift hover:bg-[#b55837] active:scale-95 transition-all min-h-[48px] mt-2 cursor-pointer shrink-0"
             >
               {tab === "signup"
                 ? isRtl
@@ -346,7 +347,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
         )}
 
         {/* Footer Security Badge */}
-        <div className="mt-3 text-center flex items-center justify-center gap-1.5 text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] border-t border-[#E2D3BE]/60 dark:border-white/10 pt-2.5 flex-none">
+        <div className="mt-3 text-center flex items-center justify-center gap-1.5 text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] border-t border-[#E2D3BE]/60 dark:border-white/10 pt-2.5 shrink-0">
           <ShieldCheck className="h-4 w-4" />
           <span>{isRtl ? "تسجيل آمن 100% ومحفوظ على جهازك" : "100% Secure & Saved locally on device"}</span>
         </div>
