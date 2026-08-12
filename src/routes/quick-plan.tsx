@@ -290,7 +290,7 @@ function QuickPlanPage() {
               </div>
 
               {/* Location Mode Option Selector */}
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <OptionChip
                   active={locationMode === "any"}
                   emoji="🌊"
@@ -308,14 +308,6 @@ function QuickPlanPage() {
                   label={isRtl ? "اختيار حي محدد" : "Select District"}
                   subLabel={isRtl ? "قائمة الأحياء الرئيسية" : "Main neighborhoods"}
                   onClick={() => setLocationMode("preset")}
-                />
-
-                <OptionChip
-                  active={locationMode === "manual"}
-                  emoji="✏️"
-                  label={isRtl ? "تحديد يدوي خاص" : "Manual Custom Location"}
-                  subLabel={isRtl ? "حي، شارع، أو معلم خاص" : "Custom street or landmark"}
-                  onClick={() => setLocationMode("manual")}
                 />
               </div>
 
@@ -342,36 +334,6 @@ function QuickPlanPage() {
                       </button>
                     ))}
                   </div>
-                </div>
-              )}
-
-              {/* Manual Input Mode */}
-              {locationMode === "manual" && (
-                <div className="animate-fade-in space-y-3 pt-2">
-                  <label className="text-xs font-extrabold text-[#6E716C] dark:text-[#B5B8B2] block">
-                    {isRtl
-                      ? "أدخل اسم الحي، الشارع، أو نقطة الانطلاق يدويًا:"
-                      : "Enter district, street, or landmark manually:"}
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={manualLocation}
-                      onChange={(e) => setManualLocation(e.target.value)}
-                      placeholder={
-                        isRtl
-                          ? "مثال: حي الشاطئ، كورنيش النورس، شارع التحلية..."
-                          : "e.g. Al Shati, North Corniche, Tahlia Street..."
-                      }
-                      className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#1A2221] p-4 pe-12 text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 focus:border-[#C96745] focus:outline-none focus:ring-2 focus:ring-[#C96745]/30 min-h-[54px]"
-                    />
-                    <Edit3 className="absolute end-4 top-4 h-5 w-5 text-[#C96745]" />
-                  </div>
-                  <p className="text-[11px] text-[#71805B] font-semibold">
-                    {isRtl
-                      ? "💡 سيقوم ذكاء جِدّاو بتخصيص خطة الطلعة حول موقعك المدخل بكل دقة!"
-                      : "💡 JEDDAW AI will customize your outing around your input location!"}
-                  </p>
                 </div>
               )}
             </fieldset>
