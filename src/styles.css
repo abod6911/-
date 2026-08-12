@@ -389,6 +389,19 @@ html[lang="ar"] label {
   box-shadow: 0 0 12px rgba(201, 103, 69, 0.3);
 }
 
+@utility glass-luxury {
+  background: rgba(22, 27, 26, 0.85);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+}
+
+@utility glow-border-brand {
+  border: 1px solid rgba(201, 103, 69, 0.4);
+  box-shadow: 0 0 20px -5px rgba(201, 103, 69, 0.25);
+}
+
 @utility no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;

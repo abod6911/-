@@ -102,24 +102,39 @@ function PlacesPage() {
   }, [query, mainCat, subCat, selectedDistrict, sortBy]);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="mx-auto max-w-6xl px-4 py-8 md:py-10">
       {/* Header Banner */}
-      <div className="animate-fade-in-up flex items-center gap-3">
-        <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#C96745]/15 text-2xl">🗺️</span>
-        <div>
-          <h1 className="text-3xl font-extrabold text-[#252A28] dark:text-[#F5F1E8] md:text-4xl">
-            {isRtl ? "استكشف جدة على راحتك" : "Explore Jeddah Your Way"}
-          </h1>
-          <p className="mt-1 text-sm text-[#6E716C] dark:text-[#B5B8B2] font-semibold">
-            {isRtl
-              ? "دليلك الشامل لجميع مطاعم، كافيهات، فنادق، منتجعات وفعاليات جدة مع تفاصيل الموقع والخرائط"
-              : "Your complete guide to restaurants, cafes, hotels, resorts & activities in Jeddah."}
-          </p>
+      <div className="animate-fade-in-up rounded-3xl bg-gradient-to-r from-[#091C1A] via-[#122A27] to-[#1E423E] p-6 md:p-8 text-[#FAF6F0] shadow-2xl border border-white/15 relative overflow-hidden">
+        <div className="absolute top-0 end-0 h-64 w-64 rounded-full bg-[#C96745]/20 blur-3xl pointer-events-none" />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start md:items-center gap-4">
+            <div className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-[#C96745] to-[#E4A23B] text-white text-2xl shadow-lg shrink-0">
+              🗺️
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="rounded-full bg-[#C96745]/20 px-3 py-0.5 text-[11px] font-extrabold text-[#FF9D7A] border border-[#C96745]/30">
+                  {isRtl ? "دليل جدة الشامل 2026" : "Jeddah 2026 Master Guide"}
+                </span>
+                <span className="rounded-full bg-[#5EAAA5]/20 px-3 py-0.5 text-[11px] font-extrabold text-[#5EAAA5] border border-[#5EAAA5]/30">
+                  {isRtl ? "+150 وجهة ومكان" : "+150 Destinations"}
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight">
+                {isRtl ? "استكشف جدة على راحتك" : "Explore Jeddah Your Way"}
+              </h1>
+              <p className="mt-1 text-xs md:text-sm text-[#FAF6F0]/80 font-medium max-w-xl">
+                {isRtl
+                  ? "دليلك التفاعلي لجميع مطاعم، كافيهات، فنادق، منتجعات وفعاليات جدة مع تفاصيل الموقع والخرائط"
+                  : "Your interactive guide to restaurants, cafes, hotels, resorts & activities in Jeddah."}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Main Categories Tabs */}
-      <div className="mt-8 flex items-center gap-2.5 overflow-x-auto pb-3 sm:pb-4 sm:flex-wrap border-b border-[#E2D3BE] dark:border-white/10 [webkit-overflow-scrolling:touch]">
+      <div className="mt-8 flex items-center gap-2.5 overflow-x-auto pb-3 sm:pb-4 sm:flex-wrap border-b border-[#E2D3BE] dark:border-white/10 no-scrollbar">
         {[
           { id: "all", label: isRtl ? "الكل 🌟" : "All 🌟" },
           { id: "food", label: isRtl ? "🍽️ مطاعم" : "🍽️ Dining" },
@@ -135,9 +150,9 @@ function PlacesPage() {
               setMainCat(tab.id as MainCategory);
               setSubCat("all");
             }}
-            className={`rounded-full px-5 py-2.5 text-xs sm:text-sm font-bold transition-all min-h-[44px] shrink-0 ${
+            className={`rounded-full px-5 py-2.5 text-xs sm:text-sm font-extrabold transition-all min-h-[44px] shrink-0 active:scale-95 cursor-pointer ${
               mainCat === tab.id
-                ? "bg-[#C96745] text-white shadow-lift scale-[1.02]"
+                ? "bg-gradient-to-r from-[#C96745] to-[#E4A23B] text-white shadow-lift scale-[1.02] border border-white/20"
                 : "bg-[#FAF6F0] dark:bg-[#222826] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 hover:border-[#C96745]"
             }`}
           >
