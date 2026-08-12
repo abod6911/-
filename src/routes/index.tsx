@@ -200,30 +200,30 @@ function Index() {
 
       {/* ===== BELOW THE FOLD: INSTANT SEARCH & DISCOVERY ===== */}
       <section className="relative z-30 -mt-8 mx-auto max-w-5xl px-4 space-y-6">
-        {/* Instant Search Bar */}
+        {/* Instant Touch Discovery Chips (Zero Keyboard Needed) */}
         <div className="rounded-3xl bg-white dark:bg-[#1A2221] p-4 sm:p-5 border border-[#E2D3BE] dark:border-white/10 shadow-2xl backdrop-blur-xl">
-          <form onSubmit={handleHeroSearch} className="flex flex-col sm:flex-row items-center gap-3">
-            <div className="relative flex-1 w-full">
-              <Search className="absolute start-4 top-3.5 h-5 w-5 text-[#6E716C] dark:text-[#B5B8B2]" />
-              <input
-                type="text"
-                placeholder={
-                  isRtl
-                    ? "ابحث عن مكان في جدة (مطعم شامي، كافيه هادي، رد سي مول)..."
-                    : "Search Jeddah places (Red Sea Mall, Rosewood, Cafe)..."
-                }
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] ps-12 pe-4 py-3 text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 focus:border-[#C96745] focus:outline-none min-h-[48px]"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full sm:w-auto rounded-2xl bg-[#397C78] px-7 py-3 text-sm font-black text-white hover:bg-[#2d6360] transition-colors min-h-[48px]"
-            >
-              {isRtl ? "بحث فوري" : "Search"}
-            </button>
-          </form>
+          <div className="flex items-center gap-2 mb-3 text-xs font-black text-[#397C78] dark:text-[#5EAAA5]">
+            <Sparkles className="h-4 w-4 text-[#E4A23B]" />
+            <span>{isRtl ? "اكتشف جدة بنقرة واحدة:" : "Discover Jeddah in one click:"}</span>
+          </div>
+          <div className="flex flex-wrap gap-2.5">
+            {[
+              { labelAr: "كافيهات رايقة ☕", labelEn: "Chill Cafes ☕", link: "/places?category=cafe" },
+              { labelAr: "مطاعم بحرية 🌊", labelEn: "Seafood Dining 🌊", link: "/places?category=food" },
+              { labelAr: "حي البلد التاريخي 🏛️", labelEn: "Al-Balad Heritage 🏛️", link: "/places?district=balad" },
+              { labelAr: "شواطئ ومنتجعات 🏖️", labelEn: "Beaches & Resorts 🏖️", link: "/places?category=resort" },
+              { labelAr: "أنشطة وتسلية 🏎️", labelEn: "Activities & Action 🏎️", link: "/places?category=activity" },
+              { labelAr: "كافيهات الروضة ☕", labelEn: "Rawdah Cafes ☕", link: "/places?district=rawdah" },
+            ].map((chip, idx) => (
+              <Link
+                key={idx}
+                to={chip.link}
+                className="rounded-2xl bg-[#FAF6F0] dark:bg-[#161B1A] px-4 py-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/15 hover:border-[#C96745] hover:text-[#C96745] hover:scale-105 active:scale-95 transition-all shadow-sm cursor-pointer"
+              >
+                {isRtl ? chip.labelAr : chip.labelEn}
+              </Link>
+            ))}
+          </div>
         </div>
 
         {/* SINGLE NON-DUPLICATED FLASH OFFERS BANNER */}

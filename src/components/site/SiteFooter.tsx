@@ -128,27 +128,14 @@ export function SiteFooter() {
 
             <div>
               <h3 className="mb-2.5 text-xs font-bold text-[#FAF6F0]/90 flex items-center gap-1.5">
-                <Mail className="h-3.5 w-3.5 text-[#C96745]" />
-                <span>{t("newsletter")}</span>
+                <Sparkles className="h-3.5 w-3.5 text-[#C96745]" />
+                <span>{isRtl ? "جِدّاو — جدة تبدأ من هنا" : "JEDDAW — Outings Start Here"}</span>
               </h3>
-              <form
-                onSubmit={(e) => e.preventDefault()}
-                className="relative flex items-center"
-              >
-                <input
-                  type="email"
-                  placeholder={t("newsletterPlaceholder")}
-                  className="w-full rounded-full bg-white/10 border border-white/15 px-4 py-3 pe-28 text-xs font-semibold text-white placeholder:text-white/40 focus:outline-none focus:border-[#C96745] focus:ring-2 focus:ring-[#C96745]/20 transition-all"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="absolute end-1.5 top-1.5 bottom-1.5 rounded-full bg-gradient-to-r from-[#C96745] to-[#E4A23B] px-4 text-xs font-black text-white hover:opacity-95 hover:scale-105 active:scale-95 transition-all shadow-md flex items-center gap-1 cursor-pointer"
-                >
-                  <span>{t("subscribe")}</span>
-                  <Sparkles className="h-3 w-3" />
-                </button>
-              </form>
+              <p className="text-xs text-[#FAF6F0]/60 leading-relaxed">
+                {isRtl
+                  ? "نرتّب لك أمتع الطلعات والوجهات المتميزة في جدة بنقرة واحدة بدون عناء."
+                  : "We craft the finest Jeddah outing experiences in one click."}
+              </p>
             </div>
           </div>
         </div>

@@ -536,27 +536,11 @@ html[lang="ar"] label {
 }
 
 /* ==========================================================================
-   Mobile Input Focus & Keyboard UI Behavior
+   Mobile Tab Bar Behavior
    ========================================================================== */
-.mobile-tab-bar,
-.ai-launcher {
+.mobile-tab-bar {
   transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1) !important;
   will-change: opacity, transform;
-}
-
-html[data-input-focused="true"] .mobile-tab-bar,
-html[data-input-focused="true"] .ai-launcher,
-html[data-keyboard-open="true"] .mobile-tab-bar,
-html[data-keyboard-open="true"] .ai-launcher,
-body:has(input:focus) .mobile-tab-bar,
-body:has(input:focus) .ai-launcher,
-body:has(textarea:focus) .mobile-tab-bar,
-body:has(textarea:focus) .ai-launcher {
-  display: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  visibility: hidden !important;
-  transform: translateY(120%) !important;
 }
 
 /* Mobile Visual Viewport Sheet Container */

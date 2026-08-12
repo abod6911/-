@@ -163,26 +163,15 @@ function PlacesPage() {
         ))}
       </div>
 
-      {/* Search and Filters Bar */}
-      <div className="surface-card mt-6 p-6 animate-fade-in-up delay-1 border border-[#E2D3BE] dark:border-white/10">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          {/* Search Input */}
-          <div className="relative flex-1">
-            <Search className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C]" />
-            <input
-              type="text"
-              placeholder={
-                isRtl
-                  ? "ابحث عن اسم المطعم، الكافيه، الفندق، أو نوع الأكل..."
-                  : "Search place name, cafe, hotel, or cuisine type..."
-              }
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] ps-10 pe-4 py-3 text-base sm:text-sm font-semibold text-[#252A28] dark:text-[#F5F1E8] transition-all focus:border-[#C96745] focus:outline-none"
-            />
+      {/* Interactive Filters Bar (Zero Keyboard Needed) */}
+      <div className="surface-card mt-6 p-5 animate-fade-in-up delay-1 border border-[#E2D3BE] dark:border-white/10">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs font-black text-[#397C78] dark:text-[#5EAAA5]">
+            <Filter className="h-4 w-4" />
+            <span>{isRtl ? "تصفية سريعة بالحي والميزانية:" : "Quick Filter by District & Budget:"}</span>
           </div>
 
-          <div className="flex flex-wrap gap-2.5">
+          <div className="flex flex-wrap items-center gap-2.5">
             {/* District Selector */}
             <select
               value={selectedDistrict}
