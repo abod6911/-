@@ -79,10 +79,16 @@ if (fs.existsSync(assetsDir)) {
 }
 
 // Copy public logo to dist and root if it exists
-const publicLogo = path.join(rootDir, "public", "jeddaw-logo.png");
-if (fs.existsSync(publicLogo)) {
-  fs.copyFileSync(publicLogo, path.join(distDir, "jeddaw-logo.png"));
-  fs.copyFileSync(publicLogo, path.join(rootDir, "jeddaw-logo.png"));
+const publicLogoPng = path.join(rootDir, "public", "jeddaw-logo.png");
+if (fs.existsSync(publicLogoPng)) {
+  fs.copyFileSync(publicLogoPng, path.join(distDir, "jeddaw-logo.png"));
+  fs.copyFileSync(publicLogoPng, path.join(rootDir, "jeddaw-logo.png"));
+}
+
+const publicLogoWebp = path.join(rootDir, "public", "jeddaw-logo.webp");
+if (fs.existsSync(publicLogoWebp)) {
+  fs.copyFileSync(publicLogoWebp, path.join(distDir, "jeddaw-logo.webp"));
+  fs.copyFileSync(publicLogoWebp, path.join(rootDir, "jeddaw-logo.webp"));
 }
 
 fs.writeFileSync(path.join(rootDir, "index.html"), indexHtmlContent, "utf-8");

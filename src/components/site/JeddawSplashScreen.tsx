@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import logoImg from "@/assets/jeddaw-logo.png";
+import logoImg from "@/assets/jeddaw-logo.webp";
 import { Sparkles } from "lucide-react";
 
 const elegantPhrases = [
@@ -17,7 +17,9 @@ export function JeddawSplashScreen() {
   const [hasError, setHasError] = useState(false);
 
   const handleError = () => {
-    if (currentSrc !== "./jeddaw-logo.png") {
+    if (currentSrc !== "./jeddaw-logo.webp") {
+      setCurrentSrc("./jeddaw-logo.webp");
+    } else if (currentSrc !== "./jeddaw-logo.png") {
       setCurrentSrc("./jeddaw-logo.png");
     } else {
       setHasError(true);

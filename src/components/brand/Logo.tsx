@@ -1,12 +1,14 @@
 import { useState } from "react";
-import logoImg from "@/assets/jeddaw-logo.png";
+import logoImg from "@/assets/jeddaw-logo.webp";
 
 export function Logo({ className = "" }: { className?: string }) {
   const [currentSrc, setCurrentSrc] = useState<string>(logoImg);
   const [hasError, setHasError] = useState(false);
 
   const handleError = () => {
-    if (currentSrc !== "./jeddaw-logo.png") {
+    if (currentSrc !== "./jeddaw-logo.webp") {
+      setCurrentSrc("./jeddaw-logo.webp");
+    } else if (currentSrc !== "./jeddaw-logo.png") {
       setCurrentSrc("./jeddaw-logo.png");
     } else {
       setHasError(true);
