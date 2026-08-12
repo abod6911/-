@@ -78,6 +78,13 @@ if (fs.existsSync(assetsDir)) {
   fs.cpSync(assetsDir, rootAssetsDir, { recursive: true });
 }
 
+// Copy public logo to dist and root if it exists
+const publicLogo = path.join(rootDir, "public", "jeddaw-logo.png");
+if (fs.existsSync(publicLogo)) {
+  fs.copyFileSync(publicLogo, path.join(distDir, "jeddaw-logo.png"));
+  fs.copyFileSync(publicLogo, path.join(rootDir, "jeddaw-logo.png"));
+}
+
 fs.writeFileSync(path.join(rootDir, "index.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, "404.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, ".nojekyll"), "", "utf-8");

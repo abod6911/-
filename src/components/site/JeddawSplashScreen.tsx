@@ -14,12 +14,13 @@ export function JeddawSplashScreen() {
   const [fadeOut, setFadeOut] = useState(false);
   const [phraseIdx, setPhraseIdx] = useState(0);
   const [currentSrc, setCurrentSrc] = useState<string>(logoImg);
+  const [hasError, setHasError] = useState(false);
 
   const handleError = () => {
     if (currentSrc !== "./jeddaw-logo.png") {
       setCurrentSrc("./jeddaw-logo.png");
-    } else if (currentSrc !== "./logo.png") {
-      setCurrentSrc("./logo.png");
+    } else {
+      setHasError(true);
     }
   };
 
@@ -81,13 +82,19 @@ export function JeddawSplashScreen() {
         <div className="relative mb-7">
           <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] opacity-35 blur-xl animate-pulse" />
           <div className="relative grid h-24 w-24 sm:h-28 sm:w-28 place-items-center rounded-3xl bg-white p-2 shadow-2xl border border-white/40 backdrop-blur-xl overflow-hidden">
-            <img
-              src={currentSrc}
-              alt="شعار جِدّاو — JEDDAW"
-              className="h-full w-full object-contain"
-              style={{ imageRendering: "crisp-edges" }}
-              onError={handleError}
-            />
+            {!hasError ? (
+              <img
+                src={currentSrc}
+                alt="شعار جِدّاو — JEDDAW"
+                className="h-full w-full object-contain"
+                style={{ imageRendering: "crisp-edges" }}
+                onError={handleError}
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center rounded-2xl bg-gradient-to-br from-[#C96745] via-[#E4A23B] to-[#397C78] text-white font-black text-xl">
+                جِدّاو
+              </div>
+            )}
           </div>
         </div>
 
