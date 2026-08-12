@@ -24,14 +24,6 @@ const isEditableElement = (el: Element | null): boolean => {
  * Writes geometry directly to CSS Custom Properties (--vv-height, --vv-top) using RAF.
  */
 export function useMobileViewport(): MobileViewportState {
-  const [state, setState] = useState<MobileViewportState>({
-    inputFocused: false,
-    keyboardOpen: false,
-    keyboardHeight: 0,
-    vvHeight: typeof window !== "undefined" ? window.innerHeight : 0,
-    vvTop: 0,
-  });
-
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -41,7 +33,6 @@ export function useMobileViewport(): MobileViewportState {
 
     let baselineHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
     let isInputFocused = false;
-    let isKeyboardOpen = false;
 
     const root = document.documentElement;
 
@@ -62,9 +53,9 @@ export function useMobileViewport(): MobileViewportState {
 
       // Keyboard is open if an input is focused AND height is reduced substantially (>100px or <85% baseline)
       const heightReduced = heightDifference > 100 || (baselineHeight > 0 && currentVvHeight / baselineHeight < 0.85);
-      const newKeyboardOpen = isInputFocused && heightReduced;
+      const isKeyboardOpen = isInputFocused && heightReduced;
 
-      // Write CSS custom properties directly to documentElement (no React rerenders per pixel)
+      // Write CSS custom properties directly to documentElement (0 React re-renders)
       root.style.setProperty("--vv-height", `${currentVvHeight}px`);
       root.style.setProperty("--vv-top", `${currentVvTop}px`);
       root.style.setProperty("--vv-left", `${currentVvLeft}px`);
@@ -72,18 +63,7 @@ export function useMobileViewport(): MobileViewportState {
       root.style.setProperty("--keyboard-height", `${heightDifference}px`);
 
       root.dataset.inputFocused = isInputFocused ? "true" : "false";
-      root.dataset.keyboardOpen = newKeyboardOpen ? "true" : "false";
-
-      if (isInputFocused !== state.inputFocused || newKeyboardOpen !== isKeyboardOpen) {
-        isKeyboardOpen = newKeyboardOpen;
-        setState({
-          inputFocused: isInputFocused,
-          keyboardOpen: newKeyboardOpen,
-          keyboardHeight: heightDifference,
-          vvHeight: currentVvHeight,
-          vvTop: currentVvTop,
-        });
-      }
+      root.dataset.keyboardOpen = isKeyboardOpen ? "true" : "false";
     };
 
     const scheduleGeometryUpdate = () => {
@@ -110,7 +90,14 @@ export function useMobileViewport(): MobileViewportState {
         }
 
         isInputFocused = true;
-        root.dataset.inputFocused = "true"; // IMMEDIATE DOM attribute write before resize event!
+        root.dataset.inputFocused = "true"; // IMMEDIATE DOM attribute write
+
+        // Smoothly center active focused input above soft keyboard on mobile touchscreens
+        if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches && target) {
+          setTimeout(() => {
+            target.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
+          }, 250);
+        }
 
         scheduleGeometryUpdate();
         scheduleStaggeredUpdates();
@@ -160,5 +147,11 @@ export function useMobileViewport(): MobileViewportState {
     };
   }, []);
 
-  return state;
+  return {
+    inputFocused: false,
+    keyboardOpen: false,
+    keyboardHeight: 0,
+    vvHeight: typeof window !== "undefined" ? window.innerHeight : 0,
+    vvTop: 0,
+  };
 }

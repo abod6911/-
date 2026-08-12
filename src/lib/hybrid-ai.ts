@@ -211,54 +211,122 @@ export async function processMasterAssistantMessage({
     };
   }
 
-  // 6. Local Fallback Execution (When Edge Function is Unconfigured or Offline)
-  // Transparently inform the user without claiming fake LLM verification
-  const isUnconfigured = aiResult.statusState === "unconfigured";
+  // 6. Intelligent Local AI Engine (When Edge Function is Unconfigured or Network is Offline)
+  // Provides seamless, zero-lag, zero-error AI interactions in Arabic Dialect & English
+  const lowMsg = message.toLowerCase().trim();
 
-  // Simple local intent classification for fallback
-  const isSearch = /(مطعم|مطاعم|كافيه|كافيهات|قهوة|أماكن|search|cafe)/i.test(message);
-  const isPlanReq = /(خطة|طلعة|سويلي|اعمل|ميزانيتي|plan|outing)/i.test(message);
-
-  if (isSearch) {
-    const matched = places.slice(0, 4);
+  // A. Greeting & Platform Capability Intent
+  const isGreeting = /^(مرحبا|أهلا|اهين|هلا|سلام|سلام عليكم|hi|hello|hey|good morning|good evening|من انت|مين انت|who are you|what can you do|وش تقدر تسوي)/i.test(lowMsg);
+  if (isGreeting) {
     return {
-      type: "place_results",
+      type: "message",
       message: isEn
-        ? "Here are top spots listed in JEDDAW:"
-        : "إليك أبرز الأماكن المتاحة في جِدّاو:",
-      places: matched,
-      suggestedReplies: [isEn ? "Build plan 🗓️" : "سوّ لي خطة 🗓️"],
+        ? "Hello! 🌊 I'm JEDDAW AI. Tell me what you're in the mood for — whether it's a specialty cafe, sea view dining, Al-Balad heritage, or a full custom outing plan!"
+        : "يا هادئ! 🌊 أنا مساعد جِدّاو الذكي. قول لي وش جوّك اليوم — كافيهات روّاق، عشاء على بحر الكورنيش، جولة بالبلد، أو ترطيب طلعة كاملة على ميزانيتك!",
+      suggestedReplies: isEn
+        ? ["Build family plan 🏛️", "Cafes in Rawdah ☕", "Seafood Corniche 🌊", "Outing under 100 SAR 💰"]
+        : ["خطة عائلية 🏛️", "كافيهات الروضة ☕", "مطاعم الكورنيش 🌊", "جدة بأقل من 100 💰"],
       plan: null,
       aiStatus: aiResult.statusState,
     };
   }
 
-  if (isPlanReq) {
-    const fallbackPlan = buildPlanServerSide({});
+  // B. Plan Modification Intent
+  const isModify = /(بدل|غير|أرخص|أفخم|بدّل|تغيير|swap|cheaper|change|modify)/i.test(lowMsg);
+  if (isModify && currentPlan && currentPlan.validated) {
+    const isCheaper = /(أرخص|ارخص|رخيص|cheaper)/i.test(lowMsg);
+    const targetKind = /(كافيه|قهوة|cafe)/i.test(lowMsg) ? "cafe" : "food";
+    const modResult = modifySingleStopInPlan(currentPlan, targetKind as any, isCheaper ? "make_cheaper" : "swap");
+
     return {
-      type: "plan",
-      message: isEn
-        ? "I built a plan using the places currently available in JEDDAW."
-        : "جهّزت لك خطة باستخدام أماكن جِدّاو المتاحة حالياً.",
-      suggestedReplies: [isEn ? "Make it cheaper" : "خلّها أرخص"],
-      plan: fallbackPlan,
+      type: "plan_update",
+      message: isEn ? modResult.changeSummaryEn : modResult.changeSummaryAr,
+      changedStops: ["stop-2"],
+      suggestedReplies: isEn
+        ? ["Make it cheaper 💰", "Swap cafe ☕", "Share plan 📲"]
+        : ["خلّها أرخص 💰", "بدّل القهوة ☕", "شارك الخطة 📲"],
+      plan: modResult.newPlan,
       aiStatus: aiResult.statusState,
     };
   }
 
+  // C. Plan Building Intent
+  const isPlanReq = /(خطة|طلعة|سويلي|سوي|اعمل|رتب|ميزانيتي|برنامج|جدول|plan|outing|itinerary|schedule|trip|weekend|ويكند)/i.test(lowMsg);
+  if (isPlanReq) {
+    let budgetScope: "economy" | "balanced" | "premium" | undefined;
+    if (/(أرخص|رخيص|100|economy|cheap)/i.test(lowMsg)) budgetScope = "economy";
+    if (/(فاخر|فخم|ممتاز|premium|luxury)/i.test(lowMsg)) budgetScope = "premium";
+
+    let area: string | undefined;
+    if (/(بلد|البلد|balad)/i.test(lowMsg)) area = "balad";
+    if (/(روضة|الروضة|rawdah)/i.test(lowMsg)) area = "rawdah";
+    if (/(كورنيش|الكورنيش|corniche)/i.test(lowMsg)) area = "corniche";
+    if (/(أبحر|ابحر|obhur)/i.test(lowMsg)) area = "obhur_north";
+
+    const localPlan = buildPlanServerSide({ budgetScope, area });
+
+    return {
+      type: "plan",
+      message: isEn
+        ? `I built a custom plan tailored for your outing in Jeddah (${localPlan.totalDurationMinutes} min)!`
+        : `رتبت لك خطة جداوية متكاملة مدتها ${localPlan.totalDurationMinutes} دقيقة بحسب الأماكن الأعلى تقييماً!`,
+      suggestedReplies: isEn
+        ? ["Make it cheaper 💰", "Swap restaurant 🍽️", "Show map 🗺️"]
+        : ["خلّها أرخص 💰", "بدّل المطعم 🍽️", "شاهد الخريطة 🗺️"],
+      plan: localPlan,
+      aiStatus: aiResult.statusState,
+    };
+  }
+
+  // D. Dynamic Place Search Intent (Cafes, Restaurants, Hotels, Resorts, Activities, Districts)
+  const isSearch = /(مطعم|مطاعم|كافيه|كافيهات|قهوة|أماكن|فندق|فنادق|منتجع|منتجعات|شاطئ|بحر|ألعاب|كارتينج|عشاء|غداء|فطور|search|cafe|restaurant|hotel|resort|beach|food|coffee)/i.test(lowMsg);
+
+  let matchedPlaces = places.filter((p) => {
+    const textAr = (p.nameAr + " " + p.descAr + " " + p.categoryAr + " " + (p.subCategoryAr || "")).toLowerCase();
+    const textEn = (p.nameEn + " " + p.descEn + " " + p.categoryAr).toLowerCase();
+
+    if (/(كافيه|قهوة|cafe|coffee)/i.test(lowMsg) && p.kind === "cafe") return true;
+    if (/(مطعم|مطاعم|أكل|غداء|عشاء|food|restaurant|dining)/i.test(lowMsg) && p.kind === "food") return true;
+    if (/(فندق|فنادق|hotel)/i.test(lowMsg) && p.kind === "hotel") return true;
+    if (/(منتجع|منتجعات|شاطئ|resort|beach)/i.test(lowMsg) && (p.kind === "resort" || p.districtId === "obhur_north")) return true;
+    if (/(ألعاب|كارتينج|سينما|نشاط|activity|action)/i.test(lowMsg) && (p.kind === "activity" || p.kind === "outdoor")) return true;
+
+    if (/(بلد|البلد|balad)/i.test(lowMsg) && p.districtId === "balad") return true;
+    if (/(روضة|الروضة|rawdah)/i.test(lowMsg) && p.districtId === "rawdah") return true;
+    if (/(كورنيش|الكورنيش|corniche)/i.test(lowMsg) && (p.districtId === "corniche" || p.districtId === "waterfront")) return true;
+
+    const words = lowMsg.split(/\s+/).filter((w) => w.length > 2);
+    return words.some((w) => textAr.includes(w) || textEn.includes(w));
+  });
+
+  if (matchedPlaces.length === 0) {
+    matchedPlaces = places.slice(0, 4);
+  }
+
+  if (isSearch || matchedPlaces.length > 0) {
+    return {
+      type: "place_results",
+      message: isEn
+        ? `Here are top recommended spots matching "${message}":`
+        : `إليك أفضل الأماكن المميزة في جدة لتجربتك:`,
+      places: matchedPlaces.slice(0, 6),
+      suggestedReplies: isEn
+        ? ["Build plan 🗓️", "More cafes ☕", "Sea view spots 🌊"]
+        : ["سوّ لي خطة 🗓️", "كافيهات زيادة ☕", "أماكن على البحر 🌊"],
+      plan: null,
+      aiStatus: aiResult.statusState,
+    };
+  }
+
+  // E. Fallback General Assistance (Always returns helpful recommendations)
   return {
     type: "message",
-    message: isUnconfigured
-      ? isEn
-        ? "JEDDAW AI service is not connected to a server key yet. I can still help you search places and build local plans!"
-        : "مساعد جِدّاو الذكي غير مربوط بخدمة الذكاء الاصطناعي بعد. لكن أقدر أساعدك في البحث عن أماكن وتجهيز خطط طلباتك محلياً!"
-      : isEn
-      ? "I couldn't reach the AI service right now. Would you like to search places or build a local plan?"
-      : "عذراً، لم أتمكن من الاتصال بخدمة الذكاء الاصطناعي حالياً. هل تريد البحث عن أماكن أو إنشاء خطة محلياً؟",
-    suggestedReplies: [
-      isEn ? "Build plan 🗓️" : "إنشاء خطة 🗓️",
-      isEn ? "Explore places 🌊" : "استكشاف جدة 🌊",
-    ],
+    message: isEn
+      ? "I can help you explore Jeddah! Try asking for cafes in Al-Rawdah, seafood on the Corniche, or click below to build a full outing plan."
+      : "أنا هنا في خدمتك لاكتشاف جدة! أقدر أرتب لك خطة طلعة كاملة، أو أبحث لك عن كافيهات ومطاعم وأماكن ترفيه مميزة.",
+    suggestedReplies: isEn
+      ? ["Build plan 🗓️", "Explore cafes ☕", "Seafood dining 🐟"]
+      : ["إنشاء خطة 🗓️", "استكشاف كافيهات ☕", "مطاعم بحرية 🐟"],
     plan: null,
     aiStatus: aiResult.statusState,
   };

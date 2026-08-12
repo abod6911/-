@@ -119,7 +119,7 @@ function PlacesPage() {
       </div>
 
       {/* Main Categories Tabs */}
-      <div className="mt-8 flex flex-wrap gap-2.5 border-b border-[#E2D3BE] dark:border-white/10 pb-4">
+      <div className="mt-8 flex items-center gap-2.5 overflow-x-auto pb-3 sm:pb-4 sm:flex-wrap border-b border-[#E2D3BE] dark:border-white/10 [webkit-overflow-scrolling:touch]">
         {[
           { id: "all", label: isRtl ? "الكل 🌟" : "All 🌟" },
           { id: "food", label: isRtl ? "🍽️ مطاعم" : "🍽️ Dining" },
@@ -135,7 +135,7 @@ function PlacesPage() {
               setMainCat(tab.id as MainCategory);
               setSubCat("all");
             }}
-            className={`rounded-full px-5 py-2.5 text-sm font-bold transition-all min-h-[44px] ${
+            className={`rounded-full px-5 py-2.5 text-xs sm:text-sm font-bold transition-all min-h-[44px] shrink-0 ${
               mainCat === tab.id
                 ? "bg-[#C96745] text-white shadow-lift scale-[1.02]"
                 : "bg-[#FAF6F0] dark:bg-[#222826] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 hover:border-[#C96745]"
@@ -147,12 +147,12 @@ function PlacesPage() {
       </div>
 
       {/* Sub-Category Filter Chips */}
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-4 flex items-center gap-2 overflow-x-auto pb-2 sm:flex-wrap [webkit-overflow-scrolling:touch]">
         {subCategoryChips.map((chip) => (
           <button
             key={chip.id}
             onClick={() => setSubCat(chip.id)}
-            className={`rounded-xl px-3.5 py-2 text-xs font-bold transition-all min-h-[38px] ${
+            className={`rounded-xl px-3.5 py-2 text-xs font-bold transition-all min-h-[38px] shrink-0 ${
               subCat === chip.id
                 ? "bg-[#397C78] text-white shadow-sm"
                 : "bg-[#F4EBDD] dark:bg-[#161B1A] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE]/60 dark:border-white/10 hover:border-[#397C78]"

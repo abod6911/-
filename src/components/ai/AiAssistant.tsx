@@ -187,7 +187,7 @@ export function AiAssistant() {
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/75 animate-fade-in" />
           <Dialog.Content className="fixed inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 outline-none">
-            <div className="mobile-visual-viewport-sheet sm:!static surface-card flex h-[var(--vv-height,90vh)] sm:!h-[86vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl border border-[#E2D3BE] dark:border-white/10 bg-[#FAF6F0] dark:bg-[#1C2422] shadow-2xl">
+            <div className="mobile-visual-viewport-sheet surface-card flex w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl border border-[#E2D3BE] dark:border-white/10 bg-[#FAF6F0] dark:bg-[#1C2422] shadow-2xl">
               
               <Dialog.Title className="sr-only">
                 {isRtl ? "مساعد جِدّاو" : "JEDDAW Assistant"}

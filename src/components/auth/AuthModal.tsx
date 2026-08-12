@@ -252,7 +252,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
             {/* Protection Footer Badge - Fixed Non-scrolling */}
             <div className="mt-3 text-center flex items-center justify-center gap-1.5 text-[11px] font-bold text-[#397C78] dark:text-[#5EAAA5] border-t border-[#E2D3BE]/60 dark:border-white/10 pt-3 flex-none">
               <ShieldCheck className="h-4 w-4" />
-              <span>{isRtl ? "بياناتك محمية ومشفرة 100% بأمان SSL" : "100% SSL Encrypted & Protected"}</span>
+              <span>{isRtl ? "ملف محلي آمن ومحفوظ على جهازك" : "Profile safely saved locally on this device"}</span>
             </div>
           </div>
         </Dialog.Content>

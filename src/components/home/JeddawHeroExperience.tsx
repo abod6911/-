@@ -120,7 +120,6 @@ interface JeddawHeroExperienceProps {
 export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperienceProps) {
   const { isRtl } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
   const [splineError, setSplineError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -153,10 +152,12 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
       if (isIntersecting && document.visibilityState === "visible" && !isInputActive) {
         currentX += (targetX - currentX) * 0.035;
         currentY += (targetY - currentY) * 0.035;
-        setMousePos({
-          x: Math.max(-1, Math.min(1, currentX)),
-          y: Math.max(-1, Math.min(1, currentY)),
-        });
+        if (containerRef.current) {
+          const px = Math.max(-1, Math.min(1, currentX));
+          const py = Math.max(-1, Math.min(1, currentY));
+          containerRef.current.style.setProperty("--hero-px", `${px}`);
+          containerRef.current.style.setProperty("--hero-py", `${py}`);
+        }
         animationFrameId = requestAnimationFrame(updateParallax);
       } else {
         animationFrameId = null; // Do NOT keep RAF running when offscreen or input focused!
@@ -253,7 +254,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         style={{
           top: "10%",
           left: "30%",
-          transform: `translate(${mousePos.x * -30}px, ${mousePos.y * -25}px)`,
+          transform: "translate(calc(var(--hero-px, 0) * -30px), calc(var(--hero-py, 0) * -25px))",
         }}
       />
       
@@ -263,7 +264,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         style={{
           bottom: "5%",
           right: "15%",
-          transform: `translate(${mousePos.x * 22}px, ${mousePos.y * 18}px)`,
+          transform: "translate(calc(var(--hero-px, 0) * 22px), calc(var(--hero-py, 0) * 18px))",
         }}
       />
 
@@ -287,7 +288,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         style={{
-          transform: `translate(${mousePos.x * 4}px, ${mousePos.y * 3}px)`,
+          transform: "translate(calc(var(--hero-px, 0) * 4px), calc(var(--hero-py, 0) * 3px))",
         }}
       >
         <defs>

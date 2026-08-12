@@ -81,13 +81,13 @@ export function SiteHeader() {
             </Link>
 
             {/* Desktop Nav Links */}
-            <nav className="hidden items-center gap-4 xl:gap-7 lg:flex">
+            <nav className="hidden items-center gap-3 lg:gap-6 xl:gap-7 md:flex">
               {nav.map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}
                   activeProps={{ className: "text-[#C96745] font-extrabold" }}
-                  className="text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] hover:text-[#C96745] transition-colors whitespace-nowrap py-1"
+                  className="text-xs lg:text-sm font-bold text-[#252A28] dark:text-[#F5F1E8] hover:text-[#C96745] transition-colors whitespace-nowrap py-1"
                 >
                   {item.label}
                 </Link>
@@ -146,7 +146,7 @@ export function SiteHeader() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setOpen(!open)}
-              className="rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] p-2.5 text-[#252A28] dark:text-[#F5F1E8] lg:hidden min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0"
+              className="rounded-xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#222826] p-2.5 text-[#252A28] dark:text-[#F5F1E8] md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0"
               aria-label="القائمة"
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
