@@ -79,32 +79,24 @@ export function JeddawSplashScreen() {
       <div className="relative z-10 flex flex-col items-center text-center max-w-sm w-full">
         
         {/* Brand Mark Container with Soft Ambient Aura */}
-        <div className="relative mb-7">
-          <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] opacity-35 blur-xl animate-pulse" />
-          <div className="relative grid h-24 w-24 sm:h-28 sm:w-28 place-items-center rounded-3xl bg-white p-2 shadow-2xl border border-white/40 backdrop-blur-xl overflow-hidden">
+        <div className="relative mb-6">
+          <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-[#C96745] via-[#E4A23B] to-[#397C78] opacity-30 blur-2xl animate-pulse" />
+          <div className="relative flex items-center justify-center p-2">
             {!hasError ? (
               <img
                 src={currentSrc}
                 alt="شعار جِدّاو — JEDDAW"
-                className="h-full w-full object-contain"
+                className="h-24 sm:h-32 w-auto object-contain drop-shadow-2xl"
                 style={{ imageRendering: "crisp-edges" }}
                 onError={handleError}
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center rounded-2xl bg-gradient-to-br from-[#C96745] via-[#E4A23B] to-[#397C78] text-white font-black text-xl">
-                جِدّاو
+              <div className="flex h-20 px-6 items-center justify-center rounded-2xl bg-gradient-to-br from-[#C96745] via-[#E4A23B] to-[#397C78] text-white font-black text-2xl shadow-2xl">
+                جِدّاو JEDDAW
               </div>
             )}
           </div>
         </div>
-
-        {/* Brand Title */}
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[#FAF6F0] leading-none mb-2">
-          جِدّاو
-        </h1>
-        <span className="text-[11px] font-extrabold tracking-[0.3em] text-[#FF9D7A] uppercase mb-3">
-          J E D D A W
-        </span>
 
         {/* Tagline */}
         <p className="text-xs font-semibold text-[#FAF6F0]/70 tracking-wide flex items-center gap-1.5 mb-10">

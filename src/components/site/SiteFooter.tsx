@@ -18,9 +18,7 @@ export function SiteFooter() {
           {/* Column 1: Brand Info & Premium Emblem Badge */}
           <div className="space-y-4">
             <Link to="/" className="inline-block hover:scale-105 transition-transform">
-              <div className="bg-white/95 backdrop-blur-md p-2 px-3 rounded-2xl border border-white/20 shadow-xl inline-flex items-center">
-                <Logo className="h-9 md:h-10" />
-              </div>
+              <Logo className="h-10 md:h-12" />
             </Link>
 
             <p className="text-xs md:text-sm leading-relaxed text-[#FAF6F0]/85 font-medium max-w-xs">
