@@ -200,30 +200,83 @@ function Index() {
 
       {/* ===== BELOW THE FOLD: INSTANT SEARCH & DISCOVERY ===== */}
       <section className="relative z-30 -mt-8 mx-auto max-w-5xl px-4 space-y-6">
-        {/* Instant Touch Discovery Chips (Zero Keyboard Needed) */}
-        <div className="rounded-3xl bg-white dark:bg-[#1A2221] p-4 sm:p-5 border border-[#E2D3BE] dark:border-white/10 shadow-2xl backdrop-blur-xl">
-          <div className="flex items-center gap-2 mb-3 text-xs font-black text-[#397C78] dark:text-[#5EAAA5]">
-            <Sparkles className="h-4 w-4 text-[#E4A23B]" />
-            <span>{isRtl ? "اكتشف جدة بنقرة واحدة:" : "Discover Jeddah in one click:"}</span>
+        {/* FLAGSHIP ULTRA-PREMIUM TOUCH OUTING SEARCH & DISCOVERY PANEL */}
+        <div className="rounded-3xl bg-white dark:bg-[#1A2221] p-5 sm:p-6 border border-[#E2D3BE] dark:border-white/10 shadow-2xl backdrop-blur-xl space-y-4">
+          
+          {/* Header & Status Indicator */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E2D3BE]/60 dark:border-white/10 pb-3">
+            <div className="flex items-center gap-2 text-sm font-black text-[#252A28] dark:text-[#F5F1E8]">
+              <div className="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-[#C96745] to-[#E4A23B] text-white shadow-md">
+                <Navigation className="h-4 w-4" />
+              </div>
+              <div>
+                <span>{isRtl ? "محرك اكتشاف جدة التفاعلي" : "Interactive Jeddah Discovery Engine"}</span>
+                <span className="block text-[10px] font-semibold text-[#397C78] dark:text-[#5EAAA5]">
+                  {isRtl ? "اختر مودك أو حيك بنقرة واحدة بدون كتابة" : "One-tap discovery with zero typing needed"}
+                </span>
+              </div>
+            </div>
+            <Link
+              to="/places"
+              className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-full bg-[#397C78]/10 text-[#397C78] dark:text-[#5EAAA5] border border-[#397C78]/20 px-3.5 py-1.5 text-xs font-extrabold hover:bg-[#397C78] hover:text-white transition-all cursor-pointer"
+            >
+              <span>{isRtl ? "عرض كل الأماكن" : "View All Places"}</span>
+              <ChevronLeft className={`h-3.5 w-3.5 ${isRtl ? "" : "rotate-180"}`} />
+            </Link>
           </div>
-          <div className="flex flex-wrap gap-2.5">
-            {[
-              { labelAr: "كافيهات رايقة ☕", labelEn: "Chill Cafes ☕", link: "/places?category=cafe" },
-              { labelAr: "مطاعم بحرية 🌊", labelEn: "Seafood Dining 🌊", link: "/places?category=food" },
-              { labelAr: "حي البلد التاريخي 🏛️", labelEn: "Al-Balad Heritage 🏛️", link: "/places?district=balad" },
-              { labelAr: "شواطئ ومنتجعات 🏖️", labelEn: "Beaches & Resorts 🏖️", link: "/places?category=resort" },
-              { labelAr: "أنشطة وتسلية 🏎️", labelEn: "Activities & Action 🏎️", link: "/places?category=activity" },
-              { labelAr: "كافيهات الروضة ☕", labelEn: "Rawdah Cafes ☕", link: "/places?district=rawdah" },
-            ].map((chip, idx) => (
-              <Link
-                key={idx}
-                to={chip.link}
-                className="rounded-2xl bg-[#FAF6F0] dark:bg-[#161B1A] px-4 py-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/15 hover:border-[#C96745] hover:text-[#C96745] hover:scale-105 active:scale-95 transition-all shadow-sm cursor-pointer"
-              >
-                {isRtl ? chip.labelAr : chip.labelEn}
-              </Link>
-            ))}
+
+          {/* Row 1: Primary Category Action Chips */}
+          <div>
+            <div className="text-[11px] font-extrabold text-[#6E716C] dark:text-[#B5B8B2] mb-2 flex items-center gap-1">
+              <Sparkles className="h-3 w-3 text-[#E4A23B]" />
+              <span>{isRtl ? "اختر الوجهة الرئيسية:" : "Choose Main Destination:"}</span>
+            </div>
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 [webkit-overflow-scrolling:touch] scrollbar-none">
+              {[
+                { labelAr: "كافيهات رايقة ☕", labelEn: "Chill Cafes ☕", link: "/places?category=cafe", bg: "bg-[#C96745]/10 text-[#C96745] border-[#C96745]/30 hover:bg-[#C96745] hover:text-white" },
+                { labelAr: "مطاعم مميزة 🍽️", labelEn: "Top Restaurants 🍽️", link: "/places?category=food", bg: "bg-[#397C78]/10 text-[#397C78] dark:text-[#5EAAA5] border-[#397C78]/30 hover:bg-[#397C78] hover:text-white" },
+                { labelAr: "شواطئ ومنتجعات 🏖️", labelEn: "Beaches & Resorts 🏖️", link: "/places?category=resort", bg: "bg-[#E4A23B]/10 text-[#E4A23B] border-[#E4A23B]/30 hover:bg-[#E4A23B] hover:text-white" },
+                { labelAr: "أنشطة وتسلية 🏎️", labelEn: "Activities & Fun 🏎️", link: "/places?category=activity", bg: "bg-[#9B51E0]/10 text-[#9B51E0] border-[#9B51E0]/30 hover:bg-[#9B51E0] hover:text-white" },
+                { labelAr: "حي البلد التاريخي 🏛️", labelEn: "Al-Balad Heritage 🏛️", link: "/places?district=balad", bg: "bg-[#D97757]/10 text-[#D97757] border-[#D97757]/30 hover:bg-[#D97757] hover:text-white" },
+                { labelAr: "فنادق وإقامة 🏨", labelEn: "Hotels & Stay 🏨", link: "/places?category=hotel", bg: "bg-[#27AE60]/10 text-[#27AE60] border-[#27AE60]/30 hover:bg-[#27AE60] hover:text-white" },
+              ].map((chip, idx) => (
+                <Link
+                  key={idx}
+                  to={chip.link}
+                  className={`min-h-[44px] shrink-0 rounded-2xl border px-4 py-2.5 text-xs font-extrabold transition-all shadow-sm active:scale-95 flex items-center justify-center cursor-pointer ${chip.bg}`}
+                >
+                  {isRtl ? chip.labelAr : chip.labelEn}
+                </Link>
+              ))}
+            </div>
           </div>
+
+          {/* Row 2: Quick District Selection Pills */}
+          <div>
+            <div className="text-[11px] font-extrabold text-[#6E716C] dark:text-[#B5B8B2] mb-2 flex items-center gap-1">
+              <MapPin className="h-3 w-3 text-[#397C78]" />
+              <span>{isRtl ? "حسب الأحياء والمناطق:" : "By District & Neighborhood:"}</span>
+            </div>
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 [webkit-overflow-scrolling:touch] scrollbar-none">
+              {[
+                { labelAr: "حي الروضة", labelEn: "Al Rawdah", link: "/places?district=rawdah" },
+                { labelAr: "واجهة الكورنيش", labelEn: "Corniche", link: "/places?district=corniche" },
+                { labelAr: "أبحر الشمالية", labelEn: "North Obhur", link: "/places?district=obhur_north" },
+                { labelAr: "منطقة الشاطئ", labelEn: "Al-Shati", link: "/places?district=shati" },
+                { labelAr: "البلد التاريخية", labelEn: "Al-Balad", link: "/places?district=balad" },
+                { labelAr: "المحميات البحرية", labelEn: "Waterfront", link: "/places?district=waterfront" },
+              ].map((pill, idx) => (
+                <Link
+                  key={idx}
+                  to={pill.link}
+                  className="min-h-[40px] shrink-0 rounded-full bg-[#FAF6F0] dark:bg-[#161B1A] border border-[#E2D3BE] dark:border-white/15 px-4 py-2 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] hover:border-[#397C78] hover:text-[#397C78] active:scale-95 transition-all shadow-sm flex items-center justify-center cursor-pointer"
+                >
+                  📍 {isRtl ? pill.labelAr : pill.labelEn}
+                </Link>
+              ))}
+            </div>
+          </div>
+
         </div>
 
         {/* SINGLE NON-DUPLICATED FLASH OFFERS BANNER */}

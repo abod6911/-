@@ -164,11 +164,11 @@ function PlacesPage() {
       </div>
 
       {/* Interactive Filters Bar (Zero Keyboard Needed) */}
-      <div className="surface-card mt-6 p-5 animate-fade-in-up delay-1 border border-[#E2D3BE] dark:border-white/10">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="surface-card mt-6 p-5 animate-fade-in-up delay-1 border border-[#E2D3BE] dark:border-white/10 shadow-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs font-black text-[#397C78] dark:text-[#5EAAA5]">
             <Filter className="h-4 w-4" />
-            <span>{isRtl ? "تصفية سريعة بالحي والميزانية:" : "Quick Filter by District & Budget:"}</span>
+            <span>{isRtl ? "تصفية سريعة بالحي والميزانية والترتيب:" : "Quick Filter by District, Budget & Sort:"}</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
@@ -176,7 +176,7 @@ function PlacesPage() {
             <select
               value={selectedDistrict}
               onChange={(e) => setSelectedDistrict(e.target.value as any)}
-              className="rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] px-4 py-3 text-sm font-bold text-[#252A28] dark:text-[#F5F1E8]"
+              className="rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-[#FAF6F0] dark:bg-[#161B1A] px-4 py-2.5 text-xs font-bold text-[#252A28] dark:text-[#F5F1E8] min-h-[44px] cursor-pointer"
             >
               <option value="all">{isRtl ? "📍 الحي: كل جدة" : "📍 District: All Jeddah"}</option>
               {districts.map((d) => (
@@ -190,7 +190,7 @@ function PlacesPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="rounded-2xl border border-[#C96745] bg-[#C96745]/10 px-4 py-3 text-sm font-extrabold text-[#C96745]"
+              className="rounded-2xl border border-[#C96745] bg-[#C96745]/10 px-4 py-2.5 text-xs font-extrabold text-[#C96745] min-h-[44px] cursor-pointer"
             >
               <option value="trending">{isRtl ? "🔥 الترتيب: الترند أولاً" : "🔥 Sort: Trending First"}</option>
               <option value="topRated">{isRtl ? "⭐ الترتيب: الأفضل تقييماً" : "⭐ Sort: Top Rated"}</option>
@@ -198,6 +198,22 @@ function PlacesPage() {
               <option value="cheapest">{isRtl ? "💰 الترتيب: الأقل سعراً" : "💰 Sort: Lowest Price"}</option>
               <option value="priceDesc">{isRtl ? "💎 الترتيب: الأكثر فخامة" : "💎 Sort: Luxury First"}</option>
             </select>
+
+            {/* Reset Filters Button */}
+            {(selectedCategory !== "all" || subCat !== "all" || selectedDistrict !== "all" || sortBy !== "trending") && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCategory("all");
+                  setSubCat("all");
+                  setSelectedDistrict("all");
+                  setSortBy("trending");
+                }}
+                className="rounded-2xl bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 px-3.5 py-2.5 text-xs font-extrabold hover:bg-rose-500 hover:text-white transition-all active:scale-95 min-h-[44px] cursor-pointer"
+              >
+                🔄 {isRtl ? "إعادة ضبط الفلاتر" : "Reset Filters"}
+              </button>
+            )}
           </div>
         </div>
       </div>
