@@ -92,13 +92,6 @@ export function useMobileViewport(): MobileViewportState {
         isInputFocused = true;
         root.dataset.inputFocused = "true"; // IMMEDIATE DOM attribute write
 
-        // Smoothly center active focused input above soft keyboard on mobile touchscreens
-        if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches && target) {
-          setTimeout(() => {
-            target.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
-          }, 250);
-        }
-
         scheduleGeometryUpdate();
         scheduleStaggeredUpdates();
       }
