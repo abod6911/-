@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" },
+      { name: "viewport", content: "width=device-width, initial-scale=1.0, viewport-fit=cover" },
       { name: "author", content: "جِدّاو | JEDDAW" },
       { property: "og:site_name", content: "جِدّاو | JEDDAW — مخطط طلعات جدة" },
       { property: "og:type", content: "website" },
@@ -125,9 +125,6 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-import { useMobileViewport } from "@/hooks/useMobileViewport";
-import { KeyboardDebugPanel } from "@/components/common/KeyboardDebugPanel";
-
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -143,19 +140,18 @@ function RootComponent() {
 }
 
 function RootAppContent() {
-  // TEST 3 DIAGNOSTIC ISOLATION: useMobileViewport disabled completely to test runtime without global viewport listeners
-  // useMobileViewport();
+  const location = useLocation();
+  const isBareRoute = location.pathname.includes("bare-input-test");
 
   return (
     <div className="flex min-h-screen flex-col bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
-      {/* <KeyboardDebugPanel /> */}
-      <JeddawSplashScreen />
-      <SiteHeader />
+      {!isBareRoute && <JeddawSplashScreen />}
+      {!isBareRoute && <SiteHeader />}
       <main className="flex-1 pb-20 lg:pb-0">
         <Outlet />
       </main>
-      <SiteFooter />
-      <MobileTabBar />
+      {!isBareRoute && <SiteFooter />}
+      {!isBareRoute && <MobileTabBar />}
     </div>
   );
 }

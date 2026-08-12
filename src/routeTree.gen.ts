@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdvertiseRouteImport } from './routes/advertise'
+import { Route as BareInputTestRouteImport } from './routes/bare-input-test'
 import { Route as DebugInputRouteImport } from './routes/debug-input'
+import { Route as MobileInputTestRouteImport } from './routes/mobile-input-test'
 import { Route as OffersRouteImport } from './routes/offers'
 import { Route as PlacesRouteImport } from './routes/places'
 import { Route as PlansRouteImport } from './routes/plans'
@@ -33,9 +35,19 @@ const AdvertiseRoute = AdvertiseRouteImport.update({
   path: '/advertise',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BareInputTestRoute = BareInputTestRouteImport.update({
+  id: '/bare-input-test',
+  path: '/bare-input-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DebugInputRoute = DebugInputRouteImport.update({
   id: '/debug-input',
   path: '/debug-input',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MobileInputTestRoute = MobileInputTestRouteImport.update({
+  id: '/mobile-input-test',
+  path: '/mobile-input-test',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OffersRoute = OffersRouteImport.update({
@@ -63,7 +75,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/advertise': typeof AdvertiseRoute
+  '/bare-input-test': typeof BareInputTestRoute
   '/debug-input': typeof DebugInputRoute
+  '/mobile-input-test': typeof MobileInputTestRoute
   '/offers': typeof OffersRoute
   '/places': typeof PlacesRoute
   '/plans': typeof PlansRoute
@@ -73,7 +87,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/advertise': typeof AdvertiseRoute
+  '/bare-input-test': typeof BareInputTestRoute
   '/debug-input': typeof DebugInputRoute
+  '/mobile-input-test': typeof MobileInputTestRoute
   '/offers': typeof OffersRoute
   '/places': typeof PlacesRoute
   '/plans': typeof PlansRoute
@@ -84,7 +100,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/advertise': typeof AdvertiseRoute
+  '/bare-input-test': typeof BareInputTestRoute
   '/debug-input': typeof DebugInputRoute
+  '/mobile-input-test': typeof MobileInputTestRoute
   '/offers': typeof OffersRoute
   '/places': typeof PlacesRoute
   '/plans': typeof PlansRoute
@@ -96,7 +114,9 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/advertise'
+    | '/bare-input-test'
     | '/debug-input'
+    | '/mobile-input-test'
     | '/offers'
     | '/places'
     | '/plans'
@@ -106,7 +126,9 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/advertise'
+    | '/bare-input-test'
     | '/debug-input'
+    | '/mobile-input-test'
     | '/offers'
     | '/places'
     | '/plans'
@@ -116,7 +138,9 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/advertise'
+    | '/bare-input-test'
     | '/debug-input'
+    | '/mobile-input-test'
     | '/offers'
     | '/places'
     | '/plans'
@@ -127,7 +151,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
   AdvertiseRoute: typeof AdvertiseRoute
+  BareInputTestRoute: typeof BareInputTestRoute
   DebugInputRoute: typeof DebugInputRoute
+  MobileInputTestRoute: typeof MobileInputTestRoute
   OffersRoute: typeof OffersRoute
   PlacesRoute: typeof PlacesRoute
   PlansRoute: typeof PlansRoute
@@ -157,11 +183,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdvertiseRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bare-input-test': {
+      id: '/bare-input-test'
+      path: '/bare-input-test'
+      fullPath: '/bare-input-test'
+      preLoaderRoute: typeof BareInputTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/debug-input': {
       id: '/debug-input'
       path: '/debug-input'
       fullPath: '/debug-input'
       preLoaderRoute: typeof DebugInputRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mobile-input-test': {
+      id: '/mobile-input-test'
+      path: '/mobile-input-test'
+      fullPath: '/mobile-input-test'
+      preLoaderRoute: typeof MobileInputTestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/offers': {
@@ -199,7 +239,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
   AdvertiseRoute: AdvertiseRoute,
+  BareInputTestRoute: BareInputTestRoute,
   DebugInputRoute: DebugInputRoute,
+  MobileInputTestRoute: MobileInputTestRoute,
   OffersRoute: OffersRoute,
   PlacesRoute: PlacesRoute,
   PlansRoute: PlansRoute,
