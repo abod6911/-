@@ -438,16 +438,16 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
           >
             {/* Hotspot node (dot) */}
             <div
-              className={`relative flex items-center justify-center transition-all duration-500 cursor-pointer ${
-                isActive ? "scale-110" : "scale-100 hover:scale-105"
+              className={`relative flex flex-col items-center justify-center transition-all duration-500 cursor-pointer ${
+                isActive ? "scale-110 z-40" : "scale-100 hover:scale-105"
               }`}
             >
-              {/* Glow ring */}
+              {/* Outer pulsing glow ring */}
               <div
-                className={`absolute rounded-full transition-all duration-700 ${
+                className={`absolute rounded-full transition-all duration-700 animate-pulse ${
                   isActive
-                    ? "h-16 w-16 opacity-100"
-                    : "h-12 w-12 opacity-40"
+                    ? "h-16 w-16 opacity-100 ring-2 ring-white/40"
+                    : "h-12 w-12 opacity-60"
                 }`}
                 style={{
                   background: `radial-gradient(circle, ${spot.accentBg} 0%, transparent 70%)`,
@@ -456,32 +456,29 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
 
               {/* Icon circle */}
               <div
-                className={`relative grid place-items-center rounded-2xl border backdrop-blur-xl transition-all duration-500 shadow-lg ${
+                className={`relative grid place-items-center rounded-2xl border backdrop-blur-xl transition-all duration-500 shadow-xl ${
                   isActive
-                    ? "h-12 w-12 border-white/40 bg-[#091C1A]/95"
-                    : "h-10 w-10 border-white/20 bg-[#091C1A]/80"
+                    ? "h-12 w-12 border-white bg-[#091C1A] ring-4 ring-[#C96745]/40"
+                    : "h-11 w-11 border-white/30 bg-[#091C1A]/90 hover:border-white/70"
                 }`}
               >
                 <Icon
-                  className="h-4.5 w-4.5 transition-colors duration-300"
+                  className="h-5 w-5 transition-transform duration-300 group-hover:scale-110"
                   style={{ color: spot.accentColor }}
                 />
               </div>
 
-              {/* Label pill — shows on hover/active */}
-              <div
-                className={`absolute top-full mt-2 whitespace-nowrap transition-all duration-400 ${
-                  isActive
-                    ? "opacity-100 translate-y-0 pointer-events-auto"
-                    : "opacity-0 translate-y-2 pointer-events-none"
-                }`}
-              >
+              {/* Always Visible High-Contrast Label Pill */}
+              <div className="mt-1.5 whitespace-nowrap transition-all duration-300">
                 <span
-                  className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-extrabold text-white border border-white/15 backdrop-blur-xl shadow-xl"
-                  style={{ backgroundColor: "rgba(9, 28, 26, 0.95)" }}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-extrabold text-white border backdrop-blur-xl shadow-2xl transition-all ${
+                    isActive
+                      ? "border-white bg-[#091C1A] scale-105 ring-2 ring-white/30"
+                      : "border-white/20 bg-[#091C1A]/90 hover:border-white/50"
+                  }`}
                 >
                   <span
-                    className="h-1.5 w-1.5 rounded-full"
+                    className="h-2 w-2 rounded-full animate-ping"
                     style={{ backgroundColor: spot.accentColor }}
                   />
                   {isRtl ? spot.labelAr : spot.labelEn}
