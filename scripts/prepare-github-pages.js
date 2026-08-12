@@ -36,6 +36,9 @@ const indexHtmlContent = `<!DOCTYPE html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>جِدّاو | JEDDAW — جدة تبدأ من هنا</title>
     <meta name="description" content="جِدّاو يرتّب لك طلعة كاملة في جدة حسب وقتك وميزانيتك ومودك. اختر موقعك ووقتك، ونرتّب لك الخطة كاملة في أقل من دقيقة." />
     <link rel="icon" type="image/x-icon" href="./favicon.ico" />
@@ -91,8 +94,15 @@ if (fs.existsSync(publicLogoWebp)) {
   fs.copyFileSync(publicLogoWebp, path.join(rootDir, "jeddaw-logo.webp"));
 }
 
+const headersContent = `/*
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0`;
+
 fs.writeFileSync(path.join(rootDir, "index.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, "404.html"), indexHtmlContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, ".nojekyll"), "", "utf-8");
+fs.writeFileSync(path.join(distDir, "_headers"), headersContent, "utf-8");
+fs.writeFileSync(path.join(rootDir, "_headers"), headersContent, "utf-8");
 
 console.log("Successfully prepared static distribution for GitHub Pages in dist/ and root assets!");
