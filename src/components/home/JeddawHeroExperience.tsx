@@ -389,7 +389,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
       <div
         className="relative z-20 flex flex-col items-center justify-center transition-transform duration-700 ease-out"
         style={{
-          transform: `translate(${mousePos.x * 6}px, ${mousePos.y * 6}px)`,
+          transform: "translate(calc(var(--hero-px, 0) * 6px), calc(var(--hero-py, 0) * 6px))",
         }}
       >
         {/* Outer ring pulse */}
@@ -429,7 +429,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
             style={{
               top: spot.position.top,
               left: spot.position.left,
-              transform: `translate(${mousePos.x * spot.parallaxMultiplier.x}px, ${mousePos.y * spot.parallaxMultiplier.y}px)`,
+              transform: `translate(calc(var(--hero-px, 0) * ${spot.parallaxMultiplier.x}px), calc(var(--hero-py, 0) * ${spot.parallaxMultiplier.y}px))`,
               transition: "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
               animationDelay: `${index * 0.15}s`,
             }}
@@ -550,7 +550,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
       <div
         className="absolute top-4 start-3 sm:top-6 sm:start-5 z-40 flex items-center gap-2 rounded-full bg-[#091C1A]/85 backdrop-blur-xl border border-white/15 px-3.5 py-1.5 shadow-xl animate-float-gentle"
         style={{
-          transform: `translate(${mousePos.x * 10}px, ${mousePos.y * 10}px)`,
+          transform: "translate(calc(var(--hero-px, 0) * 10px), calc(var(--hero-py, 0) * 10px))",
         }}
       >
         <Sparkles className="h-3 w-3 text-[#E4A23B] shrink-0" />
@@ -563,7 +563,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
       <div
         className="absolute bottom-3 start-3 sm:bottom-4 sm:start-4 z-30 flex items-center gap-2 rounded-full bg-[#091C1A]/90 backdrop-blur-xl border border-white/20 px-3 py-1.5 shadow-xl animate-float-delayed pointer-events-none"
         style={{
-          transform: `translate(${mousePos.x * -10}px, ${mousePos.y * -6}px)`,
+          transform: "translate(calc(var(--hero-px, 0) * -10px), calc(var(--hero-py, 0) * -6px))",
         }}
       >
         <MapPin className="h-3 w-3 text-[#5EAAA5] shrink-0" />
@@ -576,7 +576,7 @@ export function JeddawHeroExperience({ state = "idle" }: JeddawHeroExperiencePro
       <div
         className="hidden sm:flex absolute top-4 end-3 sm:top-6 sm:end-5 z-40 items-center gap-1.5 rounded-full bg-[#091C1A]/85 backdrop-blur-xl border border-white/15 px-3 py-1 shadow-xl"
         style={{
-          transform: `translate(${mousePos.x * -8}px, ${mousePos.y * 6}px)`,
+          transform: "translate(calc(var(--hero-px, 0) * -8px), calc(var(--hero-py, 0) * 6px))",
         }}
       >
         {hotspots.map((h) => (
