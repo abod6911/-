@@ -350,6 +350,53 @@ html[lang="ar"] label {
   }
 }
 
+/* Icon Box & Luxury UI Primitives */
+@utility icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(201, 103, 69, 0.12), rgba(57, 124, 120, 0.12));
+  border: 1px solid rgba(201, 103, 69, 0.2);
+  transition: all 0.3s ease;
+}
+
+@utility icon-box-sm {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.75rem;
+}
+
+@utility icon-box-md {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 1rem;
+}
+
+@utility icon-box-lg {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1.25rem;
+}
+
+@utility gradient-text-brand {
+  background: linear-gradient(135deg, #C96745 0%, #E4A23B 50%, #397C78 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility badge-glow {
+  box-shadow: 0 0 12px rgba(201, 103, 69, 0.3);
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* ==========================================================================
    Dark mode specific overrides
    ========================================================================== */
