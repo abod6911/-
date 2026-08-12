@@ -200,11 +200,11 @@ function PlacesPage() {
             </select>
 
             {/* Reset Filters Button */}
-            {(selectedCategory !== "all" || subCat !== "all" || selectedDistrict !== "all" || sortBy !== "trending") && (
+            {(mainCat !== "all" || subCat !== "all" || selectedDistrict !== "all" || sortBy !== "trending") && (
               <button
                 type="button"
                 onClick={() => {
-                  setSelectedCategory("all");
+                  setMainCat("all");
                   setSubCat("all");
                   setSelectedDistrict("all");
                   setSortBy("trending");
