@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { CheckCircle2, Lock, Mail, MapPin, ShieldCheck, Sparkles, User, X, Zap } from "lucide-react";
+import { Lock, Mail, MapPin, ShieldCheck, User, X, Zap } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { districts } from "@/data/jeddah";
+import { MobileInput } from "@/components/common/MobileInput";
 
 interface QuickPreset {
   id: string;
@@ -114,27 +115,26 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      {/* Plain Opaque/Semi-transparent Backdrop Overlay (Zero Filters for Mobile Safety) */}
+      {/* Backdrop Overlay */}
       <div
-        className="fixed inset-0 bg-black/80"
+        className="fixed inset-0 bg-black/75 transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Plain Opaque Modal Container (No transform-gpu or filter layers) */}
+      {/* Mobile Bottom Sheet Modal Container */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative z-10 w-full max-w-lg rounded-t-3xl sm:rounded-3xl bg-[#FAF6F0] dark:bg-[#161B1A] border border-[#E2D3BE] dark:border-white/10 shadow-2xl p-5 sm:p-7 text-[#252A28] dark:text-[#F5F1E8] max-h-[600px] sm:max-h-[90vh] flex flex-col overflow-hidden"
+        className="relative z-10 w-full max-w-lg rounded-t-3xl sm:rounded-3xl bg-[#FAF6F0] dark:bg-[#161B1A] border border-[#E2D3BE] dark:border-white/10 shadow-2xl p-5 sm:p-7 text-[#252A28] dark:text-[#F5F1E8] max-h-[80vh] sm:max-h-[580px] flex flex-col overflow-hidden"
       >
-        
-        {/* Top Handle Bar for Mobile Drag Visual */}
+        {/* Top Handle Bar for Mobile Visual */}
         <div className="w-12 h-1.5 bg-[#E2D3BE] dark:bg-white/20 rounded-full mx-auto mb-3 sm:hidden shrink-0" />
 
         {/* Close Button */}
         <button
           onClick={onClose}
           type="button"
-          className="absolute top-4 end-4 grid h-9 w-9 place-items-center rounded-full bg-[#F4EBDD] dark:bg-[#222826] text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#C96745] hover:text-white transition-all cursor-pointer z-20 shrink-0"
+          className="absolute top-4 end-4 grid h-9 w-9 place-items-center rounded-full bg-[#F4EBDD] dark:bg-[#222826] text-[#252A28] dark:text-[#F5F1E8] hover:bg-[#C96745] hover:text-white transition-colors cursor-pointer z-20 shrink-0"
           aria-label="إغلاق"
         >
           <X className="h-5 w-5" />
@@ -142,16 +142,16 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
 
         {/* Modal Header */}
         <div className="text-center mb-4 pe-8 shrink-0">
-          <div className="mx-auto mb-2 grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-[#C96745] to-[#E4A23B] text-white shadow-md">
-            <Lock className="h-6 w-6" />
+          <div className="mx-auto mb-2 grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#C96745] to-[#E4A23B] text-white shadow-md">
+            <Lock className="h-5 w-5" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-[#252A28] dark:text-[#F5F1E8]">
+          <h2 className="text-lg sm:text-xl font-black text-[#252A28] dark:text-[#F5F1E8]">
             {isRtl ? "تسجيل الدخول في جِدّاو" : "Sign In to JEDDAW"}
           </h2>
-          <p className="mt-1 text-xs font-semibold text-[#6E716C] dark:text-[#B5B8B2]">
+          <p className="mt-0.5 text-xs font-semibold text-[#6E716C] dark:text-[#B5B8B2]">
             {isRtl
-              ? "احفظ خطط الويكند المفضلة واسترجعها بنقرة واحدة من أي جهاز"
-              : "Save your favorite weekend plans and access them anytime"}
+              ? "احفظ خطط الويكند المفضلة واسترجعها بنقرة واحدة"
+              : "Save your favorite plans and access them anytime"}
           </p>
         </div>
 
@@ -163,7 +163,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
               setTab("quick");
               setErrorMsg("");
             }}
-            className={`rounded-xl py-2.5 flex items-center justify-center gap-1 transition-all ${
+            className={`rounded-xl py-2.5 flex items-center justify-center gap-1 transition-colors ${
               tab === "quick"
                 ? "bg-white dark:bg-[#161B1A] text-[#C96745] shadow-sm font-black"
                 : "text-[#6E716C] dark:text-[#B5B8B2] hover:text-[#252A28]"
@@ -179,7 +179,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
               setTab("login");
               setErrorMsg("");
             }}
-            className={`rounded-xl py-2.5 transition-all ${
+            className={`rounded-xl py-2.5 transition-colors ${
               tab === "login"
                 ? "bg-white dark:bg-[#161B1A] text-[#C96745] shadow-sm font-black"
                 : "text-[#6E716C] dark:text-[#B5B8B2] hover:text-[#252A28]"
@@ -194,7 +194,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
               setTab("signup");
               setErrorMsg("");
             }}
-            className={`rounded-xl py-2.5 transition-all ${
+            className={`rounded-xl py-2.5 transition-colors ${
               tab === "signup"
                 ? "bg-white dark:bg-[#161B1A] text-[#C96745] shadow-sm font-black"
                 : "text-[#6E716C] dark:text-[#B5B8B2] hover:text-[#252A28]"
@@ -206,7 +206,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
 
         {/* Error Alert Box */}
         {errorMsg && (
-          <div className="mb-3 rounded-2xl bg-[#B84E4E]/15 border border-[#B84E4E]/30 p-2.5 text-xs font-bold text-[#B84E4E] text-center animate-fade-in shrink-0">
+          <div className="mb-3 rounded-2xl bg-[#B84E4E]/15 border border-[#B84E4E]/30 p-2.5 text-xs font-bold text-[#B84E4E] text-center shrink-0">
             ⚠️ {errorMsg}
           </div>
         )}
@@ -223,26 +223,26 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 key={preset.id}
                 type="button"
                 onClick={() => handleQuickLogin(preset)}
-                className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white dark:bg-[#222826] border border-[#E2D3BE] dark:border-white/10 hover:border-[#C96745] transition-all shadow-sm active:scale-[0.98] group cursor-pointer text-start"
+                className="w-full flex items-center justify-between p-3 rounded-2xl bg-white dark:bg-[#222826] border border-[#E2D3BE] dark:border-white/10 hover:border-[#C96745] transition-colors shadow-sm active:scale-[0.98] group cursor-pointer text-start"
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`h-11 w-11 rounded-2xl bg-gradient-to-br ${preset.avatarBg} grid place-items-center text-xl text-white shadow-md shrink-0`}
+                    className={`h-10 w-10 rounded-2xl bg-gradient-to-br ${preset.avatarBg} grid place-items-center text-lg text-white shadow-md shrink-0`}
                   >
                     {preset.emoji}
                   </div>
                   <div>
-                    <div className="text-sm font-extrabold text-[#252A28] dark:text-[#F5F1E8] group-hover:text-[#C96745] transition-colors">
+                    <div className="text-xs sm:text-sm font-extrabold text-[#252A28] dark:text-[#F5F1E8] group-hover:text-[#C96745] transition-colors">
                       {isRtl ? preset.nameAr : preset.nameEn}
                     </div>
-                    <div className="text-xs font-semibold text-[#6E716C] dark:text-[#B5B8B2] flex items-center gap-1 mt-0.5">
+                    <div className="text-[11px] font-semibold text-[#6E716C] dark:text-[#B5B8B2] flex items-center gap-1 mt-0.5">
                       <MapPin className="h-3 w-3 text-[#397C78]" />
                       <span>{isRtl ? preset.districtAr : preset.districtEn}</span>
                     </div>
                   </div>
                 </div>
 
-                <span className="rounded-full bg-[#C96745]/10 text-[#C96745] px-3 py-1 text-xs font-black group-hover:bg-[#C96745] group-hover:text-white transition-all shrink-0">
+                <span className="rounded-full bg-[#C96745]/10 text-[#C96745] px-3 py-1 text-xs font-black group-hover:bg-[#C96745] group-hover:text-white transition-colors shrink-0">
                   {isRtl ? "دخول ⚡" : "Login ⚡"}
                 </span>
               </button>
@@ -250,7 +250,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
           </div>
         )}
 
-        {/* Tab 2 & 3: Standard Custom Form (Keyboard-Safe & Zoom-Proof) */}
+        {/* Tab 2 & 3: Standard Custom Form using Zero-Lag MobileInput */}
         {(tab === "login" || tab === "signup") && (
           <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto space-y-3 pe-1 py-1">
             {tab === "signup" && (
@@ -258,23 +258,15 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 <label className="block text-xs font-bold mb-1">
                   {isRtl ? "الاسم الكامل" : "Full Name"}
                 </label>
-                <div className="relative">
-                  <User className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C] pointer-events-none" />
-                  <input
-                    type="text"
-                    inputMode="text"
-                    dir="auto"
-                    autoComplete="name"
-                    autoCorrect="off"
-                    autoCapitalize="none"
-                    spellCheck={false}
-                    required
-                    placeholder={isRtl ? "محمد العتيبي" : "John Doe"}
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base font-semibold focus:outline-none focus:border-[#C96745]"
-                  />
-                </div>
+                <MobileInput
+                  type="text"
+                  dir="auto"
+                  required
+                  placeholder={isRtl ? "محمد العتيبي" : "John Doe"}
+                  value={name}
+                  onValueChange={setName}
+                  icon={<User className="h-4 w-4" />}
+                />
               </div>
             )}
 
@@ -282,44 +274,29 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
               <label className="block text-xs font-bold mb-1">
                 {isRtl ? "البريد الإلكتروني" : "Email Address"}
               </label>
-              <div className="relative">
-                <Mail className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C] pointer-events-none" />
-                <input
-                  type="email"
-                  inputMode="email"
-                  dir="ltr"
-                  autoComplete="email"
-                  autoCorrect="off"
-                  autoCapitalize="none"
-                  spellCheck={false}
-                  required
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base font-semibold focus:outline-none focus:border-[#C96745] text-start"
-                />
-              </div>
+              <MobileInput
+                type="email"
+                dir="ltr"
+                required
+                placeholder="name@example.com"
+                value={email}
+                onValueChange={setEmail}
+                icon={<Mail className="h-4 w-4" />}
+              />
             </div>
 
             <div>
               <label className="block text-xs font-bold mb-1">
                 {isRtl ? "كلمة المرور" : "Password"}
               </label>
-              <div className="relative">
-                <Lock className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C] pointer-events-none" />
-                <input
-                  type="password"
-                  autoComplete={tab === "signup" ? "new-password" : "current-password"}
-                  autoCorrect="off"
-                  autoCapitalize="none"
-                  spellCheck={false}
-                  required
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base font-semibold focus:outline-none focus:border-[#C96745]"
-                />
-              </div>
+              <MobileInput
+                type="password"
+                required
+                placeholder="••••••••"
+                value={password}
+                onValueChange={setPassword}
+                icon={<Lock className="h-4 w-4" />}
+              />
             </div>
 
             {tab === "signup" && (
@@ -328,11 +305,11 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                   {isRtl ? "منطقتك المفضلة في جدة" : "Preferred District"}
                 </label>
                 <div className="relative">
-                  <MapPin className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C] pointer-events-none" />
+                  <MapPin className="absolute start-3.5 top-3.5 h-4 w-4 text-[#6E716C] pointer-events-none z-10" />
                   <select
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
-                    className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base font-semibold focus:outline-none focus:border-[#C96745]"
+                    className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base font-semibold focus:outline-none focus:border-[#C96745] min-h-[48px]"
                   >
                     {districts.map((d) => (
                       <option key={d.id} value={d.id}>
@@ -364,7 +341,6 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
           <ShieldCheck className="h-4 w-4" />
           <span>{isRtl ? "تسجيل آمن 100% ومحفوظ على جهازك" : "100% Secure & Saved locally on device"}</span>
         </div>
-
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { Filter, Search, X } from "lucide-react";
 import { PlaceCard } from "@/components/places/PlaceCard";
 import { districts, places, type DistrictId, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
+import { MobileInput } from "@/components/common/MobileInput";
 
 export const Route = createFileRoute("/places")({
   validateSearch: (search: Record<string, unknown>) => {
@@ -52,58 +53,22 @@ const IsolatedSearchInput = memo(function IsolatedSearchInput({
   onSearch: (val: string) => void;
   isRtl: boolean;
 }) {
-  const [val, setVal] = useState(initialValue);
-
-  useEffect(() => {
-    setVal(initialValue);
-  }, [initialValue]);
-
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setVal(e.target.value);
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onSearch(val);
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [val, onSearch]);
-
   return (
-    <div className="relative pt-2">
-      <div className="relative flex items-center">
-        <Search className="absolute start-4 h-5 w-5 text-[#C96745] pointer-events-none z-10" />
-        <input
-          type="text"
-          inputMode="search"
-          dir="auto"
-          autoCapitalize="none"
-          autoCorrect="off"
-          autoComplete="off"
-          spellCheck={false}
-          placeholder={
-            isRtl
-              ? "ابحث باسم المكان، الحي، أو نوع الأكل (مثال: كافيه الروضة، الشاطئ، مشاوي)..."
-              : "Search by place name, district, or food category..."
-          }
-          value={val}
-          onChange={handleSearchChange}
-          className="w-full rounded-2xl border border-white/20 bg-white/10 dark:bg-black/30 ps-12 pe-10 py-3.5 text-base font-bold text-white placeholder:text-white/60 focus:border-[#C96745] focus:bg-black/40 focus:outline-none shadow-inner min-h-[52px]"
-        />
-        {val.length > 0 && (
-          <button
-            type="button"
-            onClick={() => {
-              setVal("");
-              onSearch("");
-            }}
-            className="absolute end-3 grid h-7 w-7 place-items-center rounded-full bg-white/20 hover:bg-[#C96745] text-white transition-all cursor-pointer z-10"
-            aria-label="مسح البحث"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        )}
-      </div>
+    <div className="pt-2">
+      <MobileInput
+        type="search"
+        dir="auto"
+        defaultValue={initialValue}
+        onValueChange={onSearch}
+        debounceMs={200}
+        placeholder={
+          isRtl
+            ? "ابحث باسم المكان، الحي، أو نوع الأكل (مثال: كافيه الروضة، الشاطئ)..."
+            : "Search by place name, district, or food category..."
+        }
+        icon={<Search className="h-5 w-5 text-[#C96745]" />}
+        className="bg-white/10 dark:bg-black/30 border-white/20 text-white placeholder:text-white/60 focus:bg-black/40 focus:border-[#C96745] min-h-[52px]"
+      />
     </div>
   );
 });
