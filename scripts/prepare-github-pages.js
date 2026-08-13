@@ -17,6 +17,13 @@ if (fs.existsSync(outputPublicDir)) {
   fs.cpSync(outputPublicDir, distDir, { recursive: true });
 }
 
+// Copy public/input-test.html to dist and root if exists
+const inputTestHtmlSource = path.join(rootDir, "public", "input-test.html");
+if (fs.existsSync(inputTestHtmlSource)) {
+  fs.copyFileSync(inputTestHtmlSource, path.join(distDir, "input-test.html"));
+  fs.copyFileSync(inputTestHtmlSource, path.join(rootDir, "input-test.html"));
+}
+
 // Find compiled styles and index JS inside dist/assets
 const assetsDir = path.join(distDir, "assets");
 let cssFile = "";
@@ -84,4 +91,4 @@ const headersContent = `/*
 fs.writeFileSync(path.join(distDir, "_headers"), headersContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, "_headers"), headersContent, "utf-8");
 
-console.log("Successfully deployed Mobile Web App to all GitHub Pages targets (index.html, mobile-app.html, 404.html)!");
+console.log("Successfully prepared input-test.html standalone testing page!");
