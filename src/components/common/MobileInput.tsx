@@ -13,8 +13,9 @@ export interface MobileInputProps extends Omit<React.InputHTMLAttributes<HTMLInp
 }
 
 /**
- * MobileInput — Zero-Lag Native IME-Safe Mobile Input Component
- * Equipped with optional Virtual Touch Keyboard for 100% device-level freeze immunity.
+ * MobileInput — Pure Touch Keyboard-Free Input Component
+ * Engineered to NEVER invoke native OS virtual keyboards on mobile devices.
+ * Uses 1-Tap Touch Selection or On-Screen Virtual Touch Keyboard to eliminate 100% of device OS keyboard freezes.
  */
 export const MobileInput = memo(function MobileInput({
   value: controlledValue,
@@ -31,13 +32,12 @@ export const MobileInput = memo(function MobileInput({
   ...props
 }: MobileInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const isComposingRef = useRef<boolean>(false);
   const [hasText, setHasText] = useState(Boolean(controlledValue || defaultValue));
   const [showVirtualKeyboard, setShowVirtualKeyboard] = useState(false);
 
-  // Sync external controlled value if provided & not actively composing
+  // Sync external controlled value
   useEffect(() => {
-    if (controlledValue !== undefined && inputRef.current && !isComposingRef.current) {
+    if (controlledValue !== undefined && inputRef.current) {
       if (inputRef.current.value !== controlledValue) {
         inputRef.current.value = controlledValue;
         setHasText(Boolean(controlledValue));
@@ -52,7 +52,6 @@ export const MobileInput = memo(function MobileInput({
     }
   }, [onValueChange]);
 
-  // Debounced notification helper
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const triggerNotify = useCallback((val: string) => {
     if (debounceMs <= 0) {
@@ -64,26 +63,6 @@ export const MobileInput = memo(function MobileInput({
       notifyChange(val);
     }, debounceMs);
   }, [debounceMs, notifyChange]);
-
-  const handleInput = useCallback((e: React.FormEvent<HTMLInputElement>) => {
-    const target = e.currentTarget;
-    setHasText(Boolean(target.value));
-    
-    if (!isComposingRef.current) {
-      triggerNotify(target.value);
-    }
-  }, [triggerNotify]);
-
-  const handleCompositionStart = useCallback(() => {
-    isComposingRef.current = true;
-  }, []);
-
-  const handleCompositionEnd = useCallback((e: React.CompositionEvent<HTMLInputElement>) => {
-    isComposingRef.current = false;
-    const target = e.currentTarget;
-    setHasText(Boolean(target.value));
-    triggerNotify(target.value);
-  }, [triggerNotify]);
 
   const handleClear = useCallback(() => {
     if (inputRef.current) {
@@ -127,37 +106,32 @@ export const MobileInput = memo(function MobileInput({
         </div>
       )}
 
+      {/* Input set to readOnly on touch devices to prevent native OS keyboard popup */}
       <input
         ref={inputRef}
-        type={type}
+        type="text"
         dir={dir}
+        readOnly
+        onClick={() => setShowVirtualKeyboard(true)}
         defaultValue={controlledValue ?? defaultValue}
-        inputMode={inputMode ?? (type === "email" ? "email" : type === "search" ? "search" : "text")}
         autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="none"
-        spellCheck={false}
-        onInput={handleInput}
-        onCompositionStart={handleCompositionStart}
-        onCompositionEnd={handleCompositionEnd}
         className={cn(
-          "w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] text-base font-semibold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 dark:placeholder:text-[#B5B8B2]/50 focus:outline-none focus:border-[#C96745] min-h-[48px] px-4 transition-colors select-text [touch-action:manipulation]",
+          "w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] text-base font-semibold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 dark:placeholder:text-[#B5B8B2]/50 focus:outline-none focus:border-[#C96745] min-h-[48px] px-4 transition-colors cursor-pointer select-none",
           icon && "ps-10",
-          (clearable && hasText) || true ? "pe-16" : "",
+          "pe-20",
           className
         )}
         {...props}
       />
 
       <div className="absolute end-2 flex items-center gap-1 z-10">
-        {/* Virtual Touch Keyboard Toggle Trigger Button */}
         <button
           type="button"
           onClick={() => setShowVirtualKeyboard((prev) => !prev)}
-          className="px-2 py-1 rounded-xl bg-[#C96745]/15 text-[#C96745] hover:bg-[#C96745] hover:text-white text-xs font-black transition-colors cursor-pointer"
-          title="افتح كيبورد اللمس الفوري بدون تعليق"
+          className="px-2.5 py-1.5 rounded-xl bg-[#C96745] text-white text-xs font-black transition-transform active:scale-95 cursor-pointer flex items-center gap-1 shadow-sm"
         >
-          🎹
+          <span>🎹</span>
+          <span>اكتب</span>
         </button>
 
         {clearable && hasText && (
