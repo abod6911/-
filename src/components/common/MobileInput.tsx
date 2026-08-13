@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export interface MobileInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
@@ -12,9 +12,9 @@ export interface MobileInputProps extends Omit<React.InputHTMLAttributes<HTMLInp
 }
 
 /**
- * MobileInput - Zero-Lag Native Mobile Input Component
- * Engineered specifically for mobile touchscreen input reliability.
- * Prevents main-thread layout thrashing, text composition hangs, and browser autocorrect loops.
+ * MobileInput — Zero-Lag Native IME-Safe Mobile Input Component
+ * Engineered specifically for Arabic & Touchscreen mobile keyboards.
+ * Protects native WebKit/Blink IME text composition buffers from being aborted by React state re-renders.
  */
 export const MobileInput = memo(function MobileInput({
   value: controlledValue,
@@ -30,37 +30,68 @@ export const MobileInput = memo(function MobileInput({
   inputMode,
   ...props
 }: MobileInputProps) {
-  const [localValue, setLocalValue] = useState(controlledValue ?? defaultValue);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const isComposingRef = useRef<boolean>(false);
+  const [hasText, setHasText] = useState(Boolean(controlledValue || defaultValue));
 
-  // Sync controlled value if changed externally
+  // Sync external controlled value if provided & not actively composing
   useEffect(() => {
-    if (controlledValue !== undefined) {
-      setLocalValue(controlledValue);
+    if (controlledValue !== undefined && inputRef.current && !isComposingRef.current) {
+      if (inputRef.current.value !== controlledValue) {
+        inputRef.current.value = controlledValue;
+        setHasText(Boolean(controlledValue));
+      }
     }
   }, [controlledValue]);
 
-  // Debounced callback to parent
-  useEffect(() => {
-    if (!onValueChange) return;
+  const notifyChange = useCallback((val: string) => {
+    setHasText(Boolean(val));
+    if (onValueChange) {
+      onValueChange(val);
+    }
+  }, [onValueChange]);
 
+  // Debounced notification helper
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const triggerNotify = useCallback((val: string) => {
     if (debounceMs <= 0) {
-      onValueChange(localValue);
+      notifyChange(val);
       return;
     }
-
-    const timer = setTimeout(() => {
-      onValueChange(localValue);
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
+      notifyChange(val);
     }, debounceMs);
+  }, [debounceMs, notifyChange]);
 
-    return () => clearTimeout(timer);
-  }, [localValue, onValueChange, debounceMs]);
+  const handleInput = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    const target = e.currentTarget;
+    setHasText(Boolean(target.value));
+    
+    // DO NOT trigger React re-renders while native IME composition is active!
+    if (!isComposingRef.current) {
+      triggerNotify(target.value);
+    }
+  }, [triggerNotify]);
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalValue(e.target.value);
+  const handleCompositionStart = useCallback(() => {
+    isComposingRef.current = true;
   }, []);
 
+  const handleCompositionEnd = useCallback((e: React.CompositionEvent<HTMLInputElement>) => {
+    isComposingRef.current = false;
+    const target = e.currentTarget;
+    setHasText(Boolean(target.value));
+    triggerNotify(target.value);
+  }, [triggerNotify]);
+
   const handleClear = useCallback(() => {
-    setLocalValue("");
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      inputRef.current.focus();
+    }
+    setHasText(false);
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
     if (onValueChange) onValueChange("");
   }, [onValueChange]);
 
@@ -72,24 +103,27 @@ export const MobileInput = memo(function MobileInput({
         </div>
       )}
       <input
+        ref={inputRef}
         type={type}
         dir={dir}
+        defaultValue={controlledValue ?? defaultValue}
         inputMode={inputMode ?? (type === "email" ? "email" : type === "search" ? "search" : "text")}
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="none"
         spellCheck={false}
-        value={localValue}
-        onChange={handleChange}
+        onInput={handleInput}
+        onCompositionStart={handleCompositionStart}
+        onCompositionEnd={handleCompositionEnd}
         className={cn(
           "w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] text-base font-semibold text-[#252A28] dark:text-[#F5F1E8] placeholder:text-[#6E716C]/60 dark:placeholder:text-[#B5B8B2]/50 focus:outline-none focus:border-[#C96745] min-h-[48px] px-4 transition-colors select-text [touch-action:manipulation]",
           icon && "ps-10",
-          clearable && localValue.length > 0 && "pe-10",
+          clearable && hasText && "pe-10",
           className
         )}
         {...props}
       />
-      {clearable && localValue.length > 0 && (
+      {clearable && hasText && (
         <button
           type="button"
           onClick={handleClear}
