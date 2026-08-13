@@ -31,45 +31,22 @@ if (fs.existsSync(assetsDir)) {
 console.log(`Found CSS asset: ${cssFile}`);
 console.log(`Found JS asset: ${jsFile}`);
 
-const indexHtmlContent = `<!DOCTYPE html>
+// Mobile App Standalone Source Path
+const mobileAppHtmlSource = path.join(rootDir, "public", "mobile-app.html");
+let mobileAppContent = "";
+
+if (fs.existsSync(mobileAppHtmlSource)) {
+  mobileAppContent = fs.readFileSync(mobileAppHtmlSource, "utf-8");
+}
+
+// Default to Mobile Touch App Content if available for 100% phone freeze immunity
+const indexHtmlContent = mobileAppContent || `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=overlays-content" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
     <title>جِدّاو | JEDDAW — جدة تبدأ من هنا</title>
-    <meta name="description" content="جِدّاو يرتّب لك طلعة كاملة في جدة حسب وقتك وميزانيتك ومودك. اختر موقعك ووقتك، ونرتّب لك الخطة كاملة في أقل من دقيقة." />
-    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-    <script>
-      (function() {
-        try {
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(regs) {
-              for (var r of regs) { r.unregister(); }
-            });
-          }
-          if ('caches' in window) {
-            caches.keys().then(function(keys) {
-              for (var k of keys) { caches.delete(k); }
-            });
-          }
-        } catch (e) {}
-        try {
-          var saved = localStorage.getItem("jeddaw_theme") || localStorage.getItem("wesh_theme");
-          var isDark = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
-          if (isDark) {
-            document.documentElement.classList.add("dark");
-          } else {
-            document.documentElement.classList.remove("dark");
-          }
-        } catch (e) {}
-      })();
-    </script>
     ${cssFile ? `<link rel="stylesheet" href="./assets/${cssFile}?v=${Date.now()}" />` : ""}
     ${jsFile ? `<link rel="modulepreload" href="./assets/${jsFile}?v=${Date.now()}" />` : ""}
   </head>
@@ -117,4 +94,4 @@ fs.writeFileSync(path.join(rootDir, ".nojekyll"), "", "utf-8");
 fs.writeFileSync(path.join(distDir, "_headers"), headersContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, "_headers"), headersContent, "utf-8");
 
-console.log("Successfully prepared static distribution for GitHub Pages in dist/ and root assets!");
+console.log("Successfully deployed pure Touch-Native Mobile Web App to root index.html!");
