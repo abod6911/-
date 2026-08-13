@@ -70,12 +70,12 @@ const indexHtmlContent = `<!DOCTYPE html>
         } catch (e) {}
       })();
     </script>
-    ${cssFile ? `<link rel="stylesheet" href="./assets/${cssFile}" />` : ""}
-    ${jsFile ? `<link rel="modulepreload" href="./assets/${jsFile}" />` : ""}
+    ${cssFile ? `<link rel="stylesheet" href="./assets/${cssFile}?v=${Date.now()}" />` : ""}
+    ${jsFile ? `<link rel="modulepreload" href="./assets/${jsFile}?v=${Date.now()}" />` : ""}
   </head>
   <body class="bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
     <div id="root"></div>
-    ${jsFile ? `<script type="module" src="./assets/${jsFile}"></script>` : ""}
+    ${jsFile ? `<script type="module" src="./assets/${jsFile}?v=${Date.now()}"></script>` : ""}
   </body>
 </html>
 `;
