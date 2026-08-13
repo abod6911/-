@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>جِدّاو | JEDDAW — تطبيق طلعات جدة المخصص للجوال</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Alexandria', system-ui, sans-serif;
+      background-color: #FAF6F0;
+      color: #252A28;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+  <script>
+    // Service worker & Cache purger to guarantee zero-lockup freshness
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        for (var r of regs) { r.unregister(); }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(function(keys) {
+        for (var k of keys) { caches.delete(k); }
+      });
+    }
+  </script>
+</head>
+<body class="pb-24">
+
+  <!-- Mobile Top Header Bar -->
+  <header class="sticky top-0 z-40 bg-[#FAF6F0]/95 backdrop-blur-md border-b border-[#E2D3BE] px-4 py-3 flex items-center justify-between shadow-xs">
+    <div class="flex items-center gap-2">
+      <div class="h-9 w-9 rounded-2xl bg-gradient-to-br from-[#C96745] to-[#E4A23B] grid place-items-center text-white font-black text-lg shadow-sm">
+        ج
+      </div>
+      <div>
+        <h1 className="text-base font-black tracking-tight text-[#252A28]">جِدّاو <span className="text-xs font-bold text-[#C96745]">JEDDAW</span></h1>
+        <p className="text-[10px] font-bold text-[#397C78]">جدة الآن 34° 🌊</p>
+      </div>
+    </div>
+
+    <button onclick="openAuthDrawer()" class="px-3 py-1.5 rounded-full bg-[#C96745]/10 text-[#C96745] text-xs font-black border border-[#C96745]/20 active:scale-95 transition-transform cursor-pointer">
+      👤 دخول سريع
+    </button>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="max-w-md mx-auto px-4 pt-4 space-y-6">
+    <div class="rounded-3xl bg-gradient-to-br from-[#051413] to-[#122B29] p-5 text-white shadow-xl border border-white/10 relative overflow-hidden">
+      <div class="relative z-10 space-y-3">
+        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#C96745]/30 border border-[#C96745]/50 text-[#FF9D7A] text-[11px] font-black">
+          ⚡ مخطط طلعات جدة الذكي 2026
+        </span>
+        <h2 class="text-2xl font-black leading-snug">
+          جدة كثيرة… <br>
+          <span class="bg-gradient-to-r from-[#FF9D7A] to-[#E4A23B] bg-clip-text text-transparent">بس خطتك وحدة.</span>
+        </h2>
+        <p class="text-xs text-white/80 leading-relaxed font-semibold">
+          اختر مودك وحيك وميزانيتك، ونرتب لك المطعم والقهوة والمسار المباشر بنقرة واحدة!
+        </p>
+
+        <button onclick="scrollToPlanner()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#C96745] to-[#E4A23B] text-white text-xs font-black shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2 cursor-pointer">
+          <span>🚀 سوِّ لي خطة الطلعة الحين</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 1-Tap Touch Outing Planner Wizard -->
+    <section id="planner" class="rounded-3xl bg-white p-5 border border-[#E2D3BE] shadow-md space-y-4">
+      <div class="flex items-center gap-2 text-sm font-black text-[#252A28] border-b border-[#E2D3BE]/60 pb-3">
+        <span class="h-7 w-7 rounded-xl bg-[#C96745] text-white grid place-items-center text-xs">⚡</span>
+        <div>
+          <span>مولّد الطلعات السريع (بدون كتابة)</span>
+          <span class="block text-[10px] text-[#6E716C]">اختر خياراتك بنقرة زر واحدة</span>
+        </div>
+      </div>
+
+      <!-- Step 1: Mood Selector -->
+      <div>
+        <label class="block text-xs font-extrabold text-[#6E716C] mb-2">1. اختر جوك ومودك اليوم:</label>
+        <div class="grid grid-cols-2 gap-2 text-xs font-extrabold">
+          <button type="button" onclick="selectMood(this, 'sea')" class="mood-btn p-3 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-start active:bg-[#C96745] active:text-white transition-colors cursor-pointer">
+            🌊 بحر وغروب
+          </button>
+          <button type="button" onclick="selectMood(this, 'coffee')" class="mood-btn p-3 rounded-2xl border border-[#C96745] bg-[#C96745] text-white text-start shadow-sm cursor-pointer">
+            ☕ قهوة وروقان
+          </button>
+          <button type="button" onclick="selectMood(this, 'food')" class="mood-btn p-3 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-start active:bg-[#C96745] active:text-white transition-colors cursor-pointer">
+            🍔 عشاء وتجربة أكل
+          </button>
+          <button type="button" onclick="selectMood(this, 'culture')" class="mood-btn p-3 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-start active:bg-[#C96745] active:text-white transition-colors cursor-pointer">
+            🏛️ تمشية بالبلد والتاريخ
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: District Selector -->
+      <div>
+        <label class="block text-xs font-extrabold text-[#6E716C] mb-2">2. اختر الحي أو المنطقة:</label>
+        <select id="districtSelect" class="w-full rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] p-3 text-xs font-bold focus:outline-none focus:border-[#C96745]">
+          <option value="corniche">🌊 الكورنيش والواجهة البحرية</option>
+          <option value="obhur">🏖️ أبحر الشمالية والشواطئ</option>
+          <option value="rawdah">☕ حي الروضة والتحلية</option>
+          <option value="balad">🏛️ جدة التاريخية (البلد)</option>
+          <option value="shati">🌴 حي الشاطئ والزهراء</option>
+        </select>
+      </div>
+
+      <!-- Step 3: Budget Selector -->
+      <div>
+        <label class="block text-xs font-extrabold text-[#6E716C] mb-2">3. الميزانية للشخص:</label>
+        <div class="grid grid-cols-3 gap-2 text-xs font-extrabold">
+          <button type="button" onclick="selectBudget(this, 'economy')" class="budget-btn p-2.5 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-center active:bg-[#397C78] active:text-white cursor-pointer">
+            💵 اقتصادي (<50)
+          </button>
+          <button type="button" onclick="selectBudget(this, 'balanced')" class="budget-btn p-2.5 rounded-2xl border border-[#397C78] bg-[#397C78] text-white text-center shadow-sm cursor-pointer">
+            💳 متوسط (50-150)
+          </button>
+          <button type="button" onclick="selectBudget(this, 'premium')" class="budget-btn p-2.5 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-center active:bg-[#397C78] active:text-white cursor-pointer">
+            ✨ فاخر (+150)
+          </button>
+        </div>
+      </div>
+
+      <!-- Generate Plan Button -->
+      <button onclick="generateOutingPlan()" class="w-full py-3.5 rounded-2xl bg-[#397C78] text-white text-xs font-black shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2 cursor-pointer">
+        <span>⚡ تجهيز الخطة الفورية الآن</span>
+      </button>
+
+      <!-- Plan Result Box -->
+      <div id="planResult" class="hidden rounded-2xl bg-[#E6F0EF] p-4 border border-[#397C78]/30 space-y-3">
+        <div class="text-xs font-black text-[#295652] flex items-center justify-between">
+          <span>🎯 خطتك المقترحة للطلعة:</span>
+          <span class="text-[10px] bg-[#397C78] text-white px-2 py-0.5 rounded-full">جاهزة 100%</span>
+        </div>
+        <div id="planItinerary" class="space-y-2 text-xs font-bold text-[#252A28]">
+          <!-- Dynamic Content Injected Here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 1-Tap Touch Places Explorer -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between px-1">
+        <h3 class="text-sm font-black text-[#252A28]">🧭 استكشف أفضل أماكن جدة (باللمس)</h3>
+        <span class="text-[11px] font-extrabold text-[#C96745]">150+ مكان مميز</span>
+      </div>
+
+      <!-- Category Filter Chips -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+        <button onclick="filterCategory(this, 'all')" class="cat-chip px-4 py-2 rounded-2xl bg-[#C96745] text-white text-xs font-black border border-[#C96745] shadow-xs shrink-0 cursor-pointer">الكل 🌟</button>
+        <button onclick="filterCategory(this, 'مطاعم')" class="cat-chip px-4 py-2 rounded-2xl bg-white text-[#252A28] text-xs font-black border border-[#E2D3BE] shrink-0 cursor-pointer">🍽️ مطاعم</button>
+        <button onclick="filterCategory(this, 'كافيهات')" class="cat-chip px-4 py-2 rounded-2xl bg-white text-[#252A28] text-xs font-black border border-[#E2D3BE] shrink-0 cursor-pointer">☕ كافيهات</button>
+        <button onclick="filterCategory(this, 'منتجعات')" class="cat-chip px-4 py-2 rounded-2xl bg-white text-[#252A28] text-xs font-black border border-[#E2D3BE] shrink-0 cursor-pointer">🏖️ منتجعات أبحر</button>
+        <button onclick="filterCategory(this, 'البلد')" class="cat-chip px-4 py-2 rounded-2xl bg-white text-[#252A28] text-xs font-black border border-[#E2D3BE] shrink-0 cursor-pointer">🏛️ البلد التاريخية</button>
+      </div>
+
+      <!-- Places Cards Grid Container -->
+      <div id="placesGrid" class="grid grid-cols-1 gap-3">
+        <!-- Cards Injected Dynamically -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Auth Drawer Modal -->
+  <div id="authDrawer" class="fixed inset-0 z-50 hidden flex items-end justify-center bg-black/70">
+    <div class="w-full max-w-md rounded-t-3xl bg-white p-5 border-t border-[#E2D3BE] space-y-4 animate-slide-up">
+      <div class="flex items-center justify-between border-b border-[#E2D3BE] pb-3">
+        <h3 class="text-sm font-black text-[#252A28]">👤 الدخول السريع في جِدّاو</h3>
+        <button onclick="closeAuthDrawer()" class="text-xs font-bold text-[#6E716C] p-1">إغلاق ✕</button>
+      </div>
+
+      <p class="text-xs font-extrabold text-[#6E716C]">اختر بروفايلك للدخول الفوري بنقرة واحدة بدون كتابة:</p>
+
+      <div class="space-y-2">
+        <button onclick="loginUser('ابن جدة البحرية 🌊')" class="w-full p-3 rounded-2xl bg-[#FAF6F0] border border-[#E2D3BE] hover:border-[#C96745] text-start font-extrabold text-xs flex items-center justify-between cursor-pointer">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🌊</span>
+            <div>
+              <div class="text-[#252A28]">ابن جدة البحرية</div>
+              <div class="text-[10px] text-[#6E716C]">الكورنيش والواجهة</div>
+            </div>
+          </div>
+          <span class="bg-[#C96745] text-white px-3 py-1 rounded-full text-[10px]">دخول ⚡</span>
+        </button>
+
+        <button onclick="loginUser('عاشق القهوة والروقان ☕')" class="w-full p-3 rounded-2xl bg-[#FAF6F0] border border-[#E2D3BE] hover:border-[#C96745] text-start font-extrabold text-xs flex items-center justify-between cursor-pointer">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">☕</span>
+            <div>
+              <div class="text-[#252A28]">عاشق القهوة والروقان</div>
+              <div class="text-[10px] text-[#6E716C]">حي الروضة والتحلية</div>
+            </div>
+          </div>
+          <span class="bg-[#C96745] text-white px-3 py-1 rounded-full text-[10px]">دخول ⚡</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Mobile Navigation Bar -->
+  <nav class="fixed inset-x-0 bottom-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E2D3BE] px-4 py-2 flex items-center justify-around shadow-lg">
+    <button onclick="scrollToPlanner()" class="flex flex-col items-center text-[10px] font-bold text-[#C96745]">
+      <span class="text-base">🏠</span>
+      <span>الرئيسية</span>
+    </button>
+    <button onclick="scrollToPlanner()" class="flex flex-col items-center text-[10px] font-bold text-[#6E716C]">
+      <span class="text-base">🧭</span>
+      <span>استكشف</span>
+    </button>
+    <button onclick="scrollToPlanner()" class="flex flex-col items-center text-[10px] font-bold text-white bg-gradient-to-r from-[#C96745] to-[#E4A23B] p-2 rounded-full shadow-md -translate-y-2">
+      <span class="text-base">⚡</span>
+    </button>
+    <button onclick="openAuthDrawer()" class="flex flex-col items-center text-[10px] font-bold text-[#6E716C]">
+      <span class="text-base">❤️</span>
+      <span>المفضلة</span>
+    </button>
+    <button onclick="openAuthDrawer()" class="flex flex-col items-center text-[10px] font-bold text-[#6E716C]">
+      <span class="text-base">👤</span>
+      <span>الحساب</span>
+    </button>
+  </nav>
+
+  <script>
+    const samplePlaces = [
+      { name: 'مطاعم الشرق الشامية', cat: 'مطاعم', district: 'الكورنيش', rating: '4.8 ⭐', price: '75 ر.س', img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80', map: 'https://maps.google.com' },
+      { name: 'مقهى الروقان المختص', cat: 'كافيهات', district: 'الروضة', rating: '4.9 ⭐', price: '35 ر.س', img: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=400&q=80', map: 'https://maps.google.com' },
+      { name: 'منتجع شاطئ أبحر الفاخر', cat: 'منتجعات', district: 'أبحر الشمالية', rating: '4.9 ⭐', price: '350 ر.س', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80', map: 'https://maps.google.com' },
+      { name: 'بيت المأكولات التاريخي بالبلد', cat: 'البلد', district: 'البلد التاريخية', rating: '4.7 ⭐', price: '50 ر.س', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400&q=80', map: 'https://maps.google.com' }
+    ];
+
+    function renderPlaces(items) {
+      const grid = document.getElementById('placesGrid');
+      grid.innerHTML = items.map(p => `
+        <div class="rounded-3xl bg-white p-3 border border-[#E2D3BE] shadow-xs flex gap-3 items-center">
+          <img src="${p.img}" class="h-20 w-20 rounded-2xl object-cover shrink-0">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold text-[#C96745] bg-[#C96745]/10 px-2 py-0.5 rounded-full">${p.cat}</span>
+              <span class="text-[10px] font-black text-[#E4A23B]">${p.rating}</span>
+            </div>
+            <h4 class="text-xs font-black text-[#252A28] truncate mt-1">${p.name}</h4>
+            <p class="text-[10px] font-bold text-[#6E716C] mt-0.5">📍 ${p.district} · ${p.price}</p>
+            <a href="${p.map}" target="_blank" class="inline-block mt-2 text-[10px] font-black text-[#397C78] underline">فتح بالخريطة 🗺️</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    renderPlaces(samplePlaces);
+
+    function filterCategory(btn, cat) {
+      document.querySelectorAll('.cat-chip').forEach(b => {
+        b.className = 'cat-chip px-4 py-2 rounded-2xl bg-white text-[#252A28] text-xs font-black border border-[#E2D3BE] shrink-0 cursor-pointer';
+      });
+      btn.className = 'cat-chip px-4 py-2 rounded-2xl bg-[#C96745] text-white text-xs font-black border border-[#C96745] shadow-xs shrink-0 cursor-pointer';
+
+      if (cat === 'all') {
+        renderPlaces(samplePlaces);
+      } else {
+        renderPlaces(samplePlaces.filter(p => p.cat === cat || p.name.includes(cat)));
+      }
+    }
+
+    let activeMood = 'sea';
+    let activeBudget = 'balanced';
+
+    function selectMood(btn, mood) {
+      document.querySelectorAll('.mood-btn').forEach(b => {
+        b.className = 'mood-btn p-3 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-start active:bg-[#C96745] active:text-white transition-colors cursor-pointer';
+      });
+      btn.className = 'mood-btn p-3 rounded-2xl border border-[#C96745] bg-[#C96745] text-white text-start shadow-sm cursor-pointer';
+      activeMood = mood;
+    }
+
+    function selectBudget(btn, budget) {
+      document.querySelectorAll('.budget-btn').forEach(b => {
+        b.className = 'budget-btn p-2.5 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-center active:bg-[#397C78] active:text-white cursor-pointer';
+      });
+      btn.className = 'budget-btn p-2.5 rounded-2xl border border-[#397C78] bg-[#397C78] text-white text-center shadow-sm cursor-pointer';
+      activeBudget = budget;
+    }
+
+    function generateOutingPlan() {
+      const resultBox = document.getElementById('planResult');
+      const itinerary = document.getElementById('planItinerary');
+      resultBox.classList.remove('hidden');
+
+      itinerary.innerHTML = `
+        <div class="p-2 rounded-xl bg-white border border-[#397C78]/20 flex items-center justify-between">
+          <span>1. 🍽️ العشاء: مطاعم الكورنيش البحرية</span>
+          <a href="https://maps.google.com" target="_blank" class="text-[10px] text-[#C96745] underline">خريطة 📍</a>
+        </div>
+        <div class="p-2 rounded-xl bg-white border border-[#397C78]/20 flex items-center justify-between">
+          <span>2. ☕ التحلية: مقهى الروقان المختص</span>
+          <a href="https://maps.google.com" target="_blank" class="text-[10px] text-[#C96745] underline">خريطة 📍</a>
+        </div>
+        <div class="p-2 rounded-xl bg-white border border-[#397C78]/20 flex items-center justify-between">
+          <span>3. 🌊 الفعالية: تمشية على الواجهة البحرية</span>
+          <a href="https://maps.google.com" target="_blank" class="text-[10px] text-[#C96745] underline">خريطة 📍</a>
+        </div>
+      `;
+    }
+
+    function scrollToPlanner() {
+      document.getElementById('planner').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function openAuthDrawer() {
+      document.getElementById('authDrawer').classList.remove('hidden');
+    }
+
+    function closeAuthDrawer() {
+      document.getElementById('authDrawer').classList.add('hidden');
+    }
+
+    function loginUser(name) {
+      alert('تم تسجيل الدخول بنجاح كـ: ' + name);
+      closeAuthDrawer();
+    }
+  </script>
+</body>
+</html>
