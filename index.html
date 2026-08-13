@@ -3,9 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>جِدّاو | JEDDAW — البحث المطور للجوال</title>
+  <title>جِدّاو | JEDDAW — البحث والطلعات على الهاتف</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      overscroll-behavior-y: none;
+      -webkit-text-size-adjust: 100%;
+    }
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background-color: #FAF6F0;
@@ -15,6 +20,17 @@
       user-select: text;
       direction: rtl;
     }
+    
+    /* Industry Standard Mobile Input Rules (Twitter / Google / Telegram Mobile Web Standard) */
+    input, select, textarea {
+      font-size: 16px !important; /* CRITICAL: 16px prevents iOS Safari auto-zoom layout freeze */
+      touch-action: manipulation !important;
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      -webkit-appearance: none;
+      border-radius: 16px;
+    }
+
     .header {
       position: sticky; top: 0; z-index: 40;
       background-color: rgba(250, 246, 240, 0.98);
@@ -112,7 +128,7 @@
     .nav-item.active { color: #C96745; }
     .hidden { display: none !important; }
 
-    /* On-Screen Virtual Touch Keyboard Styles */
+    /* On-Screen Keypad Styles */
     .keypad-drawer {
       position: fixed; bottom: 0; left: 0; right: 0; z-index: 70;
       background: #121817; border-top: 3px solid #C96745;
@@ -124,7 +140,7 @@
       flex: 1; max-width: 36px; height: 42px; border-radius: 10px;
       background: #222826; color: #fff; font-size: 15px; font-weight: 900;
       border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
-      display: grid; place-items: center; active-bg: #C96745;
+      display: grid; place-items: center;
     }
     .key-btn:active { background: #C96745; transform: scale(0.95); }
     .key-action {
@@ -150,7 +166,7 @@
   </header>
 
   <main class="main-container">
-    <!-- MOBILE SEARCH CARD WITH DUAL INPUT MODE -->
+    <!-- INDUSTRY STANDARD MOBILE SEARCH CARD -->
     <div class="search-card">
       <div style="font-size: 13px; font-weight: 900; color: #252A28; display: flex; justify-content: space-between; align-items: center;">
         <span>🔍 ابحث عن أي مكان في جدة:</span>
@@ -171,6 +187,7 @@
           autocorrect="off"
           autocapitalize="none"
           spellcheck="false"
+          enterkeyhint="search"
           placeholder="اكتب هنا أو اختر من الكلمات السريعة بالأسفل..."
           oninput="onSearchInputChange(this.value)"
           style="width: 100%; padding: 13px 14px; padding-left: 80px; border-radius: 16px; border: 2px solid #C96745; background: #fff; font-size: 16px !important; font-weight: 700; color: #252A28; outline: none; touch-action: manipulation;"
@@ -183,7 +200,7 @@
         </button>
       </div>
 
-      <!-- Quick 1-Tap Search Suggestion Chips -->
+      <!-- Quick 1-Tap Search Tag Chips -->
       <div style="font-size: 11px; font-weight: 900; color: #6E716C; margin-top: 2px;">💡 كلمات بحث سريعة بنقرة واحدة (بدون كيبورد):</div>
       <div class="chips-slider">
         <button class="chip" onclick="quickSearchTag('مطاعم')">🥙 مطاعم</button>
