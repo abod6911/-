@@ -80,7 +80,7 @@ export function PlaceDetailModal({
         className="modal-overlay z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-md"
         onClick={(e) => e.target === e.currentTarget && onClose()}
       >
-        <div className="modal-content max-w-2xl w-full max-h-[90vh] overflow-y-auto p-0 rounded-3xl animate-modal-in surface-card bg-[#FAF6F0] dark:bg-[#222826] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 relative shadow-2xl">
+        <div className="modal-content max-w-2xl w-full max-h-[580px] overflow-y-auto p-0 rounded-3xl animate-modal-in surface-card bg-[#FAF6F0] dark:bg-[#222826] text-[#252A28] dark:text-[#F5F1E8] border border-[#E2D3BE] dark:border-white/10 relative shadow-2xl">
           {/* Place Image Hero Header */}
           <div className="relative h-48 sm:h-60 w-full overflow-hidden shrink-0">
             <PlaceImage
