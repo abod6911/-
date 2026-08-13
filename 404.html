@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>جِدّاو | JEDDAW — خانة البحث المخصصة للجوال</title>
+  <title>جِدّاو | JEDDAW — البحث المطور للجوال</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -34,7 +34,7 @@
     .search-card {
       background: #fff; border-radius: 20px; padding: 14px;
       border: 2px solid #C96745; box-shadow: 0 4px 15px rgba(201, 103, 69, 0.12);
-      display: flex; flex-direction: column; gap: 8px;
+      display: flex; flex-direction: column; gap: 10px;
     }
     .hero-card {
       background: linear-gradient(135deg, #051413, #122B29);
@@ -111,6 +111,25 @@
     .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; font-weight: 800; color: #6E716C; text-decoration: none; border: none; background: none; }
     .nav-item.active { color: #C96745; }
     .hidden { display: none !important; }
+
+    /* On-Screen Virtual Touch Keyboard Styles */
+    .keypad-drawer {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 70;
+      background: #121817; border-top: 3px solid #C96745;
+      padding: 12px; display: flex; flex-direction: column; gap: 8px;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+    }
+    .keypad-row { display: flex; justify-content: center; gap: 4px; }
+    .key-btn {
+      flex: 1; max-width: 36px; height: 42px; border-radius: 10px;
+      background: #222826; color: #fff; font-size: 15px; font-weight: 900;
+      border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+      display: grid; place-items: center; active-bg: #C96745;
+    }
+    .key-btn:active { background: #C96745; transform: scale(0.95); }
+    .key-action {
+      height: 42px; border-radius: 10px; font-size: 12px; font-weight: 900; border: none; cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -131,14 +150,19 @@
   </header>
 
   <main class="main-container">
-    <!-- NEW MOBILE SEARCH BAR BOX FOR TESTING -->
+    <!-- MOBILE SEARCH CARD WITH DUAL INPUT MODE -->
     <div class="search-card">
       <div style="font-size: 13px; font-weight: 900; color: #252A28; display: flex; justify-content: space-between; align-items: center;">
         <span>🔍 ابحث عن أي مكان في جدة:</span>
-        <span style="font-size: 10px; color: #C96745; background: rgba(201,103,69,0.1); padding: 2px 8px; border-radius: 10px; font-weight: 800;">مخصص للجوال ⚡</span>
+        <button
+          onclick="toggleVirtualKeypad()"
+          style="font-size: 10px; color: #fff; background: #C96745; padding: 4px 10px; border-radius: 12px; font-weight: 900; border: none; cursor: pointer;"
+        >
+          🎹 كيبورد اللمس الفوري
+        </button>
       </div>
 
-      <div style="position: relative; display: flex; align-items: center; margin-top: 4px;">
+      <div style="position: relative; display: flex; align-items: center;">
         <input
           id="mobileSearchInput"
           type="text"
@@ -147,7 +171,7 @@
           autocorrect="off"
           autocapitalize="none"
           spellcheck="false"
-          placeholder="اكتب اسم المطعم، الكافيه، أو المنطقة..."
+          placeholder="اكتب هنا أو اختر من الكلمات السريعة بالأسفل..."
           oninput="onSearchInputChange(this.value)"
           style="width: 100%; padding: 13px 14px; padding-left: 80px; border-radius: 16px; border: 2px solid #C96745; background: #fff; font-size: 16px !important; font-weight: 700; color: #252A28; outline: none; touch-action: manipulation;"
         />
@@ -159,8 +183,19 @@
         </button>
       </div>
 
-      <div id="searchStats" style="font-size: 10px; font-weight: 800; color: #6E716C; margin-top: 2px;">
-        اكتب أي كلمة لمشاهدة النتائج المباشرة فوراً
+      <!-- Quick 1-Tap Search Suggestion Chips -->
+      <div style="font-size: 11px; font-weight: 900; color: #6E716C; margin-top: 2px;">💡 كلمات بحث سريعة بنقرة واحدة (بدون كيبورد):</div>
+      <div class="chips-slider">
+        <button class="chip" onclick="quickSearchTag('مطاعم')">🥙 مطاعم</button>
+        <button class="chip" onclick="quickSearchTag('كافيهات')">☕ كافيهات</button>
+        <button class="chip" onclick="quickSearchTag('الروضة')">☕ الروضة</button>
+        <button class="chip" onclick="quickSearchTag('أبحر')">🏖️ أبحر</button>
+        <button class="chip" onclick="quickSearchTag('البلد')">🏛️ البلد</button>
+        <button class="chip" onclick="quickSearchTag('أسماك')">🐟 أسماك وبحري</button>
+      </div>
+
+      <div id="searchStats" style="font-size: 10px; font-weight: 800; color: #6E716C;">
+        اكتب الكلمة أو اضغط على أي وسام بالواجهة لتحديث النتائج
       </div>
     </div>
 
@@ -240,6 +275,60 @@
       <div id="placesList" style="display: flex; flex-direction: column; gap: 10px;"></div>
     </section>
   </main>
+
+  <!-- ON-SCREEN VIRTUAL KEYPAD DRAWER -->
+  <div id="virtualKeypad" class="keypad-drawer hidden">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #E4A23B; font-size: 11px; font-weight: 900;">
+      <span>🎹 كيبورد اللمس المباشر (بدون تعليق الجوال)</span>
+      <button onclick="toggleVirtualKeypad()" style="background: #C96745; color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 900; border: none; cursor: pointer;">إغلاق ✕</button>
+    </div>
+
+    <div class="keypad-row">
+      <button class="key-btn" onclick="pressKey('ض')">ض</button>
+      <button class="key-btn" onclick="pressKey('ص')">ص</button>
+      <button class="key-btn" onclick="pressKey('ث')">ث</button>
+      <button class="key-btn" onclick="pressKey('ق')">ق</button>
+      <button class="key-btn" onclick="pressKey('ف')">ف</button>
+      <button class="key-btn" onclick="pressKey('غ')">غ</button>
+      <button class="key-btn" onclick="pressKey('ع')">ع</button>
+      <button class="key-btn" onclick="pressKey('هـ')">هـ</button>
+      <button class="key-btn" onclick="pressKey('خ')">خ</button>
+      <button class="key-btn" onclick="pressKey('ح')">ح</button>
+      <button class="key-btn" onclick="pressKey('ج')">ج</button>
+    </div>
+
+    <div class="keypad-row">
+      <button class="key-btn" onclick="pressKey('ش')">ش</button>
+      <button class="key-btn" onclick="pressKey('س')">س</button>
+      <button class="key-btn" onclick="pressKey('ي')">ي</button>
+      <button class="key-btn" onclick="pressKey('ب')">ب</button>
+      <button class="key-btn" onclick="pressKey('ل')">ل</button>
+      <button class="key-btn" onclick="pressKey('ا')">ا</button>
+      <button class="key-btn" onclick="pressKey('ت')">ت</button>
+      <button class="key-btn" onclick="pressKey('ن')">ن</button>
+      <button class="key-btn" onclick="pressKey('م')">م</button>
+      <button class="key-btn" onclick="pressKey('ك')">ك</button>
+      <button class="key-btn" onclick="pressKey('ط')">ط</button>
+    </div>
+
+    <div class="keypad-row">
+      <button class="key-btn" onclick="pressKey('ئ')">ئ</button>
+      <button class="key-btn" onclick="pressKey('ء')">ء</button>
+      <button class="key-btn" onclick="pressKey('ؤ')">ؤ</button>
+      <button class="key-btn" onclick="pressKey('ر')">ر</button>
+      <button class="key-btn" onclick="pressKey('لا')">لا</button>
+      <button class="key-btn" onclick="pressKey('ى')">ى</button>
+      <button class="key-btn" onclick="pressKey('ة')">ة</button>
+      <button class="key-btn" onclick="pressKey('و')">و</button>
+      <button class="key-btn" onclick="pressKey('ز')">ز</button>
+      <button class="key-btn" onclick="pressKey('ظ')">ظ</button>
+    </div>
+
+    <div style="display: flex; gap: 8px; margin-top: 4px;">
+      <button class="key-action" onclick="pressKey(' ')" style="flex: 2; background: #2D3836; color: #fff;">مسافة</button>
+      <button class="key-action" onclick="backspaceKey()" style="flex: 1; background: #B84E4E; color: #fff;">⌫ مسح</button>
+    </div>
+  </div>
 
   <!-- Navigation Bar -->
   <nav class="navbar">
@@ -331,6 +420,38 @@
     function triggerSearchNow() {
       const input = document.getElementById('mobileSearchInput');
       if (input) {
+        currentSearch = input.value.trim().toLowerCase();
+        applyFilters();
+      }
+    }
+
+    function quickSearchTag(tag) {
+      const input = document.getElementById('mobileSearchInput');
+      if (input) {
+        input.value = tag;
+        currentSearch = tag.toLowerCase();
+        applyFilters();
+      }
+    }
+
+    function toggleVirtualKeypad() {
+      const keypad = document.getElementById('virtualKeypad');
+      keypad.classList.toggle('hidden');
+    }
+
+    function pressKey(char) {
+      const input = document.getElementById('mobileSearchInput');
+      if (input) {
+        input.value = (input.value || '') + char;
+        currentSearch = input.value.trim().toLowerCase();
+        applyFilters();
+      }
+    }
+
+    function backspaceKey() {
+      const input = document.getElementById('mobileSearchInput');
+      if (input) {
+        input.value = (input.value || '').slice(0, -1);
         currentSearch = input.value.trim().toLowerCase();
         applyFilters();
       }
