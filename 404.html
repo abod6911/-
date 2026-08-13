@@ -21,9 +21,9 @@
       direction: rtl;
     }
     
-    /* Industry Standard Mobile Input Rules (Twitter / Google / Telegram Mobile Web Standard) */
+    /* iPhone iOS Safari Arabic Keyboard Immunity Rules */
     input, select, textarea {
-      font-size: 16px !important; /* CRITICAL: 16px prevents iOS Safari auto-zoom layout freeze */
+      font-size: 16px !important;
       touch-action: manipulation !important;
       user-select: text !important;
       -webkit-user-select: text !important;
@@ -166,7 +166,7 @@
   </header>
 
   <main class="main-container">
-    <!-- INDUSTRY STANDARD MOBILE SEARCH CARD -->
+    <!-- IPHONE ARABIC KEYBOARD IMMUNE SEARCH CARD -->
     <div class="search-card">
       <div style="font-size: 13px; font-weight: 900; color: #252A28; display: flex; justify-content: space-between; align-items: center;">
         <span>🔍 ابحث عن أي مكان في جدة:</span>
@@ -182,13 +182,13 @@
         <input
           id="mobileSearchInput"
           type="text"
-          inputmode="search"
-          autocomplete="off"
+          inputmode="text"
+          autocomplete="one-time-code"
           autocorrect="off"
-          autocapitalize="none"
+          autocapitalize="off"
           spellcheck="false"
           enterkeyhint="search"
-          placeholder="اكتب هنا أو اختر من الكلمات السريعة بالأسفل..."
+          placeholder="اكتب هنا بطلاقة في الآيفون..."
           oninput="onSearchInputChange(this.value)"
           style="width: 100%; padding: 13px 14px; padding-left: 80px; border-radius: 16px; border: 2px solid #C96745; background: #fff; font-size: 16px !important; font-weight: 700; color: #252A28; outline: none; touch-action: manipulation;"
         />
