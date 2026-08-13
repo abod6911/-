@@ -17,26 +17,12 @@ if (fs.existsSync(outputPublicDir)) {
   fs.cpSync(outputPublicDir, distDir, { recursive: true });
 }
 
-// Copy public/input-test.html to dist and root if exists
-const inputTestHtmlSource = path.join(rootDir, "public", "input-test.html");
-if (fs.existsSync(inputTestHtmlSource)) {
-  fs.copyFileSync(inputTestHtmlSource, path.join(distDir, "input-test.html"));
-  fs.copyFileSync(inputTestHtmlSource, path.join(rootDir, "input-test.html"));
+// Copy public/new-site.html to dist and root
+const newSiteHtmlSource = path.join(rootDir, "public", "new-site.html");
+if (fs.existsSync(newSiteHtmlSource)) {
+  fs.copyFileSync(newSiteHtmlSource, path.join(distDir, "new-site.html"));
+  fs.copyFileSync(newSiteHtmlSource, path.join(rootDir, "new-site.html"));
 }
-
-// Find compiled styles and index JS inside dist/assets
-const assetsDir = path.join(distDir, "assets");
-let cssFile = "";
-let jsFile = "";
-
-if (fs.existsSync(assetsDir)) {
-  const files = fs.readdirSync(assetsDir);
-  cssFile = files.find((f) => f.startsWith("styles-") && f.endsWith(".css")) || "";
-  jsFile = files.find((f) => f.startsWith("index-") && f.endsWith(".js")) || "";
-}
-
-console.log(`Found CSS asset: ${cssFile}`);
-console.log(`Found JS asset: ${jsFile}`);
 
 // Mobile App Standalone Source Path
 const mobileAppHtmlSource = path.join(rootDir, "public", "mobile-app.html");
@@ -46,16 +32,7 @@ if (fs.existsSync(mobileAppHtmlSource)) {
   mobileAppContent = fs.readFileSync(mobileAppHtmlSource, "utf-8");
 }
 
-const finalHtmlContent = mobileAppContent || `<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>جِدّاو | JEDDAW — تطبيق طلعات جدة المخصص للجوال</title>
-  </head>
-  <body><div id="root"></div></body>
-</html>
-`;
+const finalHtmlContent = mobileAppContent;
 
 // Write to all possible GitHub Pages targets
 fs.writeFileSync(path.join(distDir, "index.html"), finalHtmlContent, "utf-8");
@@ -68,19 +45,13 @@ fs.writeFileSync(path.join(rootDir, "mobile-app.html"), finalHtmlContent, "utf-8
 fs.writeFileSync(path.join(rootDir, "404.html"), finalHtmlContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, ".nojekyll"), "", "utf-8");
 
-// Sync assets folder
+// Sync assets folder if exists
+const assetsDir = path.join(distDir, "assets");
 if (fs.existsSync(assetsDir)) {
   if (fs.existsSync(rootAssetsDir)) {
     fs.rmSync(rootAssetsDir, { recursive: true, force: true });
   }
   fs.cpSync(assetsDir, rootAssetsDir, { recursive: true });
-}
-
-// Copy public logo if exists
-const publicLogoPng = path.join(rootDir, "public", "jeddaw-logo.png");
-if (fs.existsSync(publicLogoPng)) {
-  fs.copyFileSync(publicLogoPng, path.join(distDir, "jeddaw-logo.png"));
-  fs.copyFileSync(publicLogoPng, path.join(rootDir, "jeddaw-logo.png"));
 }
 
 const headersContent = `/*
@@ -91,4 +62,4 @@ const headersContent = `/*
 fs.writeFileSync(path.join(distDir, "_headers"), headersContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, "_headers"), headersContent, "utf-8");
 
-console.log("Successfully prepared input-test.html standalone testing page!");
+console.log("Successfully deployed brand new standalone website!");
