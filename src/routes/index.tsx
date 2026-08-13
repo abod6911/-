@@ -27,6 +27,7 @@ import { places, type Mood, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 import { FlashOffersBanner } from "@/components/home/FlashOffersBanner";
 import { JeddawHeroVisual } from "@/components/home/JeddawHeroVisual";
+import { MobileSearchEngine } from "@/components/mobile/MobileSearchEngine";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -215,7 +216,7 @@ function Index() {
       {/* ===== BELOW THE FOLD: INSTANT SEARCH & DISCOVERY ===== */}
       <section className="relative z-30 -mt-8 mx-auto max-w-5xl px-4 space-y-6">
         {/* FLAGSHIP ULTRA-PREMIUM TOUCH OUTING SEARCH & DISCOVERY PANEL */}
-        <div className="rounded-3xl bg-white dark:bg-[#1A2221] p-5 sm:p-6 border border-[#E2D3BE] dark:border-white/10 shadow-2xl backdrop-blur-xl space-y-4">
+        <div className="rounded-3xl bg-white dark:bg-[#1A2221] p-5 sm:p-6 border border-[#E2D3BE] dark:border-white/10 shadow-2xl space-y-4">
           
           {/* Header & Status Indicator */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E2D3BE]/60 dark:border-white/10 pb-3">
@@ -226,7 +227,7 @@ function Index() {
               <div>
                 <span>{isRtl ? "محرك اكتشاف جدة التفاعلي" : "Interactive Jeddah Discovery Engine"}</span>
                 <span className="block text-[10px] font-semibold text-[#397C78] dark:text-[#5EAAA5]">
-                  {isRtl ? "اختر مودك أو حيك بنقرة واحدة بدون كتابة" : "One-tap discovery with zero typing needed"}
+                  {isRtl ? "ابحث أو اختر التصنيف بنقرة واحدة سريعة" : "Search or pick a category with 1 tap"}
                 </span>
               </div>
             </div>
@@ -238,6 +239,9 @@ function Index() {
               <ChevronLeft className={`h-3.5 w-3.5 ${isRtl ? "" : "rotate-180"}`} />
             </Link>
           </div>
+
+          {/* Embedded Mobile Search & Filtering Engine */}
+          <MobileSearchEngine />
 
           {/* Row 1: Primary Category Action Chips */}
           <div>
