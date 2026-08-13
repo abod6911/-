@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useTransition, useDeferredValue } from "react";
 import { Search, MapPin, Sparkles, Filter, X, ChevronDown } from "lucide-react";
 import { places, districts, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
@@ -10,6 +10,9 @@ export const MobileSearchEngine = memo(function MobileSearchEngine() {
   const [query, setQuery] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
   const [selectedKind, setSelectedKind] = useState<string>("all");
+
+  const [isPending, startTransition] = useTransition();
+  const deferredQuery = useDeferredValue(query);
 
   const categories = [
     { id: "all", labelAr: "الكل 🌟", labelEn: "All 🌟" },
@@ -40,8 +43,8 @@ export const MobileSearchEngine = memo(function MobileSearchEngine() {
       return false;
     }
     // Search Query Filter
-    if (query.trim()) {
-      const q = query.trim().toLowerCase();
+    if (deferredQuery.trim()) {
+      const q = deferredQuery.trim().toLowerCase();
       const matchName = (place.nameAr + place.nameEn).toLowerCase().includes(q);
       const matchDistrict = (place.districtAr + place.districtEn).toLowerCase().includes(q);
       const matchSub = (place.subCategoryAr + place.subCategoryEn).toLowerCase().includes(q);
@@ -49,6 +52,12 @@ export const MobileSearchEngine = memo(function MobileSearchEngine() {
     }
     return true;
   });
+
+  const handleQueryChange = (val: string) => {
+    startTransition(() => {
+      setQuery(val);
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -133,17 +142,17 @@ export const MobileSearchEngine = memo(function MobileSearchEngine() {
         </div>
       </div>
 
-      {/* Optional Search Input Bar (For devices that don't freeze on typing) */}
+      {/* Non-Blocking Search Input Bar */}
       <div className="relative pt-1">
         <MobileInput
           type="search"
           dir="auto"
-          onValueChange={setQuery}
-          debounceMs={150}
+          onValueChange={handleQueryChange}
+          debounceMs={200}
           placeholder={
             isRtl
-              ? "أو ابحث هنا إن أحببت..."
-              : "Or search text here if you prefer..."
+              ? "ابحث هنا بالتأثير غير الحاصر..."
+              : "Search here non-blockingly..."
           }
           icon={<Search className="h-4 w-4 text-[#C96745]" />}
           className="bg-white dark:bg-[#1C2422] border-[#E2D3BE] dark:border-white/10 text-xs min-h-[44px]"
@@ -172,9 +181,9 @@ export const MobileSearchEngine = memo(function MobileSearchEngine() {
         )}
       </div>
 
-      {/* Places Cards Grid */}
+      {/* Places Cards Grid (Paginated to 8 cards max initially) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {filteredPlaces.slice(0, 20).map((place) => (
+        {filteredPlaces.slice(0, 8).map((place) => (
           <PlaceCard key={place.id} place={place} />
         ))}
       </div>
