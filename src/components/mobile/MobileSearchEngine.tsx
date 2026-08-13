@@ -1,5 +1,5 @@
-import React, { memo, useCallback, useState } from "react";
-import { Search, MapPin, Sparkles, Filter, X } from "lucide-react";
+import React, { memo, useState } from "react";
+import { Search, MapPin, Sparkles, Filter, X, ChevronDown } from "lucide-react";
 import { places, districts, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 import { MobileInput } from "@/components/common/MobileInput";
@@ -18,6 +18,16 @@ export const MobileSearchEngine = memo(function MobileSearchEngine() {
     { id: "resort", labelAr: "🏖️ منتجعات أبحر", labelEn: "🏖️ Resorts" },
     { id: "hotel", labelAr: "🏨 فنادق فاخرة", labelEn: "🏨 Hotels" },
     { id: "activity", labelAr: "🎮 أنشطة وفعاليات", labelEn: "🎮 Activities" },
+  ];
+
+  const quickDistricts = [
+    { id: "all", labelAr: "كل الأحياء 📍", labelEn: "All Districts 📍" },
+    { id: "corniche", labelAr: "🌊 الكورنيش", labelEn: "🌊 Corniche" },
+    { id: "obhur", labelAr: "🏖️ أبحر الشمالية", labelEn: "🏖️ Obhur" },
+    { id: "rawdah", labelAr: "☕ الروضة", labelEn: "☕ Al Rawdah" },
+    { id: "shati", labelAr: "🌴 الشاطئ", labelEn: "🌴 Al Shati" },
+    { id: "balad", labelAr: "🏛️ البلد التاريخية", labelEn: "🏛️ Al Balad" },
+    { id: "hamra", labelAr: "🌇 الحمراء", labelEn: "🌇 Al Hamra" },
   ];
 
   const filteredPlaces = places.filter((place) => {
@@ -42,8 +52,89 @@ export const MobileSearchEngine = memo(function MobileSearchEngine() {
 
   return (
     <div className="space-y-4">
-      {/* Search Input Bar */}
-      <div className="relative">
+      {/* 1-Tap Category Filter Chips */}
+      <div className="space-y-2">
+        <div className="text-[11px] font-black text-[#6E716C] dark:text-[#B5B8B2] flex items-center gap-1">
+          <Sparkles className="h-3 w-3 text-[#E4A23B]" />
+          <span>{isRtl ? "تصفية سريعة بنقرة واحدة (بدون كتابة):" : "1-Tap Instant Filters (No Typing):"}</span>
+        </div>
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 px-0.5">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              type="button"
+              onClick={() => setSelectedKind(cat.id)}
+              className={`shrink-0 rounded-2xl px-4 py-2.5 text-xs font-black transition-all active:scale-95 cursor-pointer border ${
+                selectedKind === cat.id
+                  ? "bg-[#C96745] text-white border-[#C96745] shadow-md"
+                  : "bg-white dark:bg-[#1C2422] text-[#252A28] dark:text-[#F5F1E8] border-[#E2D3BE] dark:border-white/10 hover:border-[#C96745]"
+              }`}
+            >
+              {isRtl ? cat.labelAr : cat.labelEn}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 1-Tap District Selector Chips */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 px-0.5">
+        {quickDistricts.map((dist) => (
+          <button
+            key={dist.id}
+            type="button"
+            onClick={() => setSelectedDistrict(dist.id)}
+            className={`shrink-0 rounded-2xl px-3.5 py-2 text-xs font-extrabold transition-all active:scale-95 cursor-pointer border ${
+              selectedDistrict === dist.id
+                ? "bg-[#397C78] text-white border-[#397C78] shadow-md"
+                : "bg-[#FAF6F0] dark:bg-[#222826] text-[#252A28] dark:text-[#F5F1E8] border-[#E2D3BE] dark:border-white/10"
+            }`}
+          >
+            {isRtl ? dist.labelAr : dist.labelEn}
+          </button>
+        ))}
+      </div>
+
+      {/* Touch Dropdown Selectors (Zero Keyboard Required) */}
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <label className="block text-[11px] font-bold text-[#6E716C] dark:text-[#B5B8B2] mb-1">
+            {isRtl ? "اختر الحي 📍" : "Select District 📍"}
+          </label>
+          <select
+            value={selectedDistrict}
+            onChange={(e) => setSelectedDistrict(e.target.value)}
+            className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#1C2422] px-3 py-2.5 text-xs font-bold focus:outline-none focus:border-[#C96745] min-h-[44px]"
+          >
+            <option value="all">{isRtl ? "كل الأحياء 🌟" : "All Districts 🌟"}</option>
+            {districts.map((d) => (
+              <option key={d.id} value={d.id}>
+                {isRtl ? d.nameAr : d.nameEn}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-[11px] font-bold text-[#6E716C] dark:text-[#B5B8B2] mb-1">
+            {isRtl ? "اختر النوع 🍽️" : "Select Type 🍽️"}
+          </label>
+          <select
+            value={selectedKind}
+            onChange={(e) => setSelectedKind(e.target.value)}
+            className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#1C2422] px-3 py-2.5 text-xs font-bold focus:outline-none focus:border-[#C96745] min-h-[44px]"
+          >
+            <option value="all">{isRtl ? "كل الأنواع 🌟" : "All Types 🌟"}</option>
+            <option value="restaurant">{isRtl ? "مطاعم 🍽️" : "Restaurants 🍽️"}</option>
+            <option value="cafe">{isRtl ? "كافيهات ☕" : "Cafes ☕"}</option>
+            <option value="resort">{isRtl ? "منتجعات 🏖️" : "Resorts 🏖️"}</option>
+            <option value="hotel">{isRtl ? "فنادق 🏨" : "Hotels 🏨"}</option>
+            <option value="activity">{isRtl ? "أنشطة 🎮" : "Activities 🎮"}</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Optional Search Input Bar (For devices that don't freeze on typing) */}
+      <div className="relative pt-1">
         <MobileInput
           type="search"
           dir="auto"
@@ -51,30 +142,12 @@ export const MobileSearchEngine = memo(function MobileSearchEngine() {
           debounceMs={150}
           placeholder={
             isRtl
-              ? "ابحث عن مطعم، كافيه، أو منطقة في جدة..."
-              : "Search restaurants, cafes, or districts..."
+              ? "أو ابحث هنا إن أحببت..."
+              : "Or search text here if you prefer..."
           }
-          icon={<Search className="h-5 w-5 text-[#C96745]" />}
-          className="bg-white dark:bg-[#1C2422] border-[#E2D3BE] dark:border-white/10 shadow-sm text-base min-h-[50px]"
+          icon={<Search className="h-4 w-4 text-[#C96745]" />}
+          className="bg-white dark:bg-[#1C2422] border-[#E2D3BE] dark:border-white/10 text-xs min-h-[44px]"
         />
-      </div>
-
-      {/* Horizontal Category Chips */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 px-0.5">
-        {categories.map((cat) => (
-          <button
-            key={cat.id}
-            type="button"
-            onClick={() => setSelectedKind(cat.id)}
-            className={`shrink-0 rounded-2xl px-4 py-2 text-xs font-black transition-all active:scale-95 cursor-pointer border ${
-              selectedKind === cat.id
-                ? "bg-[#C96745] text-white border-[#C96745] shadow-md"
-                : "bg-white dark:bg-[#1C2422] text-[#252A28] dark:text-[#F5F1E8] border-[#E2D3BE] dark:border-white/10 hover:border-[#C96745]"
-            }`}
-          >
-            {isRtl ? cat.labelAr : cat.labelEn}
-          </button>
-        ))}
       </div>
 
       {/* Results Header */}
