@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { Filter, Search, X } from "lucide-react";
 import { PlaceCard } from "@/components/places/PlaceCard";
 import { districts, places, type DistrictId, type Place } from "@/data/jeddah";
@@ -43,38 +43,82 @@ const subCategoryChips = [
   { id: "منتجعات البحر الأحمر وأبحر", labelAr: "🏖️ منتجعات أبحر والبحر", labelEn: "🏖️ Obhur Beach Resorts" },
 ];
 
+const IsolatedSearchInput = memo(function IsolatedSearchInput({
+  initialValue,
+  onSearch,
+  isRtl,
+}: {
+  initialValue: string;
+  onSearch: (val: string) => void;
+  isRtl: boolean;
+}) {
+  const [val, setVal] = useState(initialValue);
+
+  useEffect(() => {
+    setVal(initialValue);
+  }, [initialValue]);
+
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setVal(e.target.value);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onSearch(val);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [val, onSearch]);
+
+  return (
+    <div className="relative pt-2">
+      <div className="relative flex items-center">
+        <Search className="absolute start-4 h-5 w-5 text-[#C96745] pointer-events-none z-10" />
+        <input
+          type="text"
+          inputMode="search"
+          autoCapitalize="none"
+          autoCorrect="off"
+          placeholder={
+            isRtl
+              ? "ابحث باسم المكان، الحي، أو نوع الأكل (مثال: كافيه الروضة، الشاطئ، مشاوي)..."
+              : "Search by place name, district, or food category..."
+          }
+          value={val}
+          onChange={handleSearchChange}
+          className="w-full rounded-2xl border border-white/20 bg-white/10 dark:bg-black/30 ps-12 pe-10 py-3.5 text-base font-bold text-white placeholder:text-white/60 focus:border-[#C96745] focus:bg-black/40 focus:outline-none shadow-inner min-h-[52px]"
+        />
+        {val.length > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              setVal("");
+              onSearch("");
+            }}
+            className="absolute end-3 grid h-7 w-7 place-items-center rounded-full bg-white/20 hover:bg-[#C96745] text-white transition-all cursor-pointer z-10"
+            aria-label="مسح البحث"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+});
+
 function PlacesPage() {
   const { isRtl } = useLanguage();
   const searchParams = Route.useSearch();
 
-  // Local immediate input state for 0ms visual typing feedback
-  const [inputValue, setInputValue] = useState(searchParams.q || "");
-
-  // Debounced search query state to decouple typing from dataset filtering
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.q || "");
-
   const [mainCat, setMainCat] = useState<MainCategory>("all");
   const [subCat, setSubCat] = useState<string>("all");
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictId | "all">("all");
   const [sortBy, setSortBy] = useState<SortOption>("trending");
 
-  // Sync initial searchParams.q if provided via navigation
-  useEffect(() => {
-    if (searchParams.q) {
-      setInputValue(searchParams.q);
-      setDebouncedQuery(searchParams.q);
-    }
-  }, [searchParams.q]);
+  const handleSearchDebounced = useCallback((query: string) => {
+    setDebouncedQuery(query);
+  }, []);
 
-  // 250ms Debounce Timer to isolate keystrokes from dataset recalculations
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedQuery(inputValue);
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [inputValue]);
-
-  // Concurrent React Deferred Value for smooth background list updates
   const deferredQuery = useDeferredValue(debouncedQuery);
 
   const filteredAndSorted = useMemo(() => {
@@ -157,38 +201,11 @@ function PlacesPage() {
           </div>
 
           {/* FLAGSHIP ISOLATED ZERO-LAG SEARCH INPUT (100% Mobile Safe) */}
-          <div className="relative pt-2">
-            <div className="relative flex items-center">
-              <Search className="absolute start-4 h-5 w-5 text-[#C96745] pointer-events-none z-10" />
-              <input
-                type="text"
-                inputMode="search"
-                autoCapitalize="none"
-                autoCorrect="off"
-                placeholder={
-                  isRtl
-                    ? "ابحث باسم المكان، الحي، أو نوع الأكل (مثال: كافيه الروضة، الشاطئ، مشاوي)..."
-                    : "Search by place name, district, or food category..."
-                }
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                className="w-full rounded-2xl border border-white/20 bg-white/10 dark:bg-black/30 backdrop-blur-xl ps-12 pe-10 py-3.5 text-base font-bold text-white placeholder:text-white/60 focus:border-[#C96745] focus:bg-black/40 focus:outline-none focus:ring-2 focus:ring-[#C96745]/50 shadow-inner transition-all min-h-[52px]"
-              />
-              {inputValue.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setInputValue("");
-                    setDebouncedQuery("");
-                  }}
-                  className="absolute end-3 grid h-7 w-7 place-items-center rounded-full bg-white/20 hover:bg-[#C96745] text-white transition-all cursor-pointer z-10"
-                  aria-label="مسح البحث"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-          </div>
+          <IsolatedSearchInput
+            initialValue={searchParams.q || ""}
+            onSearch={handleSearchDebounced}
+            isRtl={isRtl}
+          />
         </div>
       </div>
 

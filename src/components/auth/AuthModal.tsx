@@ -122,7 +122,10 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
       />
 
       {/* Plain Opaque Modal Container (No transform-gpu or filter layers) */}
-      <div className="relative z-10 w-full max-w-lg rounded-t-3xl sm:rounded-3xl bg-[#FAF6F0] dark:bg-[#161B1A] border border-[#E2D3BE] dark:border-white/10 shadow-2xl p-5 sm:p-7 text-[#252A28] dark:text-[#F5F1E8] max-h-[600px] sm:max-h-[90vh] flex flex-col overflow-hidden">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative z-10 w-full max-w-lg rounded-t-3xl sm:rounded-3xl bg-[#FAF6F0] dark:bg-[#161B1A] border border-[#E2D3BE] dark:border-white/10 shadow-2xl p-5 sm:p-7 text-[#252A28] dark:text-[#F5F1E8] max-h-[600px] sm:max-h-[90vh] flex flex-col overflow-hidden"
+      >
         
         {/* Top Handle Bar for Mobile Drag Visual */}
         <div className="w-12 h-1.5 bg-[#E2D3BE] dark:bg-white/20 rounded-full mx-auto mb-3 sm:hidden shrink-0" />
@@ -210,7 +213,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
 
         {/* Tab 1: Instant 1-Tap Quick Profiles (ZERO TYPING NEEDED FOR MOBILE) */}
         {tab === "quick" && (
-          <div className="flex-1 overflow-y-auto space-y-2.5 pe-1 py-1 [touch-action:pan-y] [overscroll-behavior:contain]">
+          <div className="flex-1 overflow-y-auto space-y-2.5 pe-1 py-1">
             <div className="text-[11px] font-extrabold text-[#6E716C] dark:text-[#B5B8B2] mb-1">
               {isRtl ? "اختر بروفايلك السريع للدخول الفوري:" : "Select a profile for instant sign-in:"}
             </div>
@@ -249,7 +252,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
 
         {/* Tab 2 & 3: Standard Custom Form (Keyboard-Safe & Zoom-Proof) */}
         {(tab === "login" || tab === "signup") && (
-          <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto space-y-3 pe-1 py-1 [touch-action:pan-y] [overscroll-behavior:contain]">
+          <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto space-y-3 pe-1 py-1">
             {tab === "signup" && (
               <div>
                 <label className="block text-xs font-bold mb-1">

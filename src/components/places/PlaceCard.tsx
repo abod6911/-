@@ -2,7 +2,7 @@ import { BadgeCheck, Clock, ExternalLink, Flame, Heart, MapPin, Star, Wallet } f
 import { getDistrict, type Place } from "@/data/jeddah";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import React, { memo, useState } from "react";
 import { PlaceDetailModal } from "./PlaceDetailModal";
 import { PlaceImage } from "@/components/common/PlaceImage";
 
@@ -17,7 +17,7 @@ const kindEmoji: Record<Place["kind"], string> = {
   resort: "🏖️",
 };
 
-export function PlaceCard({ place }: { place: Place }) {
+export const PlaceCard = memo(function PlaceCard({ place }: { place: Place }) {
   const { t, isRtl } = useLanguage();
   const { isFavorite, toggleFavorite } = useAuth();
   const district = getDistrict(place.districtId);
@@ -136,4 +136,4 @@ export function PlaceCard({ place }: { place: Place }) {
       )}
     </>
   );
-}
+});
