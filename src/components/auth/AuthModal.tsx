@@ -122,7 +122,7 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
       />
 
       {/* Plain Opaque Modal Container (No transform-gpu or filter layers) */}
-      <div className="relative z-10 w-full max-w-lg rounded-t-3xl sm:rounded-3xl bg-[#FAF6F0] dark:bg-[#161B1A] border border-[#E2D3BE] dark:border-white/10 shadow-2xl p-5 sm:p-7 text-[#252A28] dark:text-[#F5F1E8] max-h-[85vh] sm:max-h-[90vh] flex flex-col overflow-hidden">
+      <div className="relative z-10 w-full max-w-lg rounded-t-3xl sm:rounded-3xl bg-[#FAF6F0] dark:bg-[#161B1A] border border-[#E2D3BE] dark:border-white/10 shadow-2xl p-5 sm:p-7 text-[#252A28] dark:text-[#F5F1E8] max-h-[600px] sm:max-h-[90vh] flex flex-col overflow-hidden">
         
         {/* Top Handle Bar for Mobile Drag Visual */}
         <div className="w-12 h-1.5 bg-[#E2D3BE] dark:bg-white/20 rounded-full mx-auto mb-3 sm:hidden shrink-0" />

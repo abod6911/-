@@ -573,57 +573,107 @@ html[lang="ar"] label {
   }
 }
 
-/* Mobile Keyboard & Input Auto-Zoom Prevention & STEP 2: COMPLETE BACKDROP FILTER REMOVAL ON MOBILE */
+/* ==========================================================================
+   MOBILE NUCLEAR PERFORMANCE OVERRIDES
+   Kills ALL expensive GPU operations that freeze input/keyboard on mobile.
+   ========================================================================== */
 @media screen and (max-width: 768px) {
+
+  /* ── 1. INPUT ZOOM PREVENTION ── */
   input[type="text"],
-  input[type="number"],
   input[type="email"],
   input[type="password"],
   input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
   textarea,
   select {
     font-size: 16px !important;
     touch-action: manipulation;
   }
 
-  /* COMPLETELY DISABLE ALL BACKDROP FILTERS ON MOBILE TO PREVENT COMPOSITING / REPAINT FREEZES */
+  /* ── 2. KILL ALL FOCUS BOX-SHADOW TRANSITIONS (prevents repaint on keyboard open) ── */
+  input, select, textarea {
+    transition: none !important;
+  }
+  input:focus, select:focus, textarea:focus {
+    box-shadow: none !important;
+    outline: 2px solid var(--terracotta, #C96745) !important;
+    outline-offset: -2px;
+  }
+
+  /* ── 3. KILL ALL BACKDROP-FILTER (GPU texture blending is extremely expensive on mobile) ── */
   *,
   *::before,
-  *::after,
-  .glass-header,
-  .glass-tabbar,
-  .glass-card,
-  .glass-luxury,
-  .surface-card,
-  .modal-overlay,
-  .backdrop-blur-sm,
-  .backdrop-blur-md,
-  .backdrop-blur-lg,
-  .backdrop-blur-xl,
-  .backdrop-blur-2xl,
-  .backdrop-blur-3xl {
+  *::after {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
 
-  /* Opaque/Semi-opaque background fallbacks for mobile header & tabbar */
+  /* ── 4. KILL ALL BLUR FILTERS (blur-[100px] etc. causes massive GPU memory usage) ── */
+  .blur-sm, .blur-md, .blur-lg, .blur-xl, .blur-2xl, .blur-3xl,
+  [class*="blur-["] {
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+
+  /* ── 5. KILL ALL INFINITE CSS ANIMATIONS (continuous GPU compositing = death on mobile input) ── */
+  .animate-pulse,
+  .animate-ping,
+  .animate-bounce,
+  .animate-spin,
+  .animate-pulse-glow,
+  .animate-float,
+  .animate-float-gentle,
+  .animate-float-delayed,
+  .animate-route-draw,
+  .animate-coastline-drift,
+  .animate-horizon-glow,
+  .animate-hotspot-breathe,
+  .animate-shimmer-line,
+  .animate-subtle-rotate,
+  [class*="animate-spin"],
+  [class*="animate-pulse"],
+  [class*="animate-ping"],
+  [class*="animate-bounce"] {
+    animation: none !important;
+  }
+
+  /* ── 6. OPAQUE BACKGROUND FALLBACKS FOR GLASS ELEMENTS ── */
   .glass-header {
     background-color: rgba(250, 246, 240, 0.98) !important;
   }
   .dark .glass-header {
     background-color: rgba(18, 24, 23, 0.98) !important;
   }
-
   .glass-tabbar {
     background-color: rgba(250, 246, 240, 0.98) !important;
   }
   .dark .glass-tabbar {
     background-color: rgba(18, 24, 23, 0.98) !important;
   }
+  .glass-card {
+    background-color: rgba(250, 246, 240, 0.95) !important;
+  }
+  .dark .glass-card {
+    background-color: rgba(22, 27, 26, 0.95) !important;
+  }
+  .glass-luxury {
+    background-color: rgba(22, 27, 26, 0.95) !important;
+  }
 
+  /* ── 7. KILL WILL-CHANGE AND TRANSFORM LAYERS ON PERSISTENT ELEMENTS ── */
   .mobile-tab-bar {
     transition: none !important;
     will-change: auto !important;
+    transform: none !important;
+  }
+
+  /* ── 8. PREVENT VH-BASED LAYOUT THRASHING DURING KEYBOARD OPEN ── */
+  .mobile-visual-viewport-sheet {
+    height: auto !important;
+    max-height: none !important;
   }
 }
 
