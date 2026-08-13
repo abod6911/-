@@ -4,308 +4,307 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>جِدّاو | JEDDAW — تطبيق طلعات جدة المخصص للجوال</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Alexandria', system-ui, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background-color: #FAF6F0;
       color: #252A28;
+      padding-bottom: 90px;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
+      direction: rtl;
     }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .header {
+      position: sticky; top: 0; z-index: 40;
+      background-color: rgba(250, 246, 240, 0.98);
+      border-bottom: 1px solid #E2D3BE;
+      padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .header-logo { display: flex; items-center; gap: 8px; }
+    .logo-badge {
+      width: 36px; height: 36px; rounded: 12px;
+      background: linear-gradient(135deg, #C96745, #E4A23B);
+      color: #fff; font-weight: 900; font-size: 18px;
+      display: grid; place-items: center; border-radius: 12px;
+    }
+    .main-container { max-width: 480px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 20px; }
+    .hero-card {
+      background: linear-gradient(135deg, #051413, #122B29);
+      border-radius: 24px; padding: 20px; color: #fff;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .hero-badge {
+      display: inline-block; padding: 4px 12px; border-radius: 20px;
+      background-color: rgba(201, 103, 69, 0.3); border: 1px solid rgba(201, 103, 69, 0.5);
+      color: #FF9D7A; font-size: 11px; font-weight: 800; align-self: start;
+    }
+    .hero-title { font-size: 22px; font-weight: 900; line-height: 1.3; }
+    .hero-title span { color: #E4A23B; }
+    .hero-btn {
+      width: 100%; padding: 14px; border-radius: 16px;
+      background: linear-gradient(90deg, #C96745, #E4A23B);
+      color: #fff; font-size: 13px; font-weight: 900; border: none;
+      box-shadow: 0 4px 12px rgba(201, 103, 69, 0.3); cursor: pointer;
+    }
+    .card-box {
+      background: #fff; border-radius: 24px; padding: 18px;
+      border: 1px solid #E2D3BE; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .card-title { font-size: 14px; font-weight: 900; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #E2D3BE; padding-bottom: 10px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .touch-btn {
+      padding: 12px; border-radius: 16px; border: 1px solid #E2D3BE;
+      background: #FAF6F0; font-size: 12px; font-weight: 800; color: #252A28;
+      text-align: right; cursor: pointer; transition: all 0.15s;
+    }
+    .touch-btn.active { background: #C96745; color: #fff; border-color: #C96745; }
+    .budget-btn {
+      padding: 10px; border-radius: 16px; border: 1px solid #E2D3BE;
+      background: #FAF6F0; font-size: 11px; font-weight: 800; color: #252A28;
+      text-align: center; cursor: pointer;
+    }
+    .budget-btn.active { background: #397C78; color: #fff; border-color: #397C78; }
+    .generate-btn {
+      width: 100%; padding: 14px; border-radius: 16px; background: #397C78;
+      color: #fff; font-size: 13px; font-weight: 900; border: none; cursor: pointer;
+    }
+    .result-box {
+      background: #E6F0EF; border-radius: 16px; padding: 14px;
+      border: 1px solid rgba(57, 124, 120, 0.3); display: flex; flex-direction: column; gap: 10px;
+    }
+    .result-item {
+      background: #fff; border-radius: 12px; padding: 10px 12px;
+      border: 1px solid rgba(57, 124, 120, 0.2); font-size: 12px; font-weight: 800;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .result-item a { color: #C96745; text-decoration: underline; font-size: 11px; }
+    .chips-slider { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+    .chips-slider::-webkit-scrollbar { display: none; }
+    .chip {
+      white-space: nowrap; padding: 8px 14px; border-radius: 16px;
+      background: #fff; border: 1px solid #E2D3BE; font-size: 12px; font-weight: 800; cursor: pointer;
+    }
+    .chip.active { background: #C96745; color: #fff; border-color: #C96745; }
+    .place-card {
+      background: #fff; border-radius: 20px; padding: 12px;
+      border: 1px solid #E2D3BE; display: flex; gap: 12px; align-items: center;
+    }
+    .place-img { width: 70px; height: 70px; border-radius: 14px; object-fit: cover; }
+    .place-info { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+    .navbar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(255,255,255,0.98); border-top: 1px solid #E2D3BE;
+      padding: 10px 16px; display: flex; justify-content: space-around; align-items: center;
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; font-weight: 800; color: #6E716C; text-decoration: none; border: none; background: none; }
+    .nav-item.active { color: #C96745; }
+    .hidden { display: none !important; }
   </style>
-  <script>
-    // Service worker & Cache purger to guarantee zero-lockup freshness
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(regs) {
-        for (var r of regs) { r.unregister(); }
-      });
-    }
-    if ('caches' in window) {
-      caches.keys().then(function(keys) {
-        for (var k of keys) { caches.delete(k); }
-      });
-    }
-  </script>
 </head>
-<body class="pb-24">
+<body>
 
-  <!-- Mobile Top Header Bar -->
-  <header class="sticky top-0 z-40 bg-[#FAF6F0]/95 backdrop-blur-md border-b border-[#E2D3BE] px-4 py-3 flex items-center justify-between shadow-xs">
-    <div class="flex items-center gap-2">
-      <div class="h-9 w-9 rounded-2xl bg-gradient-to-br from-[#C96745] to-[#E4A23B] grid place-items-center text-white font-black text-lg shadow-sm">
-        ج
-      </div>
+  <!-- Top Header Bar -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-badge">ج</div>
       <div>
-        <h1 className="text-base font-black tracking-tight text-[#252A28]">جِدّاو <span className="text-xs font-bold text-[#C96745]">JEDDAW</span></h1>
-        <p className="text-[10px] font-bold text-[#397C78]">جدة الآن 34° 🌊</p>
+        <div style="font-weight: 900; font-size: 15px; color: #252A28;">جِدّاو <span style="font-size: 11px; color: #C96745;">JEDDAW</span></div>
+        <div style="font-size: 10px; font-weight: 800; color: #397C78;">جدة الآن 34° 🌊</div>
       </div>
     </div>
 
-    <button onclick="openAuthDrawer()" class="px-3 py-1.5 rounded-full bg-[#C96745]/10 text-[#C96745] text-xs font-black border border-[#C96745]/20 active:scale-95 transition-transform cursor-pointer">
+    <button onclick="openDrawer()" style="padding: 6px 14px; border-radius: 20px; background: rgba(201,103,69,0.1); color: #C96745; font-size: 11px; font-weight: 900; border: 1px solid rgba(201,103,69,0.2); cursor: pointer;">
       👤 دخول سريع
     </button>
   </header>
 
-  <!-- Hero Section -->
-  <main class="max-w-md mx-auto px-4 pt-4 space-y-6">
-    <div class="rounded-3xl bg-gradient-to-br from-[#051413] to-[#122B29] p-5 text-white shadow-xl border border-white/10 relative overflow-hidden">
-      <div class="relative z-10 space-y-3">
-        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#C96745]/30 border border-[#C96745]/50 text-[#FF9D7A] text-[11px] font-black">
-          ⚡ مخطط طلعات جدة الذكي 2026
-        </span>
-        <h2 class="text-2xl font-black leading-snug">
-          جدة كثيرة… <br>
-          <span class="bg-gradient-to-r from-[#FF9D7A] to-[#E4A23B] bg-clip-text text-transparent">بس خطتك وحدة.</span>
-        </h2>
-        <p class="text-xs text-white/80 leading-relaxed font-semibold">
-          اختر مودك وحيك وميزانيتك، ونرتب لك المطعم والقهوة والمسار المباشر بنقرة واحدة!
-        </p>
-
-        <button onclick="scrollToPlanner()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#C96745] to-[#E4A23B] text-white text-xs font-black shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2 cursor-pointer">
-          <span>🚀 سوِّ لي خطة الطلعة الحين</span>
-        </button>
-      </div>
+  <main class="main-container">
+    <!-- Hero Box -->
+    <div class="hero-card">
+      <span class="hero-badge">⚡ مخطط طلعات جدة الذكي 2026</span>
+      <h1 class="hero-title">جدة كثيرة… <br><span>بس خطتك وحدة.</span></h1>
+      <p style="font-size: 12px; color: rgba(255,255,255,0.85); font-weight: 600;">اختر مودك وحيك وميزانيتك، ونرتب لك المطعم والقهوة والمسار المباشر بنقرة واحدة!</p>
+      <button class="hero-btn" onclick="scrollToPlanner()">🚀 سوِّ لي خطة الطلعة الحين</button>
     </div>
 
-    <!-- 1-Tap Touch Outing Planner Wizard -->
-    <section id="planner" class="rounded-3xl bg-white p-5 border border-[#E2D3BE] shadow-md space-y-4">
-      <div class="flex items-center gap-2 text-sm font-black text-[#252A28] border-b border-[#E2D3BE]/60 pb-3">
-        <span class="h-7 w-7 rounded-xl bg-[#C96745] text-white grid place-items-center text-xs">⚡</span>
+    <!-- Outing Planner Wizard -->
+    <section id="planner" class="card-box">
+      <div class="card-title">
+        <span style="background: #C96745; color: #fff; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-size: 12px;">⚡</span>
         <div>
-          <span>مولّد الطلعات السريع (بدون كتابة)</span>
-          <span class="block text-[10px] text-[#6E716C]">اختر خياراتك بنقرة زر واحدة</span>
+          <div>مولّد الطلعات السريع باللمس</div>
+          <div style="font-size: 10px; color: #6E716C; font-weight: 600;">بدون كتابة كيبورد - اختيارات لمسية مباشرة</div>
         </div>
       </div>
 
-      <!-- Step 1: Mood Selector -->
+      <!-- Step 1: Mood -->
       <div>
-        <label class="block text-xs font-extrabold text-[#6E716C] mb-2">1. اختر جوك ومودك اليوم:</label>
-        <div class="grid grid-cols-2 gap-2 text-xs font-extrabold">
-          <button type="button" onclick="selectMood(this, 'sea')" class="mood-btn p-3 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-start active:bg-[#C96745] active:text-white transition-colors cursor-pointer">
-            🌊 بحر وغروب
-          </button>
-          <button type="button" onclick="selectMood(this, 'coffee')" class="mood-btn p-3 rounded-2xl border border-[#C96745] bg-[#C96745] text-white text-start shadow-sm cursor-pointer">
-            ☕ قهوة وروقان
-          </button>
-          <button type="button" onclick="selectMood(this, 'food')" class="mood-btn p-3 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-start active:bg-[#C96745] active:text-white transition-colors cursor-pointer">
-            🍔 عشاء وتجربة أكل
-          </button>
-          <button type="button" onclick="selectMood(this, 'culture')" class="mood-btn p-3 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-start active:bg-[#C96745] active:text-white transition-colors cursor-pointer">
-            🏛️ تمشية بالبلد والتاريخ
-          </button>
+        <label style="font-size: 11px; font-weight: 900; color: #6E716C; display: block; margin-bottom: 6px;">1. اختر جوك اليوم:</label>
+        <div class="grid-2">
+          <button class="touch-btn active" onclick="selectMood(this, 'sea')">🌊 بحر وغروب</button>
+          <button class="touch-btn" onclick="selectMood(this, 'coffee')">☕ قهوة وروقان</button>
+          <button class="touch-btn" onclick="selectMood(this, 'food')">🍔 عشاء وتجربة أكل</button>
+          <button class="touch-btn" onclick="selectMood(this, 'balad')">🏛️ تمشية بالبلد</button>
         </div>
       </div>
 
-      <!-- Step 2: District Selector -->
+      <!-- Step 2: District -->
       <div>
-        <label class="block text-xs font-extrabold text-[#6E716C] mb-2">2. اختر الحي أو المنطقة:</label>
-        <select id="districtSelect" class="w-full rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] p-3 text-xs font-bold focus:outline-none focus:border-[#C96745]">
+        <label style="font-size: 11px; font-weight: 900; color: #6E716C; display: block; margin-bottom: 6px;">2. اختر الحي أو المنطقة:</label>
+        <select id="districtSelect" style="width: 100%; padding: 12px; border-radius: 16px; border: 1px solid #E2D3BE; background: #FAF6F0; font-size: 12px; font-weight: 800;">
           <option value="corniche">🌊 الكورنيش والواجهة البحرية</option>
           <option value="obhur">🏖️ أبحر الشمالية والشواطئ</option>
           <option value="rawdah">☕ حي الروضة والتحلية</option>
           <option value="balad">🏛️ جدة التاريخية (البلد)</option>
-          <option value="shati">🌴 حي الشاطئ والزهراء</option>
         </select>
       </div>
 
-      <!-- Step 3: Budget Selector -->
+      <!-- Step 3: Budget -->
       <div>
-        <label class="block text-xs font-extrabold text-[#6E716C] mb-2">3. الميزانية للشخص:</label>
-        <div class="grid grid-cols-3 gap-2 text-xs font-extrabold">
-          <button type="button" onclick="selectBudget(this, 'economy')" class="budget-btn p-2.5 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-center active:bg-[#397C78] active:text-white cursor-pointer">
-            💵 اقتصادي (<50)
-          </button>
-          <button type="button" onclick="selectBudget(this, 'balanced')" class="budget-btn p-2.5 rounded-2xl border border-[#397C78] bg-[#397C78] text-white text-center shadow-sm cursor-pointer">
-            💳 متوسط (50-150)
-          </button>
-          <button type="button" onclick="selectBudget(this, 'premium')" class="budget-btn p-2.5 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-center active:bg-[#397C78] active:text-white cursor-pointer">
-            ✨ فاخر (+150)
-          </button>
+        <label style="font-size: 11px; font-weight: 900; color: #6E716C; display: block; margin-bottom: 6px;">3. الميزانية للشخص:</label>
+        <div class="grid-3">
+          <button class="budget-btn" onclick="selectBudget(this, 'economy')">💵 اقتصادي</button>
+          <button class="budget-btn active" onclick="selectBudget(this, 'balanced')">💳 متوسط</button>
+          <button class="budget-btn" onclick="selectBudget(this, 'premium')">✨ فاخر</button>
         </div>
       </div>
 
-      <!-- Generate Plan Button -->
-      <button onclick="generateOutingPlan()" class="w-full py-3.5 rounded-2xl bg-[#397C78] text-white text-xs font-black shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2 cursor-pointer">
-        <span>⚡ تجهيز الخطة الفورية الآن</span>
-      </button>
+      <button class="generate-btn" onclick="generatePlan()">⚡ تجهيز الخطة الفورية الآن</button>
 
-      <!-- Plan Result Box -->
-      <div id="planResult" class="hidden rounded-2xl bg-[#E6F0EF] p-4 border border-[#397C78]/30 space-y-3">
-        <div class="text-xs font-black text-[#295652] flex items-center justify-between">
+      <div id="resultBox" class="result-box hidden">
+        <div style="font-size: 12px; font-weight: 900; color: #295652; display: flex; justify-content: space-between;">
           <span>🎯 خطتك المقترحة للطلعة:</span>
-          <span class="text-[10px] bg-[#397C78] text-white px-2 py-0.5 rounded-full">جاهزة 100%</span>
+          <span style="background: #397C78; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10px;">جاهزة 100%</span>
         </div>
-        <div id="planItinerary" class="space-y-2 text-xs font-bold text-[#252A28]">
-          <!-- Dynamic Content Injected Here -->
-        </div>
+        <div id="itinerary" style="display: flex; flex-direction: column; gap: 6px;"></div>
       </div>
     </section>
 
-    <!-- 1-Tap Touch Places Explorer -->
-    <section class="space-y-3">
-      <div class="flex items-center justify-between px-1">
-        <h3 class="text-sm font-black text-[#252A28]">🧭 استكشف أفضل أماكن جدة (باللمس)</h3>
-        <span class="text-[11px] font-extrabold text-[#C96745]">150+ مكان مميز</span>
+    <!-- Explorer Section -->
+    <section style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="font-size: 14px; font-weight: 900; color: #252A28;">🧭 استكشف أفضل أماكن جدة</div>
+
+      <div class="chips-slider">
+        <button class="chip active" onclick="filterPlaces(this, 'all')">الكل 🌟</button>
+        <button class="chip" onclick="filterPlaces(this, 'مطاعم')">🍽️ مطاعم</button>
+        <button class="chip" onclick="filterPlaces(this, 'كافيهات')">☕ كافيهات</button>
+        <button class="chip" onclick="filterPlaces(this, 'منتجعات')">🏖️ منتجعات</button>
+        <button class="chip" onclick="filterPlaces(this, 'البلد')">🏛️ البلد</button>
       </div>
 
-      <!-- Category Filter Chips -->
-      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-        <button onclick="filterCategory(this, 'all')" class="cat-chip px-4 py-2 rounded-2xl bg-[#C96745] text-white text-xs font-black border border-[#C96745] shadow-xs shrink-0 cursor-pointer">الكل 🌟</button>
-        <button onclick="filterCategory(this, 'مطاعم')" class="cat-chip px-4 py-2 rounded-2xl bg-white text-[#252A28] text-xs font-black border border-[#E2D3BE] shrink-0 cursor-pointer">🍽️ مطاعم</button>
-        <button onclick="filterCategory(this, 'كافيهات')" class="cat-chip px-4 py-2 rounded-2xl bg-white text-[#252A28] text-xs font-black border border-[#E2D3BE] shrink-0 cursor-pointer">☕ كافيهات</button>
-        <button onclick="filterCategory(this, 'منتجعات')" class="cat-chip px-4 py-2 rounded-2xl bg-white text-[#252A28] text-xs font-black border border-[#E2D3BE] shrink-0 cursor-pointer">🏖️ منتجعات أبحر</button>
-        <button onclick="filterCategory(this, 'البلد')" class="cat-chip px-4 py-2 rounded-2xl bg-white text-[#252A28] text-xs font-black border border-[#E2D3BE] shrink-0 cursor-pointer">🏛️ البلد التاريخية</button>
-      </div>
-
-      <!-- Places Cards Grid Container -->
-      <div id="placesGrid" class="grid grid-cols-1 gap-3">
-        <!-- Cards Injected Dynamically -->
-      </div>
+      <div id="placesList" style="display: flex; flex-direction: column; gap: 10px;"></div>
     </section>
   </main>
 
-  <!-- Auth Drawer Modal -->
-  <div id="authDrawer" class="fixed inset-0 z-50 hidden flex items-end justify-center bg-black/70">
-    <div class="w-full max-w-md rounded-t-3xl bg-white p-5 border-t border-[#E2D3BE] space-y-4 animate-slide-up">
-      <div class="flex items-center justify-between border-b border-[#E2D3BE] pb-3">
-        <h3 class="text-sm font-black text-[#252A28]">👤 الدخول السريع في جِدّاو</h3>
-        <button onclick="closeAuthDrawer()" class="text-xs font-bold text-[#6E716C] p-1">إغلاق ✕</button>
-      </div>
-
-      <p class="text-xs font-extrabold text-[#6E716C]">اختر بروفايلك للدخول الفوري بنقرة واحدة بدون كتابة:</p>
-
-      <div class="space-y-2">
-        <button onclick="loginUser('ابن جدة البحرية 🌊')" class="w-full p-3 rounded-2xl bg-[#FAF6F0] border border-[#E2D3BE] hover:border-[#C96745] text-start font-extrabold text-xs flex items-center justify-between cursor-pointer">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">🌊</span>
-            <div>
-              <div class="text-[#252A28]">ابن جدة البحرية</div>
-              <div class="text-[10px] text-[#6E716C]">الكورنيش والواجهة</div>
-            </div>
-          </div>
-          <span class="bg-[#C96745] text-white px-3 py-1 rounded-full text-[10px]">دخول ⚡</span>
-        </button>
-
-        <button onclick="loginUser('عاشق القهوة والروقان ☕')" class="w-full p-3 rounded-2xl bg-[#FAF6F0] border border-[#E2D3BE] hover:border-[#C96745] text-start font-extrabold text-xs flex items-center justify-between cursor-pointer">
-          <div class="flex items-center gap-2">
-            <span class="text-lg">☕</span>
-            <div>
-              <div class="text-[#252A28]">عاشق القهوة والروقان</div>
-              <div class="text-[10px] text-[#6E716C]">حي الروضة والتحلية</div>
-            </div>
-          </div>
-          <span class="bg-[#C96745] text-white px-3 py-1 rounded-full text-[10px]">دخول ⚡</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bottom Mobile Navigation Bar -->
-  <nav class="fixed inset-x-0 bottom-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E2D3BE] px-4 py-2 flex items-center justify-around shadow-lg">
-    <button onclick="scrollToPlanner()" class="flex flex-col items-center text-[10px] font-bold text-[#C96745]">
-      <span class="text-base">🏠</span>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <button class="nav-item active" onclick="scrollToPlanner()">
+      <span style="font-size: 16px;">🏠</span>
       <span>الرئيسية</span>
     </button>
-    <button onclick="scrollToPlanner()" class="flex flex-col items-center text-[10px] font-bold text-[#6E716C]">
-      <span class="text-base">🧭</span>
+    <button class="nav-item" onclick="scrollToPlanner()">
+      <span style="font-size: 16px;">🧭</span>
       <span>استكشف</span>
     </button>
-    <button onclick="scrollToPlanner()" class="flex flex-col items-center text-[10px] font-bold text-white bg-gradient-to-r from-[#C96745] to-[#E4A23B] p-2 rounded-full shadow-md -translate-y-2">
-      <span class="text-base">⚡</span>
+    <button class="nav-item" onclick="scrollToPlanner()">
+      <span style="font-size: 16px;">⚡</span>
+      <span>خطة</span>
     </button>
-    <button onclick="openAuthDrawer()" class="flex flex-col items-center text-[10px] font-bold text-[#6E716C]">
-      <span class="text-base">❤️</span>
-      <span>المفضلة</span>
-    </button>
-    <button onclick="openAuthDrawer()" class="flex flex-col items-center text-[10px] font-bold text-[#6E716C]">
-      <span class="text-base">👤</span>
+    <button class="nav-item" onclick="openDrawer()">
+      <span style="font-size: 16px;">👤</span>
       <span>الحساب</span>
     </button>
   </nav>
 
+  <!-- Auth Modal Drawer -->
+  <div id="drawer" style="position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,0.7); display: none; align-items: flex-end;">
+    <div style="width: 100%; max-width: 480px; margin: 0 auto; background: #fff; border-radius: 24px 24px 0 0; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2D3BE; padding-bottom: 10px;">
+        <span style="font-weight: 900; font-size: 14px;">👤 الدخول السريع في جِدّاو</span>
+        <button onclick="closeDrawer()" style="font-size: 12px; font-weight: 800; border: none; background: none; cursor: pointer;">إغلاق ✕</button>
+      </div>
+      <p style="font-size: 11px; font-weight: 800; color: #6E716C;">اختر بروفايلك للدخول الفوري بنقرة واحدة بدون كتابة:</p>
+      
+      <button onclick="login('ابن جدة البحرية 🌊')" style="padding: 12px; border-radius: 16px; background: #FAF6F0; border: 1px solid #E2D3BE; text-align: right; font-weight: 800; font-size: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+        <span>🌊 ابن جدة البحرية</span>
+        <span style="background: #C96745; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 10px;">دخول ⚡</span>
+      </button>
+
+      <button onclick="login('عاشق القهوة والروقان ☕')" style="padding: 12px; border-radius: 16px; background: #FAF6F0; border: 1px solid #E2D3BE; text-align: right; font-weight: 800; font-size: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+        <span>☕ عاشق القهوة والروقان</span>
+        <span style="background: #C96745; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 10px;">دخول ⚡</span>
+      </button>
+    </div>
+  </div>
+
   <script>
-    const samplePlaces = [
-      { name: 'مطاعم الشرق الشامية', cat: 'مطاعم', district: 'الكورنيش', rating: '4.8 ⭐', price: '75 ر.س', img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80', map: 'https://maps.google.com' },
-      { name: 'مقهى الروقان المختص', cat: 'كافيهات', district: 'الروضة', rating: '4.9 ⭐', price: '35 ر.س', img: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=400&q=80', map: 'https://maps.google.com' },
-      { name: 'منتجع شاطئ أبحر الفاخر', cat: 'منتجعات', district: 'أبحر الشمالية', rating: '4.9 ⭐', price: '350 ر.س', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80', map: 'https://maps.google.com' },
-      { name: 'بيت المأكولات التاريخي بالبلد', cat: 'البلد', district: 'البلد التاريخية', rating: '4.7 ⭐', price: '50 ر.س', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400&q=80', map: 'https://maps.google.com' }
+    const placesData = [
+      { name: 'مطاعم الشرق الشامية', cat: 'مطاعم', district: 'الكورنيش', rating: '4.8 ⭐', price: '75 ر.س', img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=300&q=80', map: 'https://maps.google.com' },
+      { name: 'مقهى الروقان المختص', cat: 'كافيهات', district: 'الروضة', rating: '4.9 ⭐', price: '35 ر.س', img: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=300&q=80', map: 'https://maps.google.com' },
+      { name: 'منتجع شاطئ أبحر الفاخر', cat: 'منتجعات', district: 'أبحر الشمالية', rating: '4.9 ⭐', price: '350 ر.س', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=300&q=80', map: 'https://maps.google.com' },
+      { name: 'بيت المأكولات التاريخي', cat: 'البلد', district: 'البلد التاريخية', rating: '4.7 ⭐', price: '50 ر.س', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=300&q=80', map: 'https://maps.google.com' }
     ];
 
-    function renderPlaces(items) {
-      const grid = document.getElementById('placesGrid');
-      grid.innerHTML = items.map(p => `
-        <div class="rounded-3xl bg-white p-3 border border-[#E2D3BE] shadow-xs flex gap-3 items-center">
-          <img src="${p.img}" class="h-20 w-20 rounded-2xl object-cover shrink-0">
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold text-[#C96745] bg-[#C96745]/10 px-2 py-0.5 rounded-full">${p.cat}</span>
-              <span class="text-[10px] font-black text-[#E4A23B]">${p.rating}</span>
+    function renderList(list) {
+      const container = document.getElementById('placesList');
+      container.innerHTML = list.map(p => `
+        <div class="place-card">
+          <img src="${p.img}" class="place-img" alt="${p.name}">
+          <div class="place-info">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:10px; font-weight:800; color:#C96745; background:rgba(201,103,69,0.1); padding:2px 8px; border-radius:10px;">${p.cat}</span>
+              <span style="font-size:10px; font-weight:900; color:#E4A23B;">${p.rating}</span>
             </div>
-            <h4 class="text-xs font-black text-[#252A28] truncate mt-1">${p.name}</h4>
-            <p class="text-[10px] font-bold text-[#6E716C] mt-0.5">📍 ${p.district} · ${p.price}</p>
-            <a href="${p.map}" target="_blank" class="inline-block mt-2 text-[10px] font-black text-[#397C78] underline">فتح بالخريطة 🗺️</a>
+            <div style="font-size:12px; font-weight:900; color:#252A28;">${p.name}</div>
+            <div style="font-size:10px; font-weight:700; color:#6E716C;">📍 ${p.district} · ${p.price}</div>
+            <a href="${p.map}" target="_blank" style="font-size:10px; font-weight:900; color:#397C78; text-decoration:underline;">فتح بالخريطة 🗺️</a>
           </div>
         </div>
       `).join('');
     }
 
-    renderPlaces(samplePlaces);
+    renderList(placesData);
 
-    function filterCategory(btn, cat) {
-      document.querySelectorAll('.cat-chip').forEach(b => {
-        b.className = 'cat-chip px-4 py-2 rounded-2xl bg-white text-[#252A28] text-xs font-black border border-[#E2D3BE] shrink-0 cursor-pointer';
-      });
-      btn.className = 'cat-chip px-4 py-2 rounded-2xl bg-[#C96745] text-white text-xs font-black border border-[#C96745] shadow-xs shrink-0 cursor-pointer';
-
-      if (cat === 'all') {
-        renderPlaces(samplePlaces);
-      } else {
-        renderPlaces(samplePlaces.filter(p => p.cat === cat || p.name.includes(cat)));
-      }
+    function filterPlaces(btn, cat) {
+      document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (cat === 'all') renderList(placesData);
+      else renderList(placesData.filter(p => p.cat === cat || p.name.includes(cat)));
     }
 
-    let activeMood = 'sea';
-    let activeBudget = 'balanced';
-
     function selectMood(btn, mood) {
-      document.querySelectorAll('.mood-btn').forEach(b => {
-        b.className = 'mood-btn p-3 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-start active:bg-[#C96745] active:text-white transition-colors cursor-pointer';
-      });
-      btn.className = 'mood-btn p-3 rounded-2xl border border-[#C96745] bg-[#C96745] text-white text-start shadow-sm cursor-pointer';
-      activeMood = mood;
+      document.querySelectorAll('.touch-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
     }
 
     function selectBudget(btn, budget) {
-      document.querySelectorAll('.budget-btn').forEach(b => {
-        b.className = 'budget-btn p-2.5 rounded-2xl border border-[#E2D3BE] bg-[#FAF6F0] text-center active:bg-[#397C78] active:text-white cursor-pointer';
-      });
-      btn.className = 'budget-btn p-2.5 rounded-2xl border border-[#397C78] bg-[#397C78] text-white text-center shadow-sm cursor-pointer';
-      activeBudget = budget;
+      document.querySelectorAll('.budget-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
     }
 
-    function generateOutingPlan() {
-      const resultBox = document.getElementById('planResult');
-      const itinerary = document.getElementById('planItinerary');
-      resultBox.classList.remove('hidden');
-
+    function generatePlan() {
+      const box = document.getElementById('resultBox');
+      const itinerary = document.getElementById('itinerary');
+      box.classList.remove('hidden');
       itinerary.innerHTML = `
-        <div class="p-2 rounded-xl bg-white border border-[#397C78]/20 flex items-center justify-between">
+        <div class="result-item">
           <span>1. 🍽️ العشاء: مطاعم الكورنيش البحرية</span>
-          <a href="https://maps.google.com" target="_blank" class="text-[10px] text-[#C96745] underline">خريطة 📍</a>
+          <a href="https://maps.google.com" target="_blank">خريطة 📍</a>
         </div>
-        <div class="p-2 rounded-xl bg-white border border-[#397C78]/20 flex items-center justify-between">
+        <div class="result-item">
           <span>2. ☕ التحلية: مقهى الروقان المختص</span>
-          <a href="https://maps.google.com" target="_blank" class="text-[10px] text-[#C96745] underline">خريطة 📍</a>
+          <a href="https://maps.google.com" target="_blank">خريطة 📍</a>
         </div>
-        <div class="p-2 rounded-xl bg-white border border-[#397C78]/20 flex items-center justify-between">
+        <div class="result-item">
           <span>3. 🌊 الفعالية: تمشية على الواجهة البحرية</span>
-          <a href="https://maps.google.com" target="_blank" class="text-[10px] text-[#C96745] underline">خريطة 📍</a>
+          <a href="https://maps.google.com" target="_blank">خريطة 📍</a>
         </div>
       `;
     }
@@ -314,17 +313,17 @@
       document.getElementById('planner').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function openAuthDrawer() {
-      document.getElementById('authDrawer').classList.remove('hidden');
+    function openDrawer() {
+      document.getElementById('drawer').style.display = 'flex';
     }
 
-    function closeAuthDrawer() {
-      document.getElementById('authDrawer').classList.add('hidden');
+    function closeDrawer() {
+      document.getElementById('drawer').style.display = 'none';
     }
 
-    function loginUser(name) {
-      alert('تم تسجيل الدخول بنجاح كـ: ' + name);
-      closeAuthDrawer();
+    function login(name) {
+      alert('تم الدخول بنجاح كـ: ' + name);
+      closeDrawer();
     }
   </script>
 </body>
