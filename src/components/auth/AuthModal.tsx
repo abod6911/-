@@ -275,9 +275,11 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 {isRtl ? "البريد الإلكتروني" : "Email Address"}
               </label>
               <MobileInput
-                type="email"
+                type="text"
+                inputMode="email"
                 dir="ltr"
                 required
+                autoComplete="off"
                 placeholder="name@example.com"
                 value={email}
                 onValueChange={setEmail}
@@ -290,8 +292,11 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 {isRtl ? "كلمة المرور" : "Password"}
               </label>
               <MobileInput
-                type="password"
+                type="text"
+                inputMode="text"
                 required
+                autoComplete="off"
+                style={{ WebkitTextSecurity: "disc" }}
                 placeholder="••••••••"
                 value={password}
                 onValueChange={setPassword}
