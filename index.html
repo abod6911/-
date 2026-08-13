@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>جِدّاو | JEDDAW — تطبيق طلعات جدة المخصص للجوال</title>
+  <title>جِدّاو | JEDDAW — خانة البحث المخصصة للجوال</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -12,7 +12,7 @@
       color: #252A28;
       padding-bottom: 90px;
       -webkit-tap-highlight-color: transparent;
-      user-select: none;
+      user-select: text;
       direction: rtl;
     }
     .header {
@@ -23,14 +23,19 @@
       display: flex; align-items: center; justify-content: space-between;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-    .header-logo { display: flex; items-center; gap: 8px; }
+    .header-logo { display: flex; align-items: center; gap: 8px; }
     .logo-badge {
-      width: 36px; height: 36px; rounded: 12px;
+      width: 36px; height: 36px;
       background: linear-gradient(135deg, #C96745, #E4A23B);
       color: #fff; font-weight: 900; font-size: 18px;
       display: grid; place-items: center; border-radius: 12px;
     }
-    .main-container { max-width: 480px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 20px; }
+    .main-container { max-width: 480px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+    .search-card {
+      background: #fff; border-radius: 20px; padding: 14px;
+      border: 2px solid #C96745; box-shadow: 0 4px 15px rgba(201, 103, 69, 0.12);
+      display: flex; flex-direction: column; gap: 8px;
+    }
     .hero-card {
       background: linear-gradient(135deg, #051413, #122B29);
       border-radius: 24px; padding: 20px; color: #fff;
@@ -126,6 +131,39 @@
   </header>
 
   <main class="main-container">
+    <!-- NEW MOBILE SEARCH BAR BOX FOR TESTING -->
+    <div class="search-card">
+      <div style="font-size: 13px; font-weight: 900; color: #252A28; display: flex; justify-content: space-between; align-items: center;">
+        <span>🔍 ابحث عن أي مكان في جدة:</span>
+        <span style="font-size: 10px; color: #C96745; background: rgba(201,103,69,0.1); padding: 2px 8px; border-radius: 10px; font-weight: 800;">مخصص للجوال ⚡</span>
+      </div>
+
+      <div style="position: relative; display: flex; align-items: center; margin-top: 4px;">
+        <input
+          id="mobileSearchInput"
+          type="text"
+          inputmode="search"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="none"
+          spellcheck="false"
+          placeholder="اكتب اسم المطعم، الكافيه، أو المنطقة..."
+          oninput="onSearchInputChange(this.value)"
+          style="width: 100%; padding: 13px 14px; padding-left: 80px; border-radius: 16px; border: 2px solid #C96745; background: #fff; font-size: 16px !important; font-weight: 700; color: #252A28; outline: none; touch-action: manipulation;"
+        />
+        <button
+          onclick="triggerSearchNow()"
+          style="position: absolute; left: 6px; padding: 8px 14px; border-radius: 12px; background: #C96745; color: #fff; font-size: 11px; font-weight: 900; border: none; cursor: pointer;"
+        >
+          بحث 🔍
+        </button>
+      </div>
+
+      <div id="searchStats" style="font-size: 10px; font-weight: 800; color: #6E716C; margin-top: 2px;">
+        اكتب أي كلمة لمشاهدة النتائج المباشرة فوراً
+      </div>
+    </div>
+
     <!-- Hero Box -->
     <div class="hero-card">
       <span class="hero-badge">⚡ مخطط طلعات جدة الذكي 2026</span>
@@ -205,13 +243,13 @@
 
   <!-- Navigation Bar -->
   <nav class="navbar">
-    <button class="nav-item active" onclick="scrollToPlanner()">
-      <span style="font-size: 16px;">🏠</span>
-      <span>الرئيسية</span>
+    <button class="nav-item active" onclick="scrollToSearch()">
+      <span style="font-size: 16px;">🔍</span>
+      <span>البحث</span>
     </button>
     <button class="nav-item" onclick="scrollToPlanner()">
-      <span style="font-size: 16px;">🧭</span>
-      <span>استكشف</span>
+      <span style="font-size: 16px;">🏠</span>
+      <span>الرئيسية</span>
     </button>
     <button class="nav-item" onclick="scrollToPlanner()">
       <span style="font-size: 16px;">⚡</span>
@@ -249,11 +287,20 @@
       { name: 'مطاعم الشرق الشامية', cat: 'مطاعم', district: 'الكورنيش', rating: '4.8 ⭐', price: '75 ر.س', img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=300&q=80', map: 'https://maps.google.com' },
       { name: 'مقهى الروقان المختص', cat: 'كافيهات', district: 'الروضة', rating: '4.9 ⭐', price: '35 ر.س', img: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=300&q=80', map: 'https://maps.google.com' },
       { name: 'منتجع شاطئ أبحر الفاخر', cat: 'منتجعات', district: 'أبحر الشمالية', rating: '4.9 ⭐', price: '350 ر.س', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=300&q=80', map: 'https://maps.google.com' },
-      { name: 'بيت المأكولات التاريخي', cat: 'البلد', district: 'البلد التاريخية', rating: '4.7 ⭐', price: '50 ر.س', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=300&q=80', map: 'https://maps.google.com' }
+      { name: 'بيت المأكولات التاريخي', cat: 'البلد', district: 'البلد التاريخية', rating: '4.7 ⭐', price: '50 ر.س', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=300&q=80', map: 'https://maps.google.com' },
+      { name: 'مطعم أسماك الثروة البحرية', cat: 'مطاعم', district: 'أبحر', rating: '4.9 ⭐', price: '120 ر.س', img: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=300&q=80', map: 'https://maps.google.com' },
+      { name: 'كافيه شروق الشمس', cat: 'كافيهات', district: 'الشاطئ', rating: '4.8 ⭐', price: '28 ر.س', img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=300&q=80', map: 'https://maps.google.com' }
     ];
+
+    let currentFilter = 'all';
+    let currentSearch = '';
 
     function renderList(list) {
       const container = document.getElementById('placesList');
+      const stats = document.getElementById('searchStats');
+      if (stats) {
+        stats.innerText = `تم إيجاد ${list.length} نتائج مطابقة لـ "${currentSearch || 'الكل'}"`;
+      }
       container.innerHTML = list.map(p => `
         <div class="place-card">
           <img src="${p.img}" class="place-img" alt="${p.name}">
@@ -272,11 +319,39 @@
 
     renderList(placesData);
 
+    let searchTimer = null;
+    function onSearchInputChange(val) {
+      currentSearch = val.trim().toLowerCase();
+      if (searchTimer) clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        applyFilters();
+      }, 200);
+    }
+
+    function triggerSearchNow() {
+      const input = document.getElementById('mobileSearchInput');
+      if (input) {
+        currentSearch = input.value.trim().toLowerCase();
+        applyFilters();
+      }
+    }
+
+    function applyFilters() {
+      let filtered = placesData;
+      if (currentFilter !== 'all') {
+        filtered = filtered.filter(p => p.cat === currentFilter || p.name.includes(currentFilter));
+      }
+      if (currentSearch) {
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(currentSearch) || p.district.toLowerCase().includes(currentSearch) || p.cat.toLowerCase().includes(currentSearch));
+      }
+      renderList(filtered);
+    }
+
     function filterPlaces(btn, cat) {
       document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      if (cat === 'all') renderList(placesData);
-      else renderList(placesData.filter(p => p.cat === cat || p.name.includes(cat)));
+      currentFilter = cat;
+      applyFilters();
     }
 
     function selectMood(btn, mood) {
@@ -307,6 +382,10 @@
           <a href="https://maps.google.com" target="_blank">خريطة 📍</a>
         </div>
       `;
+    }
+
+    function scrollToSearch() {
+      document.getElementById('mobileSearchInput').focus();
     }
 
     function scrollToPlanner() {
