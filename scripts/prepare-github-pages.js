@@ -48,6 +48,18 @@ const indexHtmlContent = `<!DOCTYPE html>
     <script>
       (function() {
         try {
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              for (var r of regs) { r.unregister(); }
+            });
+          }
+          if ('caches' in window) {
+            caches.keys().then(function(keys) {
+              for (var k of keys) { caches.delete(k); }
+            });
+          }
+        } catch (e) {}
+        try {
           var saved = localStorage.getItem("jeddaw_theme") || localStorage.getItem("wesh_theme");
           var isDark = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
           if (isDark) {
