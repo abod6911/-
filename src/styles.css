@@ -5,25 +5,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ==========================================================================
-   Arabic Typography & Readability Rules
-   ========================================================================== */
-html[lang="ar"] h1,
-html[lang="ar"] h2,
-html[lang="ar"] h3,
-html[lang="ar"] h4 {
-  line-height: 1.45 !important;
-  letter-spacing: 0 !important;
-}
-
-html[lang="ar"] p,
-html[lang="ar"] button,
-html[lang="ar"] a,
-html[lang="ar"] label {
-  line-height: 1.6;
-}
-
-/* ==========================================================================
-   جِدّاو | JEDDAW — Earthy Coastal Jeddah Style System
+   JEDDAW — Pure Mobile-Native Architecture & Design System
    ========================================================================== */
 
 @theme inline {
@@ -58,647 +40,108 @@ html[lang="ar"] label {
 
   /* Custom Brand Tokens */
   --color-terracotta: #C96745;
-  --color-teal-sea: #397C78;
-  --color-sand: #F4EBDD;
-  --color-pearl: #FAF6F0;
-  --color-charcoal: #252A28;
-  --color-warm-gray: #6E716C;
-  --color-olive: #71805B;
-  --color-gold: #E4A23B;
-  --color-muted-red: #B84E4E;
+  --color-terracotta-dark: #A84F31;
+  --color-terracotta-light: #F6E6E0;
+  --color-sand: #FAF6F0;
+  --color-sand-card: #F4EBDD;
+  --color-sea: #397C78;
+  --color-sea-dark: #295652;
+  --color-sea-light: #E6F0EF;
+  --color-coral: #B84E4E;
+  --color-sun: #E4A23B;
+  --color-stone-text: #252A28;
+  --color-muted-text: #6E716C;
 
-  --shadow-soft: var(--shadow-soft);
-  --shadow-lift: var(--shadow-lift);
-  --shadow-glow: var(--shadow-glow);
+  /* Dark Theme Tokens */
+  --color-dark-bg: #121817;
+  --color-dark-surface: #1C2422;
+  --color-dark-card: #253230;
+  --color-dark-border: rgba(255, 255, 255, 0.1);
+  --color-dark-text: #F5F1E8;
+  --color-dark-muted: #B5B8B2;
 }
 
 :root {
-  --radius: 1.25rem; /* 20px */
-
-  /* Light Theme Palette */
-  --terracotta: #C96745;
-  --teal-sea: #397C78;
-  --sand: #F4EBDD;
-  --pearl: #FAF6F0;
-  --charcoal: #252A28;
-  --warm-gray: #6E716C;
-  --olive: #71805B;
-  --gold: #E4A23B;
-  --muted-red: #B84E4E;
-
-  --background: var(--sand);
-  --foreground: var(--charcoal);
-  --card: var(--pearl);
-  --card-foreground: var(--charcoal);
-  --popover: var(--pearl);
-  --popover-foreground: var(--charcoal);
-  --primary: var(--terracotta);
-  --primary-foreground: #FAF6F0;
-  --secondary: var(--teal-sea);
-  --secondary-foreground: #FAF6F0;
-  --muted: #EADECB;
-  --muted-foreground: var(--warm-gray);
-  --accent: var(--terracotta);
-  --accent-foreground: #FAF6F0;
-  --destructive: var(--muted-red);
-  --destructive-foreground: #FAF6F0;
+  --background: #FAF6F0;
+  --foreground: #252A28;
+  --card: #FFFFFF;
+  --card-foreground: #252A28;
+  --popover: #FFFFFF;
+  --popover-foreground: #252A28;
+  --primary: #C96745;
+  --primary-foreground: #FFFFFF;
+  --secondary: #397C78;
+  --secondary-foreground: #FFFFFF;
+  --muted: #F4EBDD;
+  --muted-foreground: #6E716C;
+  --accent: #E4A23B;
+  --accent-foreground: #252A28;
+  --destructive: #B84E4E;
+  --destructive-foreground: #FFFFFF;
   --border: #E2D3BE;
   --input: #E2D3BE;
-  --ring: var(--terracotta);
-
-  --shadow-soft: 0 4px 20px -6px rgba(37, 42, 40, 0.08);
-  --shadow-lift: 0 20px 40px -15px rgba(201, 103, 69, 0.25);
-  --shadow-glow: 0 0 25px -5px rgba(201, 103, 69, 0.35);
+  --ring: #C96745;
+  --radius: 1rem;
 }
 
 .dark {
-  /* Dark Theme Palette */
-  --background: #161B1A;
+  --background: #121817;
   --foreground: #F5F1E8;
-  --card: #222826;
+  --card: #1C2422;
   --card-foreground: #F5F1E8;
-  --popover: #222826;
+  --popover: #1C2422;
   --popover-foreground: #F5F1E8;
-  --primary: #D47855;
-  --primary-foreground: #161B1A;
+  --primary: #C96745;
+  --primary-foreground: #FFFFFF;
   --secondary: #5EAAA5;
-  --secondary-foreground: #161B1A;
-  --muted: #2E3633;
+  --secondary-foreground: #121817;
+  --muted: #253230;
   --muted-foreground: #B5B8B2;
-  --accent: #D47855;
-  --accent-foreground: #161B1A;
-  --destructive: #D86060;
-  --destructive-foreground: #FAF6F0;
-  --border: rgba(245, 241, 232, 0.12);
-  --input: rgba(245, 241, 232, 0.15);
-  --ring: #D47855;
-
-  --shadow-soft: 0 4px 20px -6px rgba(0, 0, 0, 0.4);
-  --shadow-lift: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 0 25px -5px rgba(212, 120, 85, 0.25);
-
-  color-scheme: dark;
+  --accent: #E4A23B;
+  --accent-foreground: #121817;
+  --destructive: #D96B6B;
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(255, 255, 255, 0.12);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #C96745;
 }
 
-/* ==========================================================================
-   Base styles
-   ========================================================================== */
-
-@layer base {
-  * {
-    border-color: var(--color-border);
-  }
-
-  html {
-    scroll-behavior: smooth;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    overflow-x: hidden;
-  }
-
-  h1, h2, h3, h4 {
-    font-family: "Alexandria", var(--font-sans);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.25;
-  }
-
-  [dir="rtl"] {
-    line-height: 1.8;
-  }
-
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(201, 103, 69, 0.3);
-    border-radius: 999px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(201, 103, 69, 0.6);
-  }
-
-  /* Form controls */
-  input, select, textarea {
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    min-height: 48px;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--terracotta);
-    box-shadow: 0 0 0 3px rgba(201, 103, 69, 0.2);
-  }
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* ==========================================================================
-   Keyframe animations
-   ========================================================================== */
-
-@keyframes route-draw {
-  from { stroke-dashoffset: 300; }
-  to { stroke-dashoffset: 0; }
+/* Hide scrollbars for clean mobile touch sliders */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 103, 69, 0.4); }
-  50% { box-shadow: 0 0 0 12px rgba(201, 103, 69, 0); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-@keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-4deg); }
-  75% { transform: rotate(4deg); }
-}
-
-@keyframes heartBeat {
-  0% { transform: scale(1); }
-  14% { transform: scale(1.3); }
-  28% { transform: scale(1); }
-  42% { transform: scale(1.3); }
-  70% { transform: scale(1); }
-}
-
-@keyframes modalIn {
-  from { opacity: 0; transform: scale(0.95) translateY(12px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-/* ==========================================================================
-   Utility classes
-   ========================================================================== */
-
-@utility surface-card {
-  background-color: var(--card);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--border);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@utility glass-card {
-  background: rgba(250, 246, 240, 0.75);
-  backdrop-filter: blur(16px) saturate(1.6);
-  -webkit-backdrop-filter: blur(16px) saturate(1.6);
-  border: 1px solid rgba(226, 211, 190, 0.6);
-  border-radius: var(--radius-2xl);
-}
-
-@utility glass-header {
-  background: rgba(244, 235, 221, 0.88);
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-}
-
-@utility glass-tabbar {
-  background: rgba(250, 246, 240, 0.92);
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-}
-
-@utility animate-route-draw {
-  stroke-dasharray: 10 8;
-  animation: route-draw 2.4s linear infinite;
-}
-
-@utility animate-fade-in-up {
-  animation: fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@utility animate-fade-in-down {
-  animation: fadeInDown 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@utility animate-fade-in {
-  animation: fadeIn 0.4s ease both;
-}
-
-@utility animate-pulse-glow {
-  animation: pulseGlow 2.2s ease-in-out infinite;
-}
-
-@utility animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-@utility animate-wiggle {
-  animation: wiggle 0.5s ease-in-out;
-}
-
-@utility animate-heart {
-  animation: heartBeat 0.8s ease-in-out;
-}
-
-@utility animate-modal-in {
-  animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* Stagger delays */
-@utility delay-1 { animation-delay: 0.08s; }
-@utility delay-2 { animation-delay: 0.16s; }
-@utility delay-3 { animation-delay: 0.24s; }
-@utility delay-4 { animation-delay: 0.32s; }
-@utility delay-5 { animation-delay: 0.40s; }
-@utility delay-6 { animation-delay: 0.48s; }
-
-/* Hover effects */
-@utility hover-lift {
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-lift);
-  }
-}
-
-@utility hover-scale {
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-  &:hover {
-    transform: scale(1.03);
-  }
-}
-
-/* Icon Box & Luxury UI Primitives */
-@utility icon-box {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 1rem;
-  background: linear-gradient(135deg, rgba(201, 103, 69, 0.12), rgba(57, 124, 120, 0.12));
-  border: 1px solid rgba(201, 103, 69, 0.2);
-  transition: all 0.3s ease;
-}
-
-@utility icon-box-sm {
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 0.75rem;
-}
-
-@utility icon-box-md {
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 1rem;
-}
-
-@utility icon-box-lg {
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 1.25rem;
-}
-
-@utility gradient-text-brand {
-  background: linear-gradient(135deg, #C96745 0%, #E4A23B 50%, #397C78 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-@utility badge-glow {
-  box-shadow: 0 0 12px rgba(201, 103, 69, 0.3);
-}
-
-@utility glass-luxury {
-  background: rgba(22, 27, 26, 0.85);
-  backdrop-filter: blur(24px) saturate(1.8);
-  -webkit-backdrop-filter: blur(24px) saturate(1.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
-}
-
-@utility glow-border-brand {
-  border: 1px solid rgba(201, 103, 69, 0.4);
-  box-shadow: 0 0 20px -5px rgba(201, 103, 69, 0.25);
-}
-
-@utility no-scrollbar {
+.no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
-/* ==========================================================================
-   Dark mode specific overrides
-   ========================================================================== */
-
-.dark .glass-card {
-  background: rgba(34, 40, 38, 0.8) !important;
-  border-color: rgba(245, 241, 232, 0.12) !important;
+/* Mobile-Safe Input Rules */
+input, select, textarea {
+  font-size: 16px !important;
+  touch-action: manipulation;
+  user-select: text !important;
+  -webkit-user-select: text !important;
 }
 
+/* Opaque Solid Glass Fallbacks for Mobile */
+.glass-header {
+  background-color: rgba(250, 246, 240, 0.98);
+}
 .dark .glass-header {
-  background: rgba(22, 27, 26, 0.92) !important;
-  border-color: rgba(245, 241, 232, 0.12) !important;
+  background-color: rgba(18, 24, 23, 0.98);
 }
 
+.glass-tabbar {
+  background-color: rgba(250, 246, 240, 0.98);
+}
 .dark .glass-tabbar {
-  background: rgba(34, 40, 38, 0.94) !important;
-  border-color: rgba(245, 241, 232, 0.12) !important;
+  background-color: rgba(18, 24, 23, 0.98);
 }
-
-.dark .surface-card {
-  background-color: var(--card) !important;
-  border-color: var(--border) !important;
-  box-shadow: 0 4px 20px -6px rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Dark mode utility class overrides for legacy hex colors */
-.dark .text-\[\#252A28\] {
-  color: #F5F1E8 !important;
-}
-
-.dark .text-\[\#6E716C\] {
-  color: #B5B8B2 !important;
-}
-
-.dark .bg-\[\#FAF6F0\] {
-  background-color: #222826 !important;
-}
-
-.dark .bg-\[\#F4EBDD\] {
-  background-color: #161B1A !important;
-}
-
-.dark .bg-\[\#EADECB\] {
-  background-color: #2E3633 !important;
-}
-
-.dark .border-\[\#E2D3BE\] {
-  border-color: rgba(245, 241, 232, 0.12) !important;
-}
-
-/* Modal overlays */
-@utility modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background: rgba(22, 27, 26, 0.75);
-  backdrop-filter: blur(6px);
-  animation: fadeIn 0.25s ease both;
-}
-
-@utility modal-content {
-  position: relative;
-  width: 100%;
-  max-width: 32rem;
-  max-height: 88vh;
-  overflow-y: auto;
-  border-radius: var(--radius-2xl);
-  background: var(--card);
-  padding: 1.75rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* ==========================================================================
-   Living Jeddah Hero — Cinematic Animations
-   ========================================================================== */
-
-@keyframes coastline-drift {
-  0% { transform: translateX(0) translateY(0); }
-  50% { transform: translateX(12px) translateY(-8px); }
-  100% { transform: translateX(0) translateY(0); }
-}
-
-@keyframes horizon-glow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
-}
-
-@keyframes hotspot-breathe {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(201, 103, 69, 0.3); }
-  50% { transform: scale(1.04); box-shadow: 0 0 0 8px rgba(201, 103, 69, 0); }
-}
-
-@keyframes float-gentle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes float-delayed {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-@keyframes shimmer-line {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-@keyframes reveal-up {
-  from { opacity: 0; transform: translateY(32px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes subtle-rotate {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(1.5deg); }
-}
-
-@utility animate-coastline-drift {
-  animation: coastline-drift 8s ease-in-out infinite;
-}
-
-@utility animate-horizon-glow {
-  animation: horizon-glow 4s ease-in-out infinite;
-}
-
-@utility animate-hotspot-breathe {
-  animation: hotspot-breathe 2.8s ease-in-out infinite;
-}
-
-@utility animate-float-gentle {
-  animation: float-gentle 4s ease-in-out infinite;
-}
-
-@utility animate-float-delayed {
-  animation: float-gentle 4s ease-in-out infinite;
-  animation-delay: 1.5s;
-}
-
-@utility animate-shimmer-line {
-  background-size: 200% 100%;
-  animation: shimmer-line 3s ease-in-out infinite;
-}
-
-@utility animate-reveal-up {
-  animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@utility animate-subtle-rotate {
-  animation: subtle-rotate 6s ease-in-out infinite;
-}
-
-/* Safe area for mobile tab bar */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  .safe-area-bottom {
-    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
-  }
-}
-
-/* ==========================================================================
-   MOBILE NUCLEAR PERFORMANCE OVERRIDES
-   Kills ALL expensive GPU operations that freeze input/keyboard on mobile.
-   ========================================================================== */
-@media screen and (max-width: 768px) {
-
-  /* ── 1. INPUT ZOOM PREVENTION & TEXT SELECTION ENABLEMENT ── */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="search"],
-  input[type="tel"],
-  input[type="url"],
-  input[type="number"],
-  textarea,
-  select {
-    font-size: 16px !important;
-    touch-action: manipulation;
-    user-select: text !important;
-    -webkit-user-select: text !important;
-  }
-
-  /* ── 2. KILL ALL FOCUS BOX-SHADOW TRANSITIONS (prevents repaint on keyboard open) ── */
-  input, select, textarea {
-    transition: none !important;
-  }
-  input:focus, select:focus, textarea:focus {
-    box-shadow: none !important;
-    outline: 2px solid var(--terracotta, #C96745) !important;
-    outline-offset: -2px;
-  }
-
-  /* ── 3. KILL ALL BACKDROP-FILTER (GPU texture blending is extremely expensive on mobile) ── */
-  *,
-  *::before,
-  *::after {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-
-  /* ── 4. KILL ALL BLUR FILTERS (blur-[100px] etc. causes massive GPU memory usage) ── */
-  .blur-sm, .blur-md, .blur-lg, .blur-xl, .blur-2xl, .blur-3xl,
-  [class*="blur-["] {
-    filter: none !important;
-    -webkit-filter: none !important;
-  }
-
-  /* ── 5. KILL ALL INFINITE CSS ANIMATIONS (continuous GPU compositing = death on mobile input) ── */
-  .animate-pulse,
-  .animate-ping,
-  .animate-bounce,
-  .animate-spin,
-  .animate-pulse-glow,
-  .animate-float,
-  .animate-float-gentle,
-  .animate-float-delayed,
-  .animate-route-draw,
-  .animate-coastline-drift,
-  .animate-horizon-glow,
-  .animate-hotspot-breathe,
-  .animate-shimmer-line,
-  .animate-subtle-rotate,
-  [class*="animate-spin"],
-  [class*="animate-pulse"],
-  [class*="animate-ping"],
-  [class*="animate-bounce"] {
-    animation: none !important;
-  }
-
-  /* ── 6. OPAQUE BACKGROUND FALLBACKS FOR GLASS ELEMENTS ── */
-  .glass-header {
-    background-color: rgba(250, 246, 240, 0.98) !important;
-  }
-  .dark .glass-header {
-    background-color: rgba(18, 24, 23, 0.98) !important;
-  }
-  .glass-tabbar {
-    background-color: rgba(250, 246, 240, 0.98) !important;
-  }
-  .dark .glass-tabbar {
-    background-color: rgba(18, 24, 23, 0.98) !important;
-  }
-  .glass-card {
-    background-color: rgba(250, 246, 240, 0.95) !important;
-  }
-  .dark .glass-card {
-    background-color: rgba(22, 27, 26, 0.95) !important;
-  }
-  .glass-luxury {
-    background-color: rgba(22, 27, 26, 0.95) !important;
-  }
-
-  /* ── 7. KILL WILL-CHANGE AND TRANSFORM LAYERS ON PERSISTENT ELEMENTS ── */
-  .mobile-tab-bar {
-    transition: none !important;
-    will-change: auto !important;
-    transform: none !important;
-  }
-
-  /* ── 8. PREVENT VH-BASED LAYOUT THRASHING DURING KEYBOARD OPEN ── */
-  .mobile-visual-viewport-sheet {
-    height: auto !important;
-    max-height: none !important;
-  }
-}
-
-/* ==========================================================================
-   Mobile Tab Bar Behavior
-   ========================================================================== */
-.mobile-tab-bar {
-  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1) !important;
-  will-change: opacity, transform;
-}
-
-/* Mobile Visual Viewport Sheet Container */
-.mobile-visual-viewport-sheet {
-  height: var(--vv-height, 100dvh) !important;
-  max-height: var(--vv-height, 100dvh) !important;
-  width: 100% !important;
-}
-
-@media screen and (min-width: 640px) {
-  .mobile-visual-viewport-sheet {
-    height: 86vh !important;
-    max-height: 86vh !important;
-  }
-}
-
-
