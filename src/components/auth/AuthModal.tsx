@@ -263,7 +263,11 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                   <input
                     type="text"
                     inputMode="text"
+                    dir="auto"
                     autoComplete="name"
+                    autoCorrect="off"
+                    autoCapitalize="none"
+                    spellCheck={false}
                     required
                     placeholder={isRtl ? "محمد العتيبي" : "John Doe"}
                     value={name}
@@ -283,12 +287,15 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 <input
                   type="email"
                   inputMode="email"
+                  dir="ltr"
                   autoComplete="email"
+                  autoCorrect="off"
+                  autoCapitalize="none"
+                  spellCheck={false}
                   required
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  dir="ltr"
                   className="w-full rounded-2xl border border-[#E2D3BE] dark:border-white/15 bg-white dark:bg-[#222826] ps-10 pe-3 py-3 text-base font-semibold focus:outline-none focus:border-[#C96745] text-start"
                 />
               </div>
@@ -303,6 +310,9 @@ export function AuthModal({ onClose }: { onClose: () => void }) {
                 <input
                   type="password"
                   autoComplete={tab === "signup" ? "new-password" : "current-password"}
+                  autoCorrect="off"
+                  autoCapitalize="none"
+                  spellCheck={false}
                   required
                   placeholder="••••••••"
                   value={password}

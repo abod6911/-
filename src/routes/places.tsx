@@ -76,8 +76,11 @@ const IsolatedSearchInput = memo(function IsolatedSearchInput({
         <input
           type="text"
           inputMode="search"
+          dir="auto"
           autoCapitalize="none"
           autoCorrect="off"
+          autoComplete="off"
+          spellCheck={false}
           placeholder={
             isRtl
               ? "ابحث باسم المكان، الحي، أو نوع الأكل (مثال: كافيه الروضة، الشاطئ، مشاوي)..."
