@@ -103,7 +103,6 @@
   --destructive-foreground: #FFFFFF;
   --border: rgba(255, 255, 255, 0.12);
   --input: rgba(255, 255, 255, 0.15);
-  --ring: #C96745;
 }
 
 body {
@@ -123,25 +122,19 @@ body {
   scrollbar-width: none;
 }
 
-/* Mobile-Safe Input Rules */
+/* Mobile-Safe Input Overrides */
 input, select, textarea {
   font-size: 16px !important;
-  touch-action: manipulation;
+  touch-action: manipulation !important;
   user-select: text !important;
   -webkit-user-select: text !important;
+  -webkit-autofill: none !important;
 }
 
-/* Opaque Solid Glass Fallbacks for Mobile */
-.glass-header {
-  background-color: rgba(250, 246, 240, 0.98);
-}
-.dark .glass-header {
-  background-color: rgba(18, 24, 23, 0.98);
-}
-
-.glass-tabbar {
-  background-color: rgba(250, 246, 240, 0.98);
-}
-.dark .glass-tabbar {
-  background-color: rgba(18, 24, 23, 0.98);
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--foreground) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--card) inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
 }
