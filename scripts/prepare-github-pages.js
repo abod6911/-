@@ -39,30 +39,29 @@ if (fs.existsSync(mobileAppHtmlSource)) {
   mobileAppContent = fs.readFileSync(mobileAppHtmlSource, "utf-8");
 }
 
-// Default to Mobile Touch App Content if available for 100% phone freeze immunity
-const indexHtmlContent = mobileAppContent || `<!DOCTYPE html>
+const finalHtmlContent = mobileAppContent || `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <title>جِدّاو | JEDDAW — جدة تبدأ من هنا</title>
-    ${cssFile ? `<link rel="stylesheet" href="./assets/${cssFile}?v=${Date.now()}" />` : ""}
-    ${jsFile ? `<link rel="modulepreload" href="./assets/${jsFile}?v=${Date.now()}" />` : ""}
+    <title>جِدّاو | JEDDAW — تطبيق طلعات جدة المخصص للجوال</title>
   </head>
-  <body class="bg-[#FAF6F0] dark:bg-[#121817] text-[#252A28] dark:text-[#F5F1E8]">
-    <div id="root"></div>
-    ${jsFile ? `<script type="module" src="./assets/${jsFile}?v=${Date.now()}"></script>` : ""}
-  </body>
+  <body><div id="root"></div></body>
 </html>
 `;
 
-// Write compiled index.html, 404.html, .nojekyll to dist
-fs.writeFileSync(path.join(distDir, "index.html"), indexHtmlContent, "utf-8");
-fs.writeFileSync(path.join(distDir, "404.html"), indexHtmlContent, "utf-8");
+// Write to all possible GitHub Pages targets
+fs.writeFileSync(path.join(distDir, "index.html"), finalHtmlContent, "utf-8");
+fs.writeFileSync(path.join(distDir, "mobile-app.html"), finalHtmlContent, "utf-8");
+fs.writeFileSync(path.join(distDir, "404.html"), finalHtmlContent, "utf-8");
 fs.writeFileSync(path.join(distDir, ".nojekyll"), "", "utf-8");
 
-// Also sync root assets folder and root index.html, 404.html, .nojekyll for GitHub Pages root deployment
+fs.writeFileSync(path.join(rootDir, "index.html"), finalHtmlContent, "utf-8");
+fs.writeFileSync(path.join(rootDir, "mobile-app.html"), finalHtmlContent, "utf-8");
+fs.writeFileSync(path.join(rootDir, "404.html"), finalHtmlContent, "utf-8");
+fs.writeFileSync(path.join(rootDir, ".nojekyll"), "", "utf-8");
+
+// Sync assets folder
 if (fs.existsSync(assetsDir)) {
   if (fs.existsSync(rootAssetsDir)) {
     fs.rmSync(rootAssetsDir, { recursive: true, force: true });
@@ -70,17 +69,11 @@ if (fs.existsSync(assetsDir)) {
   fs.cpSync(assetsDir, rootAssetsDir, { recursive: true });
 }
 
-// Copy public logo to dist and root if it exists
+// Copy public logo if exists
 const publicLogoPng = path.join(rootDir, "public", "jeddaw-logo.png");
 if (fs.existsSync(publicLogoPng)) {
   fs.copyFileSync(publicLogoPng, path.join(distDir, "jeddaw-logo.png"));
   fs.copyFileSync(publicLogoPng, path.join(rootDir, "jeddaw-logo.png"));
-}
-
-const publicLogoWebp = path.join(rootDir, "public", "jeddaw-logo.webp");
-if (fs.existsSync(publicLogoWebp)) {
-  fs.copyFileSync(publicLogoWebp, path.join(distDir, "jeddaw-logo.webp"));
-  fs.copyFileSync(publicLogoWebp, path.join(rootDir, "jeddaw-logo.webp"));
 }
 
 const headersContent = `/*
@@ -88,10 +81,7 @@ const headersContent = `/*
   Pragma: no-cache
   Expires: 0`;
 
-fs.writeFileSync(path.join(rootDir, "index.html"), indexHtmlContent, "utf-8");
-fs.writeFileSync(path.join(rootDir, "404.html"), indexHtmlContent, "utf-8");
-fs.writeFileSync(path.join(rootDir, ".nojekyll"), "", "utf-8");
 fs.writeFileSync(path.join(distDir, "_headers"), headersContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, "_headers"), headersContent, "utf-8");
 
-console.log("Successfully deployed pure Touch-Native Mobile Web App to root index.html!");
+console.log("Successfully deployed Mobile Web App to all GitHub Pages targets (index.html, mobile-app.html, 404.html)!");
