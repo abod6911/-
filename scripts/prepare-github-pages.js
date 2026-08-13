@@ -17,14 +17,7 @@ if (fs.existsSync(outputPublicDir)) {
   fs.cpSync(outputPublicDir, distDir, { recursive: true });
 }
 
-// Copy public/new-site.html to dist and root
-const newSiteHtmlSource = path.join(rootDir, "public", "new-site.html");
-if (fs.existsSync(newSiteHtmlSource)) {
-  fs.copyFileSync(newSiteHtmlSource, path.join(distDir, "new-site.html"));
-  fs.copyFileSync(newSiteHtmlSource, path.join(rootDir, "new-site.html"));
-}
-
-// Mobile App Standalone Source Path
+// Read public/mobile-app.html content
 const mobileAppHtmlSource = path.join(rootDir, "public", "mobile-app.html");
 let mobileAppContent = "";
 
@@ -62,4 +55,4 @@ const headersContent = `/*
 fs.writeFileSync(path.join(distDir, "_headers"), headersContent, "utf-8");
 fs.writeFileSync(path.join(rootDir, "_headers"), headersContent, "utf-8");
 
-console.log("Successfully deployed brand new standalone website!");
+console.log("Successfully deployed Master Debounced Mobile Website to all GitHub Pages targets!");
