@@ -579,7 +579,7 @@ html[lang="ar"] label {
    ========================================================================== */
 @media screen and (max-width: 768px) {
 
-  /* ── 1. INPUT ZOOM PREVENTION ── */
+  /* ── 1. INPUT ZOOM PREVENTION & TEXT SELECTION ENABLEMENT ── */
   input[type="text"],
   input[type="email"],
   input[type="password"],
@@ -591,6 +591,8 @@ html[lang="ar"] label {
   select {
     font-size: 16px !important;
     touch-action: manipulation;
+    user-select: text !important;
+    -webkit-user-select: text !important;
   }
 
   /* ── 2. KILL ALL FOCUS BOX-SHADOW TRANSITIONS (prevents repaint on keyboard open) ── */
