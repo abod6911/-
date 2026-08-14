@@ -3,91 +3,185 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>مربع كتابة مخصص للجوال</title>
+  <title>تجربة حلول الكتابة الأربعة للجوال</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
-      width: 100%; height: 100%;
+      width: 100%; min-height: 100%;
       background-color: #0F172A;
       color: #F8FAFC;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 16px;
       direction: rtl;
       -webkit-tap-highlight-color: transparent;
     }
-    .single-card {
-      width: 100%; max-width: 400px;
-      background: #1E293B;
-      border-radius: 20px;
-      padding: 24px 16px;
-      border: 2px solid #38BDF8;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    .container {
+      max-width: 440px; margin: 0 auto;
       display: flex; flex-direction: column; gap: 16px;
     }
-    .custom-input {
+    .card {
+      background: #1E293B;
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid #334155;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .card-title {
+      font-size: 13px; font-weight: 900; color: #38BDF8;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .test-input, .test-area, .content-box {
       width: 100%;
-      padding: 14px;
+      padding: 12px 14px;
       border-radius: 14px;
       border: 2px solid #38BDF8;
       background: #0F172A;
-      font-size: 16px !important; /* ⚠️ 16px Prevents iOS Auto-Zoom */
+      font-size: 16px !important; /* CRITICAL FOR IOS SAFARI */
       font-weight: 700;
       color: #FFFFFF;
       outline: none;
       touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: text;
     }
-    .text-display {
-      min-height: 50px;
-      padding: 14px;
-      border-radius: 12px;
-      background: #334155;
-      color: #38BDF8;
-      font-weight: 800;
-      font-size: 14px;
-      word-break: break-word;
+    .content-box {
+      min-height: 48px;
+      background: #0F172A;
+      border-color: #10B981;
     }
+    .output-text {
+      font-size: 12px; font-weight: 800; color: #94A3B8; background: #334155;
+      padding: 10px; border-radius: 10px; min-height: 38px; word-break: break-word;
+    }
+
+    /* Touch Keypad */
+    .keypad {
+      display: flex; flex-direction: column; gap: 6px; background: #0D131F;
+      padding: 10px; border-radius: 14px; border: 1px solid #C96745;
+    }
+    .key-row { display: flex; justify-content: center; gap: 3px; }
+    .key-b {
+      flex: 1; max-width: 32px; height: 38px; border-radius: 8px;
+      background: #1E293B; color: #fff; font-size: 14px; font-weight: 900;
+      border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: grid; place-items: center;
+    }
+    .key-b:active { background: #C96745; }
   </style>
 </head>
 <body>
 
-  <div class="single-card">
+  <div class="container">
     <div style="font-size: 16px; font-weight: 900; text-align: center; color: #38BDF8;">
-      📝 مربع كتابة مخصص للجوال
+      🧪 تجربة 4 تقنيات كتابة مختلفة لمشكلة الآيفون
+    </div>
+    <p style="font-size: 11px; color: #94A3B8; text-align: center;">جرب الكتابة في كل مربع لمعرفة أي تقنية تعمل بسلاسة بدون تعليق على جوالك:</p>
+
+    <!-- METHOD 1: ContentEditable Div (Bypasses Input AutoFill) -->
+    <div class="card" style="border-color: #10B981;">
+      <div class="card-title">
+        <span>1️⃣ مربع ContentEditable (محرر نصي مباشر):</span>
+        <span style="color:#10B981; font-size:10px; background:rgba(16,185,129,0.2); padding:2px 8px; border-radius:8px;">يتجاوز تعليق الحقول ⚡</span>
+      </div>
+      <div
+        contenteditable="true"
+        class="content-box"
+        placeholder="اكتب هنا في المحرر النصي..."
+        oninput="document.getElementById('out1').innerText = this.innerText"
+      ></div>
+      <div id="out1" class="output-text">النتيجة تظهر هنا...</div>
     </div>
 
-    <input
-      id="pureInput"
-      type="text"
-      inputmode="text"
-      autocomplete="one-time-code"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
-      placeholder="اكتب هنا مباشرة..."
-      class="custom-input"
-    />
+    <!-- METHOD 2: Textarea Element -->
+    <div class="card" style="border-color: #E4A23B;">
+      <div class="card-title">
+        <span>2️⃣ مربع Textarea (منطقة نصية متعددة الأسطر):</span>
+        <span style="color:#E4A23B; font-size:10px; background:rgba(228,162,59,0.2); padding:2px 8px; border-radius:8px;">معالجة أسطر مختلفة 📝</span>
+      </div>
+      <textarea
+        rows="2"
+        class="test-area"
+        placeholder="اكتب هنا داخل الـ Textarea..."
+        oninput="document.getElementById('out2').innerText = this.value"
+      ></textarea>
+      <div id="out2" class="output-text">النتيجة تظهر هنا...</div>
+    </div>
 
-    <div style="font-size: 11px; font-weight: 700; color: #94A3B8;">النص المكتوب:</div>
-    <div id="outputDisplay" class="text-display">لم يتم كتابة شيء بعد...</div>
+    <!-- METHOD 3: On-Screen Touch Keypad (Zero Native Keyboard Invocation) -->
+    <div class="card" style="border-color: #C96745;">
+      <div class="card-title">
+        <span>3️⃣ كيبورد اللمس الفورية 🎹 (مضمونة 100% بدون كيبورد الجهاز):</span>
+      </div>
+      <input
+        id="touchInput"
+        type="text"
+        readonly
+        class="test-input"
+        style="border-color: #C96745;"
+        placeholder="اضغط الأزرار بالأسفل للكتابة..."
+      />
+      <div class="keypad">
+        <div class="key-row">
+          <button class="key-b" onclick="pressT('ض')">ض</button>
+          <button class="key-b" onclick="pressT('ص')">ص</button>
+          <button class="key-b" onclick="pressT('ث')">ث</button>
+          <button class="key-b" onclick="pressT('ق')">ق</button>
+          <button class="key-b" onclick="pressT('ف')">ف</button>
+          <button class="key-b" onclick="pressT('غ')">غ</button>
+          <button class="key-b" onclick="pressT('ع')">ع</button>
+          <button class="key-b" onclick="pressT('هـ')">هـ</button>
+          <button class="key-b" onclick="pressT('خ')">خ</button>
+          <button class="key-b" onclick="pressT('ح')">ح</button>
+          <button class="key-b" onclick="pressT('ج')">ج</button>
+        </div>
+        <div class="key-row">
+          <button class="key-b" onclick="pressT('ش')">ش</button>
+          <button class="key-b" onclick="pressT('س')">س</button>
+          <button class="key-b" onclick="pressT('ي')">ي</button>
+          <button class="key-b" onclick="pressT('ب')">ب</button>
+          <button class="key-b" onclick="pressT('ل')">ل</button>
+          <button class="key-b" onclick="pressT('ا')">ا</button>
+          <button class="key-b" onclick="pressT('ت')">ت</button>
+          <button class="key-b" onclick="pressT('ن')">ن</button>
+          <button class="key-b" onclick="pressT('م')">م</button>
+          <button class="key-b" onclick="pressT('ك')">ك</button>
+          <button class="key-b" onclick="pressT('ط')">ط</button>
+        </div>
+        <div style="display:flex; gap:6px; margin-top:4px;">
+          <button style="flex:2; height:36px; border-radius:8px; background:#334155; color:#fff; font-weight:800; border:none;" onclick="pressT(' ')">مسافة</button>
+          <button style="flex:1; height:36px; border-radius:8px; background:#EF4444; color:#fff; font-weight:800; border:none;" onclick="backT()">⌫ مسح</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- METHOD 4: Standard HTML Input -->
+    <div class="card" style="border-color: #64748B;">
+      <div class="card-title">
+        <span>4️⃣ حقل إدخال Input عادي:</span>
+      </div>
+      <input
+        type="text"
+        inputmode="text"
+        autocomplete="one-time-code"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        class="test-input"
+        style="border-color: #64748B;"
+        placeholder="جرب الكتابة بالـ Input العادي..."
+        oninput="document.getElementById('out4').innerText = this.value"
+      />
+      <div id="out4" class="output-text">النتيجة تظهر هنا...</div>
+    </div>
   </div>
 
   <script>
-    // Debounce 300ms
-    function debounce(func, delay = 300) {
-      let timer;
-      return function (...args) {
-        clearTimeout(timer);
-        timer = setTimeout(() => func.apply(this, args), delay);
-      };
+    function pressT(char) {
+      const inp = document.getElementById('touchInput');
+      inp.value = (inp.value || '') + char;
     }
-
-    const handleInput = debounce((e) => {
-      document.getElementById('outputDisplay').innerText = e.target.value || 'لم يتم كتابة شيء بعد...';
-    }, 300);
-
-    document.getElementById('pureInput').addEventListener('input', handleInput);
+    function backT() {
+      const inp = document.getElementById('touchInput');
+      inp.value = (inp.value || '').slice(0, -1);
+    }
   </script>
 </body>
 </html>
