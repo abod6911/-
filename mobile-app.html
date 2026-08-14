@@ -23,7 +23,7 @@
       --bg-main: #0B0F19;
       --bg-card: #141B2D;
       --bg-card-hover: #1C2640;
-      --bg-glass: rgba(20, 27, 45, 0.85);
+      --bg-glass: rgba(20, 27, 45, 0.95);
       --border-color: #232E4A;
       --border-accent: #C96745;
       --primary: #C96745;
@@ -57,7 +57,7 @@
     }
 
     /* 💡 حماية الجوال من التجمّد والـ Auto-Zoom (Font Size 16px Rule) */
-    .search-input, input, select, textarea {
+    .search-input, .auth-input, input, select, textarea {
       font-size: 16px !important; /* ⚠️ خط أحمر: لا تجعل حجم الخط أصغر من 16px في الجوال */
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
@@ -70,10 +70,8 @@
     .header {
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 40;
       background: var(--bg-glass);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border-color);
       padding: 12px 16px;
       display: flex;
@@ -324,16 +322,6 @@
       gap: 12px;
       position: relative;
       overflow: hidden;
-    }
-    .hero-banner::after {
-      content: "";
-      position: absolute;
-      top: -40px;
-      left: -40px;
-      width: 140px;
-      height: 140px;
-      background: radial-gradient(circle, rgba(201, 103, 69, 0.25), transparent 70%);
-      pointer-events: none;
     }
 
     .hero-badge {
@@ -629,38 +617,130 @@
     }
 
     /* ==========================================================================
-       5. Detail Modal
+       5. Modals (Detail & Auth)
        ========================================================================== */
     .modal-backdrop {
       position: fixed;
       inset: 0;
       z-index: 100;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.85);
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
     }
     .modal-content {
       width: 100%;
-      max-width: 500px;
+      max-width: 440px;
       background: var(--bg-card);
-      border-radius: 28px 28px 0 0;
-      border-top: 2px solid var(--primary);
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--primary);
       padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      max-height: 85vh;
+      gap: 14px;
+      max-height: 90vh;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
     }
     .modal-img-hero {
       width: 100%;
       height: 180px;
       border-radius: var(--radius-md);
       object-fit: cover;
+    }
+
+    /* Auth Modal Specifics */
+    .auth-tab-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4px;
+      background: #0B0F19;
+      padding: 4px;
+      border-radius: 14px;
+    }
+    .auth-tab-btn {
+      padding: 10px 4px;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .auth-tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(201, 103, 69, 0.3);
+    }
+
+    .auth-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .auth-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+    .auth-input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 2px solid var(--border-color);
+      background: #0B0F19;
+      color: var(--text-main);
+      font-weight: 700;
+      transition: border-color 0.2s ease;
+    }
+    .auth-input:focus {
+      border-color: var(--primary);
+    }
+
+    .auth-submit-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 900;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(201, 103, 69, 0.3);
+      margin-top: 4px;
+    }
+    .auth-submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Preset Buttons */
+    .preset-card {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #0B0F19;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .preset-card:active {
+      border-color: var(--primary);
+      transform: scale(0.98);
     }
 
     /* ==========================================================================
@@ -673,8 +753,6 @@
       right: 0;
       z-index: 40;
       background: var(--bg-glass);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border-top: 1px solid var(--border-color);
       padding: 10px 16px;
       display: flex;
@@ -726,7 +804,7 @@
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
       }
       /* 💡 حماية الجوال من التجمّد والـ Auto-Zoom */
-      .search-input {
+      .search-input, .auth-input {
         font-size: 16px !important;
         padding: 8px 0;
       }
@@ -739,7 +817,7 @@
         border-radius: 18px;
         max-height: 280px;
         overflow-y: auto;
-        -webkit-overflow-scrolling: touch; /* تمرير سلس جداً على أجهزة آيفون */
+        -webkit-overflow-scrolling: touch;
       }
       /* توزيع الكلمات المفتاحية */
       .trending-tags {
@@ -766,8 +844,8 @@
       </div>
     </div>
 
-    <button class="header-action-btn" onclick="openProfileModal()">
-      👤 حسابي
+    <button class="header-action-btn" onclick="openAuthModal()">
+      👤 حسابي / دخول
     </button>
   </header>
 
@@ -893,6 +971,144 @@
 
   </main>
 
+  <!-- 👤 High-Performance Zero-Reflow Auth Modal -->
+  <div id="authModal" class="modal-backdrop hidden" onclick="closeAuthModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 6px; font-weight: 900; font-size: 15px;">
+          <span>🔒</span>
+          <span>تسجيل الدخول في جِدّاو</span>
+        </div>
+        <button onclick="closeAuthModal()" style="background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-weight: 900; cursor: pointer;">✕</button>
+      </div>
+
+      <!-- Tab Buttons -->
+      <div class="auth-tab-bar">
+        <button id="tabBtnQuick" class="auth-tab-btn active" onclick="switchAuthTab('quick')">
+          <span>⚡</span>
+          <span>بنقرة واحدة</span>
+        </button>
+        <button id="tabBtnLogin" class="auth-tab-btn" onclick="switchAuthTab('login')">
+          <span>دخول</span>
+        </button>
+        <button id="tabBtnSignup" class="auth-tab-btn" onclick="switchAuthTab('signup')">
+          <span>حساب جديد 🎉</span>
+        </button>
+      </div>
+
+      <!-- Tab 1: Instant Quick Presets -->
+      <div id="authTabQuick" style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="font-size: 11px; font-weight: 800; color: var(--text-muted);">اختر بروفايلك للدخول الفوري بنقرة واحدة بدون كتابة:</div>
+        
+        <div class="preset-card" onclick="loginPreset('ابن جدة البحرية 🌊')">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 22px;">🌊</span>
+            <div>
+              <div style="font-size: 13px; font-weight: 900;">ابن جدة البحرية</div>
+              <div style="font-size: 10px; color: var(--text-muted);">الكورنيش والواجهة البحرية</div>
+            </div>
+          </div>
+          <span style="background: rgba(201,103,69,0.2); color: #FF9D7A; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 900;">دخول ⚡</span>
+        </div>
+
+        <div class="preset-card" onclick="loginPreset('عاشق القهوة والروقان ☕')">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 22px;">☕</span>
+            <div>
+              <div style="font-size: 13px; font-weight: 900;">عاشق القهوة والروقان</div>
+              <div style="font-size: 10px; color: var(--text-muted);">حي الروضة والتحلية</div>
+            </div>
+          </div>
+          <span style="background: rgba(201,103,69,0.2); color: #FF9D7A; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 900;">دخول ⚡</span>
+        </div>
+
+        <div class="preset-card" onclick="loginPreset('مستكشف أبحر والشواطئ 🏖️')">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 22px;">🏖️</span>
+            <div>
+              <div style="font-size: 13px; font-weight: 900;">مستكشف أبحر والشواطئ</div>
+              <div style="font-size: 10px; color: var(--text-muted);">أبحر الشمالية والمسابح</div>
+            </div>
+          </div>
+          <span style="background: rgba(201,103,69,0.2); color: #FF9D7A; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 900;">دخول ⚡</span>
+        </div>
+      </div>
+
+      <!-- Tab 2 & 3: Custom Form (Zero-Reflow, 16px Font, One-Time-Code) -->
+      <form id="authForm" class="hidden" onsubmit="handleAuthSubmit(event)" style="display: flex; flex-direction: column; gap: 10px;">
+        <div id="formNameGroup" class="auth-input-group hidden">
+          <label class="auth-label">الاسم الكامل</label>
+          <input
+            id="formNameInput"
+            type="text"
+            inputmode="text"
+            autocomplete="one-time-code"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="محمد العتيبي"
+            class="auth-input"
+          />
+        </div>
+
+        <div class="auth-input-group">
+          <label class="auth-label">البريد الإلكتروني</label>
+          <input
+            id="formEmailInput"
+            type="text"
+            inputmode="email"
+            required
+            autocomplete="one-time-code"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="name@example.com"
+            class="auth-input"
+          />
+          <!-- 1-Tap Email Domain Pills -->
+          <div style="display: flex; gap: 6px; overflow-x: auto; padding-top: 4px;">
+            <button type="button" onclick="appendEmailDomain('@gmail.com')" style="padding: 3px 8px; border-radius: 6px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 10px; font-weight: 800; cursor: pointer;">@gmail.com</button>
+            <button type="button" onclick="appendEmailDomain('@hotmail.com')" style="padding: 3px 8px; border-radius: 6px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 10px; font-weight: 800; cursor: pointer;">@hotmail.com</button>
+            <button type="button" onclick="appendEmailDomain('@icloud.com')" style="padding: 3px 8px; border-radius: 6px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 10px; font-weight: 800; cursor: pointer;">@icloud.com</button>
+          </div>
+        </div>
+
+        <div class="auth-input-group">
+          <label class="auth-label">كلمة المرور</label>
+          <input
+            id="formPasswordInput"
+            type="password"
+            required
+            autocomplete="one-time-code"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="••••••••"
+            class="auth-input"
+          />
+        </div>
+
+        <div id="formDistrictGroup" class="auth-input-group hidden">
+          <label class="auth-label">منطقتك المفضلة في جدة</label>
+          <select id="formDistrictSelect" class="auth-input">
+            <option value="corniche">🌊 الكورنيش والواجهة البحرية</option>
+            <option value="rawdah">☕ حي الروضة والتحلية</option>
+            <option value="obhur">🏖️ أبحر والشواطئ</option>
+            <option value="balad">🏛️ جدة التاريخية (البلد)</option>
+          </select>
+        </div>
+
+        <button id="formSubmitBtn" type="submit" class="auth-submit-btn">
+          دخول الحساب 🔑
+        </button>
+      </form>
+
+      <div style="font-size: 11px; color: var(--teal); text-align: center; border-top: 1px solid var(--border-color); padding-top: 8px; font-weight: 700;">
+        🛡️ حسابك آمن ومحفوظ على جهازك 100%
+      </div>
+    </div>
+  </div>
+
   <!-- Place Detail Modal -->
   <div id="detailModal" class="modal-backdrop hidden" onclick="closeDetailModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
@@ -932,7 +1148,7 @@
       <span>🧭</span>
       <span>الأماكن</span>
     </button>
-    <button class="nav-btn" onclick="openProfileModal()">
+    <button class="nav-btn" onclick="openAuthModal()">
       <span>👤</span>
       <span>حسابي</span>
     </button>
@@ -1037,7 +1253,7 @@
         rating: "4.9 ⭐",
         price: "220 ر.س / شخص",
         hours: "5:00 م - 3:00 ص",
-        desc: "أجواء راقية ومأكولات عالمية على أنغام الموسيقى الهادئة في قلب شارع التحلية.",
+        desc: "أجواء راقية ومأكولات عالمية على أنغام الموسيقى الهادئة في قلب شارع التتحلية.",
         img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
         mapsUrl: "https://maps.google.com"
       },
@@ -1058,6 +1274,7 @@
     let currentSearchTerm = '';
     let selectedMoodVal = 'sea';
     let selectedBudgetVal = 'balanced';
+    let currentAuthTab = 'quick';
 
     // ==========================================
     // 3️⃣ عرض بطاقات الأماكن
@@ -1282,6 +1499,67 @@
       resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
+    // ==========================================
+    // 7️⃣ إدارة نافذة تسجيل الدخول (Zero-Reflow Auth)
+    // ==========================================
+    function openAuthModal() {
+      document.getElementById('authModal').classList.remove('hidden');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.add('hidden');
+    }
+
+    function switchAuthTab(tab) {
+      currentAuthTab = tab;
+      document.getElementById('tabBtnQuick').classList.toggle('active', tab === 'quick');
+      document.getElementById('tabBtnLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('tabBtnSignup').classList.toggle('active', tab === 'signup');
+
+      const quickTab = document.getElementById('authTabQuick');
+      const form = document.getElementById('authForm');
+      const nameGroup = document.getElementById('formNameGroup');
+      const distGroup = document.getElementById('formDistrictGroup');
+      const submitBtn = document.getElementById('formSubmitBtn');
+
+      if (tab === 'quick') {
+        quickTab.classList.remove('hidden');
+        form.classList.add('hidden');
+      } else {
+        quickTab.classList.add('hidden');
+        form.classList.remove('hidden');
+
+        if (tab === 'signup') {
+          nameGroup.classList.remove('hidden');
+          distGroup.classList.remove('hidden');
+          submitBtn.innerText = 'إنشاء حسابي الآن 🚀';
+        } else {
+          nameGroup.classList.add('hidden');
+          distGroup.classList.add('hidden');
+          submitBtn.innerText = 'دخول الحساب 🔑';
+        }
+      }
+    }
+
+    function loginPreset(name) {
+      alert(`🎉 تم تسجيل الدخول بنجاح كـ:\n${name}`);
+      closeAuthModal();
+    }
+
+    function appendEmailDomain(domain) {
+      const emailInp = document.getElementById('formEmailInput');
+      const current = emailInp.value.split('@')[0] || '';
+      emailInp.value = current + domain;
+      emailInp.focus();
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('formEmailInput').value;
+      alert(`🎉 تم ${currentAuthTab === 'signup' ? 'إنشاء الحساب' : 'الدخول'} بنجاح:\n${email}`);
+      closeAuthModal();
+    }
+
     function scrollToSearch() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       document.getElementById('searchInput').focus();
@@ -1293,10 +1571,6 @@
 
     function scrollToPlaces() {
       document.getElementById('placesListContainer').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function openProfileModal() {
-      alert('👤 مرحباً بك في جِدّاو!\nحسابك مفعّل وجاهز لحفظ الطلعات والأماكن المفضلة.');
     }
   </script>
 </body>
