@@ -3,185 +3,324 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>تجربة حلول الكتابة الأربعة للجوال</title>
+  <title>التجارب العشر المتكاملة لحل كتابة الجوال | 10 Input Experiments</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       width: 100%; min-height: 100%;
-      background-color: #0F172A;
+      background-color: #0B0F19;
       color: #F8FAFC;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      padding: 16px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 16px 12px;
       direction: rtl;
       -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
     }
     .container {
-      max-width: 440px; margin: 0 auto;
+      max-width: 480px; margin: 0 auto;
       display: flex; flex-direction: column; gap: 16px;
     }
-    .card {
+    .header-banner {
+      background: linear-gradient(135deg, #1E293B, #0F172A);
+      border-radius: 20px; padding: 18px; border: 2px solid #38BDF8;
+      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.15); text-align: center;
+    }
+    .exp-card {
       background: #1E293B;
       border-radius: 18px;
       padding: 16px;
       border: 1px solid #334155;
       display: flex; flex-direction: column; gap: 10px;
     }
-    .card-title {
+    .exp-title {
       font-size: 13px; font-weight: 900; color: #38BDF8;
       display: flex; justify-content: space-between; align-items: center;
     }
-    .test-input, .test-area, .content-box {
+    .exp-badge {
+      font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 8px;
+    }
+    .input-base {
       width: 100%;
       padding: 12px 14px;
       border-radius: 14px;
       border: 2px solid #38BDF8;
-      background: #0F172A;
-      font-size: 16px !important; /* CRITICAL FOR IOS SAFARI */
+      background: #0B0F19;
+      font-size: 16px !important; /* CRITICAL IOS RULE */
       font-weight: 700;
       color: #FFFFFF;
       outline: none;
       touch-action: manipulation;
       -webkit-user-select: text;
     }
-    .content-box {
+    .content-edit {
       min-height: 48px;
-      background: #0F172A;
+      background: #0B0F19;
       border-color: #10B981;
     }
-    .output-text {
-      font-size: 12px; font-weight: 800; color: #94A3B8; background: #334155;
+    .output-log {
+      font-size: 12px; font-weight: 800; color: #94A3B8; background: #0F172A;
       padding: 10px; border-radius: 10px; min-height: 38px; word-break: break-word;
+      border: 1px solid rgba(255,255,255,0.05);
     }
-
-    /* Touch Keypad */
     .keypad {
-      display: flex; flex-direction: column; gap: 6px; background: #0D131F;
-      padding: 10px; border-radius: 14px; border: 1px solid #C96745;
+      display: flex; flex-direction: column; gap: 6px; background: #070A12;
+      padding: 10px; border-radius: 14px; border: 1px solid #F59E0B;
     }
     .key-row { display: flex; justify-content: center; gap: 3px; }
-    .key-b {
+    .key-btn {
       flex: 1; max-width: 32px; height: 38px; border-radius: 8px;
       background: #1E293B; color: #fff; font-size: 14px; font-weight: 900;
       border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: grid; place-items: center;
     }
-    .key-b:active { background: #C96745; }
+    .key-btn:active { background: #F59E0B; }
+    .tag-chip {
+      padding: 8px 14px; border-radius: 16px; background: #1E293B;
+      border: 1px solid #38BDF8; color: #fff; font-size: 12px; font-weight: 800; cursor: pointer;
+    }
+    .tag-chip:active { background: #38BDF8; color: #000; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div style="font-size: 16px; font-weight: 900; text-align: center; color: #38BDF8;">
-      🧪 تجربة 4 تقنيات كتابة مختلفة لمشكلة الآيفون
+    <div class="header-banner">
+      <h1 style="font-size: 18px; font-weight: 900; color: #38BDF8;">🧪 10 تجارب كتابة هندسية للجوال</h1>
+      <p style="font-size: 11px; color: #94A3B8; margin-top: 6px;">جرب الكتابة في كل تجربة واكتشف التقنية التي تمنع تعليق جوالك كلياً:</p>
     </div>
-    <p style="font-size: 11px; color: #94A3B8; text-align: center;">جرب الكتابة في كل مربع لمعرفة أي تقنية تعمل بسلاسة بدون تعليق على جوالك:</p>
 
-    <!-- METHOD 1: ContentEditable Div (Bypasses Input AutoFill) -->
-    <div class="card" style="border-color: #10B981;">
-      <div class="card-title">
-        <span>1️⃣ مربع ContentEditable (محرر نصي مباشر):</span>
-        <span style="color:#10B981; font-size:10px; background:rgba(16,185,129,0.2); padding:2px 8px; border-radius:8px;">يتجاوز تعليق الحقول ⚡</span>
+    <!-- 1️⃣ EXPERIMENT 1: ContentEditable Div (Bypasses Form Input IPC) -->
+    <div class="exp-card" style="border-color: #10B981;">
+      <div class="exp-title">
+        <span>التجربة 1: ContentEditable (محرر نصي بدون Input)</span>
+        <span class="exp-badge" style="background: rgba(16,185,129,0.2); color: #10B981;">تجاوز عازل الحقول ⚡</span>
       </div>
       <div
         contenteditable="true"
-        class="content-box"
+        class="input-base content-edit"
         placeholder="اكتب هنا في المحرر النصي..."
-        oninput="document.getElementById('out1').innerText = this.innerText"
+        oninput="updateLog('log1', this.innerText)"
       ></div>
-      <div id="out1" class="output-text">النتيجة تظهر هنا...</div>
+      <div id="log1" class="output-log">النتيجة تظهر هنا...</div>
     </div>
 
-    <!-- METHOD 2: Textarea Element -->
-    <div class="card" style="border-color: #E4A23B;">
-      <div class="card-title">
-        <span>2️⃣ مربع Textarea (منطقة نصية متعددة الأسطر):</span>
-        <span style="color:#E4A23B; font-size:10px; background:rgba(228,162,59,0.2); padding:2px 8px; border-radius:8px;">معالجة أسطر مختلفة 📝</span>
+    <!-- 2️⃣ EXPERIMENT 2: Textarea Multi-line Element -->
+    <div class="exp-card" style="border-color: #F59E0B;">
+      <div class="exp-title">
+        <span>التجربة 2: Textarea (منطقة نصية متعددة الأسطر)</span>
+        <span class="exp-badge" style="background: rgba(245,158,11,0.2); color: #F59E0B;">مسار معالجة مختلف 📝</span>
       </div>
       <textarea
         rows="2"
-        class="test-area"
+        class="input-base"
+        style="border-color: #F59E0B;"
         placeholder="اكتب هنا داخل الـ Textarea..."
-        oninput="document.getElementById('out2').innerText = this.value"
+        oninput="updateLog('log2', this.value)"
       ></textarea>
-      <div id="out2" class="output-text">النتيجة تظهر هنا...</div>
+      <div id="log2" class="output-log">النتيجة تظهر هنا...</div>
     </div>
 
-    <!-- METHOD 3: On-Screen Touch Keypad (Zero Native Keyboard Invocation) -->
-    <div class="card" style="border-color: #C96745;">
-      <div class="card-title">
-        <span>3️⃣ كيبورد اللمس الفورية 🎹 (مضمونة 100% بدون كيبورد الجهاز):</span>
+    <!-- 3️⃣ EXPERIMENT 3: Pure On-Screen Touch Keyboard 🎹 -->
+    <div class="exp-card" style="border-color: #EC4899;">
+      <div class="exp-title">
+        <span>التجربة 3: كيبورد اللمس الفورية 🎹</span>
+        <span class="exp-badge" style="background: rgba(236,72,153,0.2); color: #EC4899;">بدون كيبورد الجهاز 100%</span>
       </div>
-      <input
-        id="touchInput"
-        type="text"
-        readonly
-        class="test-input"
-        style="border-color: #C96745;"
-        placeholder="اضغط الأزرار بالأسفل للكتابة..."
-      />
+      <input id="exp3Input" type="text" readonly class="input-base" style="border-color: #EC4899;" placeholder="اضغط الأزرار بالأسفل للكتابة..." />
       <div class="keypad">
         <div class="key-row">
-          <button class="key-b" onclick="pressT('ض')">ض</button>
-          <button class="key-b" onclick="pressT('ص')">ص</button>
-          <button class="key-b" onclick="pressT('ث')">ث</button>
-          <button class="key-b" onclick="pressT('ق')">ق</button>
-          <button class="key-b" onclick="pressT('ف')">ف</button>
-          <button class="key-b" onclick="pressT('غ')">غ</button>
-          <button class="key-b" onclick="pressT('ع')">ع</button>
-          <button class="key-b" onclick="pressT('هـ')">هـ</button>
-          <button class="key-b" onclick="pressT('خ')">خ</button>
-          <button class="key-b" onclick="pressT('ح')">ح</button>
-          <button class="key-b" onclick="pressT('ج')">ج</button>
+          <button class="key-btn" onclick="typeKey('ض')">ض</button>
+          <button class="key-btn" onclick="typeKey('ص')">ص</button>
+          <button class="key-btn" onclick="typeKey('ث')">ث</button>
+          <button class="key-btn" onclick="typeKey('ق')">ق</button>
+          <button class="key-btn" onclick="typeKey('ف')">ف</button>
+          <button class="key-btn" onclick="typeKey('غ')">غ</button>
+          <button class="key-btn" onclick="typeKey('ع')">ع</button>
+          <button class="key-btn" onclick="typeKey('هـ')">هـ</button>
+          <button class="key-btn" onclick="typeKey('خ')">خ</button>
+          <button class="key-btn" onclick="typeKey('ح')">ح</button>
+          <button class="key-btn" onclick="typeKey('ج')">ج</button>
         </div>
         <div class="key-row">
-          <button class="key-b" onclick="pressT('ش')">ش</button>
-          <button class="key-b" onclick="pressT('س')">س</button>
-          <button class="key-b" onclick="pressT('ي')">ي</button>
-          <button class="key-b" onclick="pressT('ب')">ب</button>
-          <button class="key-b" onclick="pressT('ل')">ل</button>
-          <button class="key-b" onclick="pressT('ا')">ا</button>
-          <button class="key-b" onclick="pressT('ت')">ت</button>
-          <button class="key-b" onclick="pressT('ن')">ن</button>
-          <button class="key-b" onclick="pressT('م')">م</button>
-          <button class="key-b" onclick="pressT('ك')">ك</button>
-          <button class="key-b" onclick="pressT('ط')">ط</button>
+          <button class="key-btn" onclick="typeKey('ش')">ش</button>
+          <button class="key-btn" onclick="typeKey('س')">س</button>
+          <button class="key-btn" onclick="typeKey('ي')">ي</button>
+          <button class="key-btn" onclick="typeKey('ب')">ب</button>
+          <button class="key-btn" onclick="typeKey('ل')">ل</button>
+          <button class="key-btn" onclick="typeKey('ا')">ا</button>
+          <button class="key-btn" onclick="typeKey('ت')">ت</button>
+          <button class="key-btn" onclick="typeKey('ن')">ن</button>
+          <button class="key-btn" onclick="typeKey('م')">م</button>
+          <button class="key-btn" onclick="typeKey('ك')">ك</button>
+          <button class="key-btn" onclick="typeKey('ط')">ط</button>
         </div>
         <div style="display:flex; gap:6px; margin-top:4px;">
-          <button style="flex:2; height:36px; border-radius:8px; background:#334155; color:#fff; font-weight:800; border:none;" onclick="pressT(' ')">مسافة</button>
-          <button style="flex:1; height:36px; border-radius:8px; background:#EF4444; color:#fff; font-weight:800; border:none;" onclick="backT()">⌫ مسح</button>
+          <button style="flex:2; height:36px; border-radius:8px; background:#1E293B; color:#fff; font-weight:800; border:none;" onclick="typeKey(' ')">مسافة</button>
+          <button style="flex:1; height:36px; border-radius:8px; background:#EF4444; color:#fff; font-weight:800; border:none;" onclick="backKey()">⌫ مسح</button>
         </div>
       </div>
     </div>
 
-    <!-- METHOD 4: Standard HTML Input -->
-    <div class="card" style="border-color: #64748B;">
-      <div class="card-title">
-        <span>4️⃣ حقل إدخال Input عادي:</span>
+    <!-- 4️⃣ EXPERIMENT 4: Prompt Dialog Trigger Input -->
+    <div class="exp-card" style="border-color: #8B5CF6;">
+      <div class="exp-title">
+        <span>التجربة 4: الإدخال بنقرة واحدة (Prompt Window)</span>
+        <span class="exp-badge" style="background: rgba(139,92,246,0.2); color: #8B5CF6;">نافذة النظام المباشرة 💬</span>
+      </div>
+      <button onclick="openSystemPrompt()" class="input-base" style="background: #8B5CF6; color: #fff; cursor: pointer; text-align: center; border: none;">
+        💬 اضغط هنا للكتابة عبر نافذة النظام
+      </button>
+      <div id="log4" class="output-log">النتيجة تظهر هنا...</div>
+    </div>
+
+    <!-- 5️⃣ EXPERIMENT 5: Input with Debounce 300ms -->
+    <div class="exp-card" style="border-color: #38BDF8;">
+      <div class="exp-title">
+        <span>التجربة 5: Input مع تقنية Debounce (300ms)</span>
+        <span class="exp-badge" style="background: rgba(56,189,248,0.2); color: #38BDF8;">منع ضغط المعالج ⏱️</span>
       </div>
       <input
+        id="exp5Input"
+        type="text"
+        inputmode="text"
+        class="input-base"
+        placeholder="اكتب هنا مع تأخير التحديث 300ms..."
+      />
+      <div id="log5" class="output-log">النتيجة تظهر هنا...</div>
+    </div>
+
+    <!-- 6️⃣ EXPERIMENT 6: Hardware Accelerated Input Layer -->
+    <div class="exp-card" style="border-color: #06B6D4;">
+      <div class="exp-title">
+        <span>التجربة 6: تسريع كارت الشاشة GPU Layer</span>
+        <span class="exp-badge" style="background: rgba(6,182,212,0.2); color: #06B6D4;">Hardware Accelerated 🚀</span>
+      </div>
+      <input
+        type="text"
+        class="input-base"
+        style="transform: translateZ(0); backface-visibility: hidden; border-color: #06B6D4;"
+        placeholder="حقل معزول في طبقة GPU..."
+        oninput="updateLog('log6', this.value)"
+      />
+      <div id="log6" class="output-log">النتيجة تظهر هنا...</div>
+    </div>
+
+    <!-- 7️⃣ EXPERIMENT 7: Anti-Autofill Immunity Input -->
+    <div class="exp-card" style="border-color: #E11D48;">
+      <div class="exp-title">
+        <span>التجربة 7: حماية عازل المدير السري للكلمات</span>
+        <span class="exp-badge" style="background: rgba(225,29,72,0.2); color: #E11D48;">Anti-Autofill 🛡️</span>
+      </div>
+      <input
+        type="text"
+        autocomplete="one-time-code"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        data-lpignore="true"
+        data-1p-ignore="true"
+        class="input-base"
+        style="border-color: #E11D48;"
+        placeholder="حقل محمي من التعبئة التلقائية..."
+        oninput="updateLog('log7', this.value)"
+      />
+      <div id="log7" class="output-log">النتيجة تظهر هنا...</div>
+    </div>
+
+    <!-- 8️⃣ EXPERIMENT 8: Search Mode Keyboard Input -->
+    <div class="exp-card" style="border-color: #10B981;">
+      <div class="exp-title">
+        <span>التجربة 8: حقل إدخال بنمط البحث (Search Mode)</span>
+        <span class="exp-badge" style="background: rgba(16,185,129,0.2); color: #10B981;">Search Keyboard 🔍</span>
+      </div>
+      <input
+        type="search"
+        inputmode="search"
+        enterkeyhint="search"
+        class="input-base"
+        style="border-color: #10B981;"
+        placeholder="اكتب مع كيبورد البحث الرسمية..."
+        oninput="updateLog('log8', this.value)"
+      />
+      <div id="log8" class="output-log">النتيجة تظهر هنا...</div>
+    </div>
+
+    <!-- 9️⃣ EXPERIMENT 9: 1-Tap Selection Tags (No Keyboard Required) -->
+    <div class="exp-card" style="border-color: #F59E0B;">
+      <div class="exp-title">
+        <span>التجربة 9: الأوسام اللمسية بنقرة واحدة</span>
+        <span class="exp-badge" style="background: rgba(245,158,11,0.2); color: #F59E0B;">1-Tap Tags 🏷️</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <button class="tag-chip" onclick="updateLog('log9', 'مطاعم الكورنيش البحرية')">🥙 مطاعم الكورنيش</button>
+        <button class="tag-chip" onclick="updateLog('log9', 'كافيهات الروضة والتحلية')">☕ كافيهات الروضة</button>
+        <button class="tag-chip" onclick="updateLog('log9', 'منتجعات أبحر الشمالية')">🏖️ منتجعات أبحر</button>
+        <button class="tag-chip" onclick="updateLog('log9', 'جدة التاريخية البلد')">🏛️ حي البلد</button>
+      </div>
+      <div id="log9" class="output-log">النتيجة تظهر هنا...</div>
+    </div>
+
+    <!-- 🔟 EXPERIMENT 10: Master Combined Hybrid Input -->
+    <div class="exp-card" style="border-color: #38BDF8; border-width: 2px;">
+      <div class="exp-title">
+        <span>التجربة 10: الحقل الهجين المتكامل الشامل</span>
+        <span class="exp-badge" style="background: #38BDF8; color: #000;">Master Hybrid 🔥</span>
+      </div>
+      <input
+        id="exp10Input"
         type="text"
         inputmode="text"
         autocomplete="one-time-code"
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
-        class="test-input"
-        style="border-color: #64748B;"
-        placeholder="جرب الكتابة بالـ Input العادي..."
-        oninput="document.getElementById('out4').innerText = this.value"
+        class="input-base"
+        style="border-color: #38BDF8;"
+        placeholder="الحقل الشامل لكل تقنيات الأمان والحماية..."
       />
-      <div id="out4" class="output-text">النتيجة تظهر هنا...</div>
+      <div id="log10" class="output-log">النتيجة تظهر هنا...</div>
     </div>
   </div>
 
   <script>
-    function pressT(char) {
-      const inp = document.getElementById('touchInput');
+    function updateLog(id, val) {
+      document.getElementById(id).innerText = val || 'النتيجة تظهر هنا...';
+    }
+
+    function typeKey(char) {
+      const inp = document.getElementById('exp3Input');
       inp.value = (inp.value || '') + char;
     }
-    function backT() {
-      const inp = document.getElementById('touchInput');
+    function backKey() {
+      const inp = document.getElementById('exp3Input');
       inp.value = (inp.value || '').slice(0, -1);
     }
+
+    function openSystemPrompt() {
+      const res = prompt("اكتب الكلمة المراد البحث عنها هنا:");
+      if (res !== null) {
+        updateLog('log4', res);
+      }
+    }
+
+    // Debounce for Exp 5 & Exp 10
+    function debounce(func, delay = 300) {
+      let timer;
+      return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    const exp5Handler = debounce((e) => {
+      updateLog('log5', e.target.value);
+    }, 300);
+
+    const exp10Handler = debounce((e) => {
+      updateLog('log10', e.target.value);
+    }, 300);
+
+    document.getElementById('exp5Input').addEventListener('input', exp5Handler);
+    document.getElementById('exp10Input').addEventListener('input', exp10Handler);
   </script>
 </body>
 </html>
